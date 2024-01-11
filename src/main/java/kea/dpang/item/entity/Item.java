@@ -34,6 +34,9 @@ public class Item {
     @ElementCollection
     private List<String> reviews;
 
+    // 리뷰 개수
+    private Long numberReview;
+
     // 할인율
     private Double discountRate;
 
@@ -56,5 +59,14 @@ public class Item {
     // 이미지 리스트
     @ElementCollection
     private List<String> images;
+
+    // 리뷰 개수를 계산하는 메소드
+    public void calculateNumberReview(List<Review> reviews) {
+        if (reviews != null) {
+            this.numberReview = (long) reviews.size();
+        } else {
+            this.numberReview = 0L;
+        }
+    }
 }
 
