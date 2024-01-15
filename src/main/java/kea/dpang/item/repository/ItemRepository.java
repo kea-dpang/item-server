@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByItemId(Long id);
-    List<Item> findByItemNameContaining(String itemName);
+    List<Item> findByItemName(String itemName);
 }
 

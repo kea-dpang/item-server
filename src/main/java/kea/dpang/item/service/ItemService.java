@@ -1,40 +1,24 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.entity.Item;
-import kea.dpang.item.entity.Review;
-import kea.dpang.item.repository.ItemRepository;
-import kea.dpang.item.repository.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import kea.dpang.item.dto.CreateItemDto;
+import kea.dpang.item.dto.ItemDetailDto;
 
-import java.util.List;
-import java.util.Optional;
+public interface ItemService {
 
-@Service
-public class ItemService {
+    /**
+     * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
+     *
+     * @param itemId 조회할 상품의 ID
+     * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
+     */
+    ItemDetailDto getItem(Long itemId);
 
-    private final ItemRepository itemRepository;
-    private final ReviewRepository reviewRepository;
-
-    @Autowired
-    public ItemService(ItemRepository itemRepository, ReviewRepository reviewRepository) {
-        this.itemRepository = itemRepository;
-        this.reviewRepository = reviewRepository;
-    }
-
-    public Optional<Item> getItemById(Long id) {
-        // 상품 ID로 상품을 조회합니다.
-        return itemRepository.findById(id);
-    }
-
-    public List<Item> searchProducts(String keyword) {
-        List<Item> products = itemRepository.findByItemNameContaining(keyword);
-        products.forEach(product -> {
-            List<Review> reviews = reviewRepository.findById(product.getItemId());
-            // product.calculateNumberReview((long) reviews.size());
-        });
-        return products;
-    }
+    /**
+     * 새로운 상품을 등록합니다.
+     *
+     * @param createItemDto 등록할 상품의 정보가 담긴 DTO
+     * @return 등록된 상품의 정보가 담긴 Detail DTO
+     */
+    ItemDetailDto createItem(CreateItemDto createItemDto);
 
 }
-

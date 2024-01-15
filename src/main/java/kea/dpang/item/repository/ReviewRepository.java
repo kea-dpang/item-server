@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 특정 상품에 대한 리뷰 목록을 가져오는 메소드
-    List<Review> findByProductId(Long productId);
+    List<Review> findByItemId(Long itemId);
 }

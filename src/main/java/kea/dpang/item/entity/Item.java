@@ -1,8 +1,14 @@
 package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.List;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Item {
@@ -19,13 +25,17 @@ public class Item {
     @Column(nullable = false)
     private String category;
 
+    // 상품 분류 서브카테고리
+    @Column(nullable = false)
+    private String subCategory;
+
     // 브랜드명
     @Column(nullable = false)
     private String brand;
 
     // 상품 원가
     @Column(nullable = false)
-    private Double itemPrice;
+    private Long itemPrice;
 
     // 평점
     private Double rating;
@@ -38,10 +48,25 @@ public class Item {
     private Long numberReview;
 
     // 할인율
-    private Double discountRate;
+    private Long discountRate;
 
     // 할인가
-    private Double discountPrice;
+    private Long discountPrice;
+
+    // 이벤트가
+    private Long eventPrice;
+
+    // 판매처
+    private String vendor;
+
+    // 태그
+    private String tags;
+
+    // 최소 재고 수량
+    private String minStock;
+
+    // 최대 재고 수량
+    private String maxStock;
 
     // 상품 상세정보
     @Column(length = 1000)
@@ -60,13 +85,19 @@ public class Item {
     @ElementCollection
     private List<String> images;
 
-    // 리뷰 개수를 계산하는 메소드
-    public void calculateNumberReview(List<Review> reviews) {
-        if (reviews != null) {
-            this.numberReview = (long) reviews.size();
-        } else {
-            this.numberReview = 0L;
-        }
+    public void updateInformation(String itemName, String category, String subCategory, Long itemPrice, Long discountPrice, Long eventPrice, String minStock, String maxStock) {
+        this.itemName = itemName;
+        this.category = category;
+        this.subCategory = subCategory;
+        this.itemPrice = itemPrice;
+        this.discountPrice = this.discountPrice;
+        this.eventPrice = this.eventPrice;
+        this.vendor = vendor;
+        this.tags = tags;
+        this.minStock = this.minStock;
+        this.maxStock = this.maxStock;
+        this.itemImage = itemImage;
+        this.images = images;
     }
 }
 
