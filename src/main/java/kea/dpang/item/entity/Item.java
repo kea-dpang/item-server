@@ -3,6 +3,7 @@ package kea.dpang.item.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -10,10 +11,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "products")
+@Table(name = "items")
 public class Item {
     // 상품 ID
     @Id
+    @Column(name="item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
@@ -40,12 +42,15 @@ public class Item {
     // 평점
     private Double rating;
 
+    // 평균 평점
+    private Double averageRating;
+
     // 리뷰 리스트
     @ElementCollection
     private List<String> reviews;
 
     // 리뷰 개수
-    private Long numberReview;
+    private Long reviewCount;
 
     // 할인율
     private Long discountRate;
@@ -65,8 +70,12 @@ public class Item {
     // 최소 재고 수량
     private String minStock;
 
-    // 최대 재고 수량
+    // 최대 재고 수량수
     private String maxStock;
+
+    // 조회 발생 시점 기록
+    @Column(nullable = false)
+    private LocalDateTime viewDateTime;
 
     // 상품 상세정보
     @Column(length = 1000)
@@ -85,17 +94,17 @@ public class Item {
     @ElementCollection
     private List<String> images;
 
-    public void updateInformation(String itemName, String category, String subCategory, Long itemPrice, Long discountPrice, Long eventPrice, String minStock, String maxStock) {
+    public void updateInformation(String itemName, String category, String subCategory, Long itemPrice, Long discountPrice, Long eventPrice, String vendor, String tags, String minStock, String maxStock, String itemImage, List<String> images) {
         this.itemName = itemName;
         this.category = category;
         this.subCategory = subCategory;
         this.itemPrice = itemPrice;
-        this.discountPrice = this.discountPrice;
-        this.eventPrice = this.eventPrice;
+        this.discountPrice = discountPrice;
+        this.eventPrice = eventPrice;
         this.vendor = vendor;
         this.tags = tags;
-        this.minStock = this.minStock;
-        this.maxStock = this.maxStock;
+        this.minStock = minStock;
+        this.maxStock = maxStock;
         this.itemImage = itemImage;
         this.images = images;
     }
