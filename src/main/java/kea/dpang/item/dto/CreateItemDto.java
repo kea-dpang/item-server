@@ -11,7 +11,6 @@ import java.util.List;
 public class CreateItemDto {
 
     private String itemName;
-    private String brand;
     private String category;
     private String subCategory;
     private Long itemPrice;
@@ -19,6 +18,7 @@ public class CreateItemDto {
     private Long eventPrice;
     private String vendor;
     private String tags;
+    private String brand;
     private String minStock;
     private String maxStock;
     private String itemImage;

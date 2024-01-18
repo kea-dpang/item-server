@@ -1,6 +1,8 @@
 package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
+import kea.dpang.item.dto.CreateItemDto;
+import kea.dpang.item.dto.UpdateItemDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -94,19 +96,37 @@ public class Item {
     @ElementCollection
     private List<String> images;
 
-    public void updateInformation(String itemName, String category, String subCategory, Long itemPrice, Long discountPrice, Long eventPrice, String vendor, String tags, String minStock, String maxStock, String itemImage, List<String> images) {
-        this.itemName = itemName;
-        this.category = category;
-        this.subCategory = subCategory;
-        this.itemPrice = itemPrice;
-        this.discountPrice = discountPrice;
-        this.eventPrice = eventPrice;
-        this.vendor = vendor;
-        this.tags = tags;
-        this.minStock = minStock;
-        this.maxStock = maxStock;
-        this.itemImage = itemImage;
-        this.images = images;
+    public static Item from(CreateItemDto dto) {
+        return Item.builder()
+                .itemName(dto.getItemName())
+                .category(dto.getCategory())
+                .subCategory(dto.getSubCategory())
+                .itemPrice(dto.getItemPrice())
+                .discountPrice(dto.getDiscountPrice())
+                .eventPrice(dto.getEventPrice())
+                .vendor(dto.getVendor())
+                .tags(dto.getTags())
+                .brand(dto.getBrand())
+                .minStock(dto.getMinStock())
+                .maxStock(dto.getMaxStock())
+                .itemImage(dto.getItemImage())
+                .images(dto.getImages())
+                .build();
+    }
+
+    public void updateInformation(UpdateItemDto dto) {
+        this.itemName = dto.getItemName();
+        this.category = dto.getCategory();
+        this.subCategory = dto.getSubCategory();
+        this.itemPrice = dto.getItemPrice();
+        this.discountPrice = dto.getDiscountPrice();
+        this.eventPrice = dto.getEventPrice();
+        this.vendor = dto.getVendor();
+        this.tags = dto.getTags();
+        this.minStock = dto.getMinStock();
+        this.maxStock = dto.getMaxStock();
+        this.itemImage = dto.getItemImage();
+        this.images = dto.getImages();
     }
 }
 

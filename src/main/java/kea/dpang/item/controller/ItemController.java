@@ -48,13 +48,11 @@ public class ItemController {
         ItemDetailDto item = itemService.createItem(createItemDto);
         log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
 
-        // ServletUriComponentsBuilder를 이용해 생성된 직원의 URI를 구성
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{itemId}") // 생성된 직원의 id를 경로에 추가
-                .buildAndExpand(item.getItemId()) // 경로에 변수를 추가하고 URI를 빌드
+                .path("/{itemId}")
+                .buildAndExpand(item.getItemId())
                 .toUri();
 
-        // 생성된 직원의 URI를 'Location' 헤더에 추가하고, 상태 코드 201을 반환.
         return ResponseEntity.created(location).body(item);
     }
 
@@ -76,11 +74,10 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/view")
+    @PostMapping("/{itemId}/view")
     @Operation(summary = "조회수 증가", description = "조회 시 조회수가 증가되게 합니다.")
     public ResponseEntity<Void> incrementItemView(@PathVariable Long id) {
         itemService.incrementItemViewCount(id);
         return ResponseEntity.ok().build();
     }
 }
-
