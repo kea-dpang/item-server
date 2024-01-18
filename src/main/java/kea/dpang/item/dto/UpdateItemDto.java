@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class UpdateItemDto {
+
     private String itemName;
     private String category;
     private String subCategory;

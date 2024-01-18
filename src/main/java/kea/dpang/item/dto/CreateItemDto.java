@@ -23,5 +23,4 @@ public class CreateItemDto {
     private String maxStock;
     private String itemImage;
     private List<String> images;
-
 }

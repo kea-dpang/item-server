@@ -17,7 +17,7 @@ public class ItemDetailDto {
     private String subCategory;
     private String brand;
     private Long itemPrice;
-    private Double rating;
+    private Double averageRating;
     private List<String> reviews;
     private Long discountRate;
     private Long discountPrice;
@@ -38,7 +38,7 @@ public class ItemDetailDto {
         this.subCategory = item.getSubCategory();
         this.brand = item.getBrand();
         this.itemPrice = item.getItemPrice();
-        this.rating = item.getRating();
+        this.averageRating = item.getAverageRating();
         this.reviews = item.getReviews();
         this.discountRate = item.getDiscountRate();
         this.discountPrice = item.getDiscountPrice();
