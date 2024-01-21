@@ -1,10 +1,7 @@
 package kea.dpang.item.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import kea.dpang.item.dto.CreateItemDto;
-import kea.dpang.item.dto.ItemDetailDto;
-import kea.dpang.item.dto.PopularItemDto;
-import kea.dpang.item.dto.UpdateItemDto;
+import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.service.ItemServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,4 +78,20 @@ public class ItemController {
         itemService.incrementItemViewCount(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/cart")
+    public ResponseEntity<List<ReadCartItemDto>> getCartItem(@RequestParam("itemIds") List<Long> itemIds) {
+
+        // 상품 ID 목록에 해당하는 상품을 찾습니다.
+        List<Item> items = itemService.getCartItem(itemIds);
+
+        // 찾은 상품을 ReadCartItemDto로 변환합니다.
+        List<ReadCartItemDto> itemInfoDtos = items.stream()
+                .map(item -> new ReadCartItemDto(item))
+                .collect(Collectors.toList());
+
+        // 변환된 ReadCartItemDto의 리스트를 응답 본문에 담아 반환합니다.
+        return ResponseEntity.ok(itemInfoDtos);
+    }
+
 }

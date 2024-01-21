@@ -93,6 +93,12 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.delete(item);
     }
 
+    // =============================카트 관련 기능===============================
+
+    @Override
+    public List<Item> getCartItem(List<Long> itemId) {
+        return itemRepository.findCartItemByItemId(itemId);
+    }
 
 }
 
