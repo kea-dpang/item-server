@@ -2,6 +2,7 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.CreateItemDto;
 import kea.dpang.item.dto.ItemDetailDto;
+import kea.dpang.item.dto.ItemThumbnailDto;
 import kea.dpang.item.dto.UpdateItemDto;
 
 public interface ItemService {
@@ -13,6 +14,14 @@ public interface ItemService {
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
     ItemDetailDto getItem(Long itemId);
+
+    /**
+     * 상품 목록을 조회합니다.
+     *
+     * @param itemId 조회할 상품의 ID
+     */
+    ItemThumbnailDto getItemThumbnail(Long itemId);
+
 
     /**
      * 새로운 상품을 등록합니다.

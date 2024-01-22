@@ -42,6 +42,16 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
+    // 상품 썸네일 조회
+    @Override
+    @Transactional(readOnly = true)
+    public ItemThumbnailDto getItemThumbnail(Long itemId) {
+        return itemRepository.findById(itemId)
+                .map(ItemThumbnailDto::new)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+    }
+
+
     // 인기 상품 조회
     @Override
     @Transactional
@@ -65,14 +75,6 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(finalItemId));
     }
 
-    // 상품 조회수 증가
-    @Override
-    @Transactional
-    public void incrementItemViewCount(Long itemId) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
-    }
-
     // 상품 수정
     @Override
     @Transactional
@@ -93,22 +95,12 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.delete(item);
     }
 
+    // 상품 조회수 증가
+    @Override
+    @Transactional
+    public void incrementItemViewCount(Long itemId) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
+    }
 
 }
-
-//    @Override
-//    @Transactional
-//    public ItemThumbnailDto convertToItemThumbnailDTO(Item item) {
-//        List<Review> reviews = reviewRepository.findByItemId(item.getItemId());
-//
-//        return new ItemThumbnailDto(
-//                item.getItemId(),
-//                item.getItemName(),
-//                item.getBrand(),
-//                item.getItemPrice(),
-//                item.getDiscountPrice(),
-//                item.getWishlistCheck(),
-//                item.getItemImage(),
-//                item.getNumberReview()
-//        );
-//    }
