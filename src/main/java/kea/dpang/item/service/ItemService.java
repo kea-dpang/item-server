@@ -1,9 +1,8 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.CreateItemDto;
-import kea.dpang.item.dto.ItemDetailDto;
-import kea.dpang.item.dto.ItemThumbnailDto;
-import kea.dpang.item.dto.UpdateItemDto;
+import kea.dpang.item.dto.*;
+
+import java.util.List;
 
 public interface ItemService {
 
@@ -17,10 +16,8 @@ public interface ItemService {
 
     /**
      * 상품 목록을 조회합니다.
-     *
-     * @param itemId 조회할 상품의 ID
      */
-    ItemThumbnailDto getItemThumbnail(Long itemId);
+    List<ItemThumbnailDto> getItemList();
 
 
     /**
@@ -47,7 +44,14 @@ public interface ItemService {
      */
     void deleteItem(Long itemId);
 
-    ItemDetailDto getPopularItems(Long itemId, Double score);
+    /**
+     * 인기 상품을 조회합니다.
+     */
+    List<PopularItemDto> getPopularItems();
 
+    /**
+     * 상품 조회수를 증가시킵니다.
+     * @param itemId 조회수를 증가시킬 상품의 ID
+     */
     void incrementItemViewCount(Long itemId);
 }
