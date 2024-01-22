@@ -12,9 +12,9 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,37 +42,39 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    // 상품 썸네일 조회
+    // 상품 리스트 조회
     @Override
-    @Transactional(readOnly = true)
-    public ItemThumbnailDto getItemThumbnail(Long itemId) {
-        return itemRepository.findById(itemId)
+    public List<ItemThumbnailDto> getItemList() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
                 .map(ItemThumbnailDto::new)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
+                .collect(Collectors.toList());
     }
 
+    // 상품 조회수 증가
+    @Override
+    @Transactional
+    public void incrementItemViewCount(Long itemId) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
+    }
 
     // 인기 상품 조회
     @Override
-    @Transactional
-    public ItemDetailDto getPopularItems(Long itemId, Double score) {
-        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet().reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
+    @Transactional(readOnly = true)
+    public List<PopularItemDto> getPopularItems() {
+        // Redis에서 조회수를 기준으로 인기 상품 ID와 점수를 가져옴.
+        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
+                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
 
-        List<PopularItemDto> popularItems = new ArrayList<>();
-        if (items != null) {
-            for (ZSetOperations.TypedTuple<String> item : items) {
-                itemId = Long.valueOf(item.getValue());
-                score = item.getScore();
+        // 가져온 데이터를 PopularItemDto 리스트로 변환.
+        return items.stream().map(item -> {
+            Long itemId = Long.valueOf(item.getValue());
+            Double score = item.getScore();
+            String itemName = "Item " + itemId;
 
-                String itemName = "Item " + itemId;
-
-                popularItems.add(new PopularItemDto(itemId, itemName, score));
-            }
-        }
-        Long finalItemId = itemId;
-        return itemRepository.findById(itemId)
-                .map(ItemDetailDto::new)
-                .orElseThrow(() -> new ItemNotFoundException(finalItemId));
+            return new PopularItemDto(itemId, itemName, score);
+        }).collect(Collectors.toList());
     }
 
     // 상품 수정
@@ -93,14 +95,6 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         itemRepository.delete(item);
-    }
-
-    // 상품 조회수 증가
-    @Override
-    @Transactional
-    public void incrementItemViewCount(Long itemId) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
     }
 
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,22 +30,21 @@ public class ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/items")
     @Operation(summary = "상품 리스트 조회", description = "상품의 썸네일 정보를 조회합니다.")
-    public ResponseEntity<ItemThumbnailDto> getItemThumbnail(@PathVariable Long itemId) {
-        ItemThumbnailDto item = itemService.getItemThumbnail(itemId);
-        log.info("상품 리스트 조회 완료. 상품 ID: {}", item.getItemId());
-
-        return ResponseEntity.ok(item);
+    public ResponseEntity<List<ItemThumbnailDto>> getItemList() {
+        List<ItemThumbnailDto> items = itemService.getItemList();
+        return ResponseEntity.ok(items);
     }
+
 
     @GetMapping("/{itemId}/popular")
     @Operation(summary = "인기 상품 조회", description = "인기 상품을 조회합니다.")
-    public ResponseEntity<ItemDetailDto> getPopularItems(@PathVariable Long itemId, Double score) {
-        ItemDetailDto item = itemService.getPopularItems(itemId, score);
-        log.info("인기 상품 정보 조회 완료. 상 ID: {}", item.getItemId());
+    public ResponseEntity<List<PopularItemDto>> getPopularItems() {
+        List<PopularItemDto> popularItems = itemService.getPopularItems();
+        log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
 
-        return ResponseEntity.ok(item);
+        return ResponseEntity.ok(popularItems);
     }
 
     @PostMapping
