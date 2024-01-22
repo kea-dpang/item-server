@@ -80,10 +80,10 @@ public class ItemController {
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<List<ReadCartItemDto>> getCartItem(@RequestParam("itemIds") List<Long> itemIds) {
+    public ResponseEntity<List<ReadCartItemDto>> getCartItemInfo(@RequestParam("itemIds") List<Long> itemIds) {
 
         // 상품 ID 목록에 해당하는 상품을 찾습니다.
-        List<Item> items = itemService.getCartItem(itemIds);
+        List<Item> items = itemService.getCartItems(itemIds);
 
         // 찾은 상품을 ReadCartItemDto로 변환합니다.
         List<ReadCartItemDto> itemInfoDtos = items.stream()
@@ -92,6 +92,16 @@ public class ItemController {
 
         // 변환된 ReadCartItemDto의 리스트를 응답 본문에 담아 반환합니다.
         return ResponseEntity.ok(itemInfoDtos);
+    }
+
+    @GetMapping("cart/{itemId}")
+    public ResponseEntity<ReadCartItemDto> getItemInfo(@PathVariable("itemId") Long itemId) {
+
+        Item item = itemService.getCartItem(itemId);
+
+        ReadCartItemDto itemInfo = new ReadCartItemDto(item);
+
+        return ResponseEntity.ok(itemInfo);
     }
 
 }

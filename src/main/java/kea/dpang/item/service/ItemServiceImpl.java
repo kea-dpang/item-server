@@ -95,8 +95,15 @@ public class ItemServiceImpl implements ItemService {
 
     // =============================카트 관련 기능===============================
 
+    // 상품 정보 목록 조회
     @Override
-    public List<Item> getCartItem(List<Long> itemId) {
+    public List<Item> getCartItems(List<Long> itemId) {
+        return itemRepository.findCartItemsByItemId(itemId);
+    }
+
+    // 상품 정보 조회
+    @Override
+    public Item getCartItem(Long itemId) {
         return itemRepository.findCartItemByItemId(itemId);
     }
 
