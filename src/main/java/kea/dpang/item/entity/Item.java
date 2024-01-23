@@ -96,6 +96,9 @@ public class Item {
     @ElementCollection
     private List<String> images;
 
+    // 상품 점수
+    private Double score;
+
     public static Item from(CreateItemDto dto) {
         return Item.builder()
                 .itemName(dto.getItemName())

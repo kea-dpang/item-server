@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +32,22 @@ public class ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @GetMapping("/{itemId}/popular")
-    @Operation(summary = "인기 상품 조회", description = "인기 상품을 조회합니다.")
-    public ResponseEntity<ItemDetailDto> getPopularItems(@PathVariable Long itemId, Double score) {
-        ItemDetailDto item = itemService.getPopularItems(itemId, score);
-        log.info("인기 상품 정보 조회 완료. 상 ID: {}", item.getItemId());
-        return ResponseEntity.ok(item);
+    @GetMapping("/items")
+    @Operation(summary = "상품 리스트 조회", description = "상품의 썸네일 정보를 조회합니다.")
+    public ResponseEntity<List<ItemThumbnailDto>> getItemList() {
+        List<ItemThumbnailDto> items = itemService.getItemList();
+        return ResponseEntity.ok(items);
     }
 
+
+    @GetMapping("/{itemId}/popular")
+    @Operation(summary = "인기 상품 조회", description = "인기 상품을 조회합니다.")
+    public ResponseEntity<List<PopularItemDto>> getPopularItems() {
+        List<PopularItemDto> popularItems = itemService.getPopularItems();
+        log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
+
+        return ResponseEntity.ok(popularItems);
+    }
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
@@ -74,8 +83,9 @@ public class ItemController {
 
     @PostMapping("/{itemId}/view")
     @Operation(summary = "조회수 증가", description = "조회 시 조회수가 증가되게 합니다.")
-    public ResponseEntity<Void> incrementItemView(@PathVariable Long id) {
-        itemService.incrementItemViewCount(id);
+    public ResponseEntity<Void> incrementItemView(@PathVariable Long itemId) {
+        itemService.incrementItemViewCount(itemId);
+
         return ResponseEntity.ok().build();
     }
 

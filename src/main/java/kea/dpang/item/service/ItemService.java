@@ -18,6 +18,12 @@ public interface ItemService {
     ItemDetailDto getItem(Long itemId);
 
     /**
+     * 상품 목록을 조회합니다.
+     */
+    List<ItemThumbnailDto> getItemList();
+
+
+    /**
      * 새로운 상품을 등록합니다.
      *
      * @param createItemDto 등록할 상품의 정보가 담긴 DTO
@@ -41,8 +47,15 @@ public interface ItemService {
      */
     void deleteItem(Long itemId);
 
-    ItemDetailDto getPopularItems(Long itemId, Double score);
+    /**
+     * 인기 상품을 조회합니다.
+     */
+    List<PopularItemDto> getPopularItems();
 
+    /**
+     * 상품 조회수를 증가시킵니다.
+     * @param itemId 조회수를 증가시킬 상품의 ID
+     */
     void incrementItemViewCount(Long itemId);
 
     // =============================카트 관련 기능===============================

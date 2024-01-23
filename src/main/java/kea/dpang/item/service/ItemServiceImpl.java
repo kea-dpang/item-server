@@ -12,9 +12,9 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,27 +42,13 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    // 인기 상품 조회
+    // 상품 리스트 조회
     @Override
-    @Transactional
-    public ItemDetailDto getPopularItems(Long itemId, Double score) {
-        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet().reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
-
-        List<PopularItemDto> popularItems = new ArrayList<>();
-        if (items != null) {
-            for (ZSetOperations.TypedTuple<String> item : items) {
-                itemId = Long.valueOf(item.getValue());
-                score = item.getScore();
-
-                String itemName = "Item " + itemId;
-
-                popularItems.add(new PopularItemDto(itemId, itemName, score));
-            }
-        }
-        Long finalItemId = itemId;
-        return itemRepository.findById(itemId)
-                .map(ItemDetailDto::new)
-                .orElseThrow(() -> new ItemNotFoundException(finalItemId));
+    public List<ItemThumbnailDto> getItemList() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(ItemThumbnailDto::new)
+                .collect(Collectors.toList());
     }
 
     // 상품 조회수 증가
@@ -71,6 +57,24 @@ public class ItemServiceImpl implements ItemService {
     public void incrementItemViewCount(Long itemId) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
+    }
+
+    // 인기 상품 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<PopularItemDto> getPopularItems() {
+        // Redis에서 조회수를 기준으로 인기 상품 ID와 점수를 가져옴.
+        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
+                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
+
+        // 가져온 데이터를 PopularItemDto 리스트로 변환.
+        return items.stream().map(item -> {
+            Long itemId = Long.valueOf(item.getValue());
+            Double score = item.getScore();
+            String itemName = "Item " + itemId;
+
+            return new PopularItemDto(itemId, itemName, score);
+        }).collect(Collectors.toList());
     }
 
     // 상품 수정
@@ -92,7 +96,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         itemRepository.delete(item);
     }
-
+  
     // =============================카트 관련 기능===============================
 
     // 상품 정보 목록 조회
@@ -120,22 +124,4 @@ public class ItemServiceImpl implements ItemService {
     public Item getWishlistItem(Long itemId) {
         return null;
     }
-
 }
-
-//    @Override
-//    @Transactional
-//    public ItemThumbnailDto convertToItemThumbnailDTO(Item item) {
-//        List<Review> reviews = reviewRepository.findByItemId(item.getItemId());
-//
-//        return new ItemThumbnailDto(
-//                item.getItemId(),
-//                item.getItemName(),
-//                item.getBrand(),
-//                item.getItemPrice(),
-//                item.getDiscountPrice(),
-//                item.getWishlistCheck(),
-//                item.getItemImage(),
-//                item.getNumberReview()
-//        );
-//    }
