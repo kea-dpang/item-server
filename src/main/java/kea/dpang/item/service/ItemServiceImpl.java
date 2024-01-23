@@ -107,6 +107,20 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findCartItemByItemId(itemId);
     }
 
+    // ==========================위시리스트 관련 기능==============================
+
+    // 상품 정보 목록 조회
+    @Override
+    public List<Item> getWishlistItems(List<Long> itemId) {
+        return null;
+    }
+
+    // 상품 정보 조회
+    @Override
+    public Item getWishlistItem(Long itemId) {
+        return null;
+    }
+
 }
 
 //    @Override

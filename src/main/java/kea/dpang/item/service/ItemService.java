@@ -47,7 +47,11 @@ public interface ItemService {
 
     // =============================카트 관련 기능===============================
 
+    List<Item> getCartItems(List<Long> itemId);
+
     Item getCartItem(Long itemId);
 
-    List<Item> getCartItems(List<Long> itemId);
+    List<Item> getWishlistItems(List<Long> itemId);
+
+    Item getWishlistItem(Long itemId);
 }
