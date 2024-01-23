@@ -2,6 +2,7 @@ package kea.dpang.item.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import kea.dpang.item.dto.*;
+import kea.dpang.item.entity.Item;
 import kea.dpang.item.service.ItemServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,5 +87,59 @@ public class ItemController {
         itemService.incrementItemViewCount(itemId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<List<ReadCartItemDto>> getCartItemInfo(@RequestParam("itemIds") List<Long> itemIds) {
+
+        // 상품 ID 목록에 해당하는 상품을 찾습니다.
+        List<Item> items = itemService.getCartItems(itemIds);
+
+        // 찾은 상품을 ReadCartItemDto로 변환합니다.
+        List<ReadCartItemDto> itemInfoDtos = items.stream()
+                .map(item -> new ReadCartItemDto(item))
+                .collect(Collectors.toList());
+
+        // 변환된 ReadCartItemDto의 리스트를 응답 본문에 담아 반환합니다.
+        return ResponseEntity.ok(itemInfoDtos);
+    }
+
+    @GetMapping("/cart/{itemId}")
+    public ResponseEntity<ReadCartItemDto> getCartItemInfo(@PathVariable("itemId") Long itemId) {
+
+        // item
+        Item item = itemService.getCartItem(itemId);
+
+        ReadCartItemDto itemInfo = new ReadCartItemDto(item);
+
+        return ResponseEntity.ok(itemInfo);
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<List<ReadWishlistItemDto>> getWishlistItemInfo(@RequestParam("itemIds") List<Long> itemIds) {
+
+        // 상품 ID 목록에 해당하는 상품을 찾습니다.
+        List<Item> items = itemService.getWishlistItems(itemIds);
+
+        // 찾은 상품을 ReadWishlistItemDto의 리스트로 변환합니다.
+        List<ReadWishlistItemDto> itemInfoDtos = items.stream()
+                .map(ReadWishlistItemDto::new)
+                .toList();
+
+        // 변환된 ReadWishlistItemDto의 리스트를 응답 본문에 담아 반환합니다.
+        return ResponseEntity.ok(itemInfoDtos);
+    }
+
+    @GetMapping("/cart/{itemId}")
+    public ResponseEntity<ReadWishlistItemDto> getWishlistItemInfo(@PathVariable("itemId") Long itemId) {
+
+        // 상품 ID 목록에 해당하는 상품을 찾습니다.
+        Item item = itemService.getWishlistItem(itemId);
+
+        // 찾은 상품을 ReadWishlistItemDto로 변환합니다.
+        ReadWishlistItemDto itemInfo = new ReadWishlistItemDto(item);
+
+        // 변환된 ReadWishlistItemDto를 응답 본문에 담아 반환합니다.
+        return ResponseEntity.ok(itemInfo);
     }
 }

@@ -1,6 +1,9 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.CreateItemDto;
+import kea.dpang.item.dto.ItemDetailDto;
+import kea.dpang.item.dto.UpdateItemDto;
+import kea.dpang.item.entity.Item;
 
 import java.util.List;
 
@@ -54,4 +57,14 @@ public interface ItemService {
      * @param itemId 조회수를 증가시킬 상품의 ID
      */
     void incrementItemViewCount(Long itemId);
+
+    // =============================카트 관련 기능===============================
+
+    List<Item> getCartItems(List<Long> itemId);
+
+    Item getCartItem(Long itemId);
+
+    List<Item> getWishlistItems(List<Long> itemId);
+
+    Item getWishlistItem(Long itemId);
 }
