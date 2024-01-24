@@ -28,17 +28,17 @@ public class ItemServiceImpl implements ItemService {
     // 상품 등록
     @Override
     @Transactional
-    public ItemDetailDto createItem(CreateItemDto dto) {
+    public ItemResponseDto createItem(ItemCreateDto dto) {
         Item item = Item.from(dto);
-        return new ItemDetailDto(itemRepository.save(item));
+        return new ItemResponseDto(itemRepository.save(item));
     }
 
     // 상품 조회
     @Override
     @Transactional(readOnly = true)
-    public ItemDetailDto getItem(Long itemId) {
+    public ItemResponseDto getItem(Long itemId) {
         return itemRepository.findById(itemId)
-                .map(ItemDetailDto::new)
+                .map(ItemResponseDto::new)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
@@ -74,18 +74,18 @@ public class ItemServiceImpl implements ItemService {
             String itemName = "Item " + itemId;
 
             return new PopularItemDto(itemId, itemName, score);
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     // 상품 수정
     @Override
     @Transactional
-    public ItemDetailDto updateItem(Long itemId, UpdateItemDto dto) {
+    public ItemResponseDto updateItem(Long itemId, ItemUpdateDto dto) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
 
         item.updateInformation(dto);
-        return new ItemDetailDto(itemRepository.save(item));
+        return new ItemResponseDto(itemRepository.save(item));
     }
 
     // 상품 삭제

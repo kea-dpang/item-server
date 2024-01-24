@@ -15,7 +15,7 @@ public interface ItemService {
      * @param itemId 조회할 상품의 ID
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
-    ItemDetailDto getItem(Long itemId);
+    ItemResponseDto getItem(Long itemId);
 
     /**
      * 상품 목록을 조회합니다.
@@ -29,7 +29,7 @@ public interface ItemService {
      * @param createItemDto 등록할 상품의 정보가 담긴 DTO
      * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
-    ItemDetailDto createItem(CreateItemDto createItemDto);
+    ItemResponseDto createItem(ItemCreateDto createItemDto);
 
     /**
      * 상품의 정보를 업데이트합니다.
@@ -38,7 +38,7 @@ public interface ItemService {
      * @param updateItemDto 업데이트할 상품의 정보가 담긴 DTO
      * @return 업데이트된 상품의 정보가 담긴 Detail DTO
      */
-    ItemDetailDto updateItem(Long itemId, UpdateItemDto updateItemDto);
+    ItemResponseDto updateItem(Long itemId, ItemUpdateDto updateItemDto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.

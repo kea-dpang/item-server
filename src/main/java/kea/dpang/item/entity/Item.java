@@ -1,12 +1,15 @@
 package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
-import kea.dpang.item.dto.CreateItemDto;
-import kea.dpang.item.dto.UpdateItemDto;
+import kea.dpang.item.base.BaseEntity;
+import kea.dpang.item.dto.ItemCreateDto;
+import kea.dpang.item.dto.ItemUpdateDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -14,66 +17,65 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "items")
-public class Item {
+public class Item extends BaseEntity {
     // 상품 ID
     @Id
     @Column(name="item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
+    // 판매처 ID
+    @Column(name="seller_id", nullable = false)
+    private Long sellerId;
+
     // 상품명
-    @Column(nullable = false)
+    @Column(name="name", nullable = false)
     private String itemName;
 
+    // 상품 회원 할인가
+    @Column(name="price", nullable = false)
+    private int itemPrice;
+
     // 상품 분류 카테고리
-    @Column(nullable = false)
-    private String category;
+    @Column(name="category")
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     // 상품 분류 서브카테고리
-    @Column(nullable = false)
-    private String subCategory;
-
-    // 브랜드명
-    @Column(nullable = false)
-    private String brand;
-
-    // 상품 원가
-    @Column(nullable = false)
-    private Long itemPrice;
+    @Column(name="sub_category")
+    @Enumerated(EnumType.STRING)
+    private SubCategory subCategory;
 
     // 평점
-    private Double rating;
+    private float rating;
 
     // 평균 평점
-    private Double averageRating;
+    private float averageRating;
 
     // 리뷰 리스트
     @ElementCollection
     private List<String> reviews;
 
-    // 리뷰 개수
-    private Long reviewCount;
-
-    // 할인율
-    private Long discountRate;
+    // 이벤트 할인율
+    private int discountRate;
 
     // 할인가
-    private Long discountPrice;
-
-    // 이벤트가
-    private Long eventPrice;
-
-    // 판매처
-    private String vendor;
-
-    // 태그
-    private String tags;
+    private int discountPrice;
 
     // 최소 재고 수량
-    private String minStock;
+    private int minStock;
 
-    // 최대 재고 수량수
-    private String maxStock;
+    // 최대 재고 수량
+    private int maxStock;
+
+    @ManyToMany
+    @JoinTable(
+            name = "item_tag",
+            joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
 
     // 조회 발생 시점 기록
     @Column(nullable = false)
@@ -99,17 +101,14 @@ public class Item {
     // 상품 점수
     private Double score;
 
-    public static Item from(CreateItemDto dto) {
+    public static Item from(ItemCreateDto dto) {
         return Item.builder()
+                .sellerId(dto.getSellerId())
                 .itemName(dto.getItemName())
                 .category(dto.getCategory())
                 .subCategory(dto.getSubCategory())
                 .itemPrice(dto.getItemPrice())
                 .discountPrice(dto.getDiscountPrice())
-                .eventPrice(dto.getEventPrice())
-                .vendor(dto.getVendor())
-                .tags(dto.getTags())
-                .brand(dto.getBrand())
                 .minStock(dto.getMinStock())
                 .maxStock(dto.getMaxStock())
                 .itemImage(dto.getItemImage())
@@ -117,15 +116,12 @@ public class Item {
                 .build();
     }
 
-    public void updateInformation(UpdateItemDto dto) {
+    public void updateInformation(ItemUpdateDto dto) {
         this.itemName = dto.getItemName();
         this.category = dto.getCategory();
         this.subCategory = dto.getSubCategory();
         this.itemPrice = dto.getItemPrice();
         this.discountPrice = dto.getDiscountPrice();
-        this.eventPrice = dto.getEventPrice();
-        this.vendor = dto.getVendor();
-        this.tags = dto.getTags();
         this.minStock = dto.getMinStock();
         this.maxStock = dto.getMaxStock();
         this.itemImage = dto.getItemImage();
