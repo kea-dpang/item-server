@@ -1,15 +1,16 @@
 package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import kea.dpang.item.base.BaseEntity;
+import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Data
 @Table(name = "reviews")
-public class Review {
+public class Review extends BaseEntity {
     // 리뷰 ID
     @Id
     @Column(name = "item_review_id", nullable = false)

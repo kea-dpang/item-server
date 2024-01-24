@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -23,8 +22,8 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     @Operation(summary = "상품 상세 정보 조회", description = "상품의 상세 정보를 조회합니다.")
-    public ResponseEntity<ItemDetailDto> getItem(@PathVariable Long itemId) {
-        ItemDetailDto item = itemService.getItem(itemId);
+    public ResponseEntity<ItemResponseDto> getItem(@PathVariable Long itemId) {
+        ItemResponseDto item = itemService.getItem(itemId);
         log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
 
         return ResponseEntity.ok(item);
@@ -49,8 +48,8 @@ public class ItemController {
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
-    public ResponseEntity<ItemDetailDto> createItem(@RequestBody CreateItemDto createItemDto) {
-        ItemDetailDto item = itemService.createItem(createItemDto);
+    public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateDto createItemDto) {
+        ItemResponseDto item = itemService.createItem(createItemDto);
         log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -63,8 +62,8 @@ public class ItemController {
 
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "기존 상품 정보를 업데이트합니다.")
-    public ResponseEntity<ItemDetailDto> updateItem(@PathVariable Long itemId, @RequestBody UpdateItemDto updateItemDto) {
-        ItemDetailDto item = itemService.updateItem(itemId, updateItemDto);
+    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @RequestBody ItemUpdateDto updateItemDto) {
+        ItemResponseDto item = itemService.updateItem(itemId, updateItemDto);
         log.info("상품 정보 업데이트 완료. 상품 ID: {}", item.getItemId());
 
         return ResponseEntity.ok(item);
