@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: classpath:/secret.yml
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/itemdb
+
+  jpa:
+    hibernate:
+      ddl-auto: update

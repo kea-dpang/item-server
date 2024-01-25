@@ -1,8 +1,10 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.CreateItemDto;
-import kea.dpang.item.dto.ItemDetailDto;
-import kea.dpang.item.dto.UpdateItemDto;
+import kea.dpang.item.dto.ItemCreateDto;
+import kea.dpang.item.dto.ItemResponseDto;
+import kea.dpang.item.dto.ItemThumbnailDto;
+import kea.dpang.item.dto.ItemUpdateDto;
+import kea.dpang.item.dto.PopularItemDto;
 import kea.dpang.item.entity.Item;
 
 import java.util.List;
