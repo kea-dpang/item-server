@@ -54,19 +54,4 @@ public interface ItemService {
      */
     List<PopularItemDto> getPopularItems();
 
-    /**
-     * 상품 조회수를 증가시킵니다.
-     * @param itemId 조회수를 증가시킬 상품의 ID
-     */
-    void incrementItemViewCount(Long itemId);
-
-    // =============================카트 관련 기능===============================
-
-    List<Item> getCartItems(List<Long> itemId);
-
-    Item getCartItem(Long itemId);
-
-    List<Item> getWishlistItems(List<Long> itemId);
-
-    Item getWishlistItem(Long itemId);
 }
