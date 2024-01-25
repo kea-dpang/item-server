@@ -2,6 +2,10 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
+import kea.dpang.item.dto.ItemCreateDto;
+import kea.dpang.item.dto.ItemUpdateDto;
+import kea.dpang.item.dto.ReviewCreateDto;
+import kea.dpang.item.dto.ReviewUpdateDto;
 import lombok.*;
 
 @Getter
@@ -32,4 +36,20 @@ public class Review extends BaseEntity {
     // 평점
     @Column(name = "rating", nullable = false)
     private Double rating;
+
+    public static Review from(ReviewCreateDto dto) {
+        return Review.builder()
+                .reviewerId(dto.getReviewerId())
+                .itemId(dto.getItemId())
+                .content(dto.getContent())
+                .rating(dto.getRating())
+                .build();
+    }
+
+    public void updateInformation(ReviewUpdateDto dto) {
+        this.reviewId = dto.getReviewId();
+        this.content = dto.getContent();
+        this.rating = dto.getRating();
+    }
+
 }

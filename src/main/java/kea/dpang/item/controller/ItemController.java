@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.service.ItemServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,6 +23,20 @@ import java.util.stream.Collectors;
 public class ItemController {
 
     private final ItemServiceImpl itemService;
+
+    @PostMapping
+    @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
+    public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateDto itemCreateDto) {
+        ItemResponseDto item = itemService.createItem(itemCreateDto);
+        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{itemId}")
+                .buildAndExpand(item.getItemId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(item);
+    }
 
     @GetMapping("/{itemId}")
     @Operation(summary = "상품 상세 정보 조회", description = "상품의 상세 정보를 조회합니다.")
@@ -48,24 +64,10 @@ public class ItemController {
         return ResponseEntity.ok(popularItems);
     }
 
-    @PostMapping
-    @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
-    public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateDto createItemDto) {
-        ItemResponseDto item = itemService.createItem(createItemDto);
-        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{itemId}")
-                .buildAndExpand(item.getItemId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(item);
-    }
-
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "기존 상품 정보를 업데이트합니다.")
-    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @RequestBody ItemUpdateDto updateItemDto) {
-        ItemResponseDto item = itemService.updateItem(itemId, updateItemDto);
+    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
+        ItemResponseDto item = itemService.updateItem(itemId, itemUpdateDto);
         log.info("상품 정보 업데이트 완료. 상품 ID: {}", item.getItemId());
 
         return ResponseEntity.ok(item);
@@ -89,6 +91,7 @@ public class ItemController {
     }
 
     @GetMapping("/cart")
+    @Operation(summary = "장바구니 조회", description = "장바구니의 상품 정보 목록을 조회 합니다.")
     public ResponseEntity<List<ReadCartItemDto>> getCartItemInfo(@RequestParam("itemIds") List<Long> itemIds) {
 
         // 상품 ID 목록에 해당하는 상품을 찾습니다.
@@ -104,6 +107,7 @@ public class ItemController {
     }
 
     @GetMapping("/cart/{itemId}")
+    @Operation(summary = "장바구니 상품 조회", description = "장바구니의 상품 별 상세 정보를 조회 합니다.")
     public ResponseEntity<ReadCartItemDto> getCartItemInfo(@PathVariable("itemId") Long itemId) {
 
         // item
@@ -115,6 +119,7 @@ public class ItemController {
     }
 
     @GetMapping("/wishlist")
+    @Operation(summary = "위시리스트 조회", description = "위시리스트의 상품 정보 목록을 조회합니다.")
     public ResponseEntity<List<ReadWishlistItemDto>> getWishlistItemInfo(@RequestParam("itemIds") List<Long> itemIds) {
 
         // 상품 ID 목록에 해당하는 상품을 찾습니다.
@@ -129,7 +134,8 @@ public class ItemController {
         return ResponseEntity.ok(itemInfoDtos);
     }
 
-    @GetMapping("/cart/{itemId}")
+    @GetMapping("/wishlist/{itemId}")
+    @Operation(summary = "위시리스트 상품 조회", description = "위시리스트의 상품 별 상세 정보를 조회합니다.")
     public ResponseEntity<ReadWishlistItemDto> getWishlistItemInfo(@PathVariable("itemId") Long itemId) {
 
         // 상품 ID 목록에 해당하는 상품을 찾습니다.

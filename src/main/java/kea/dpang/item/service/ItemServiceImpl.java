@@ -4,8 +4,9 @@ import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.repository.ItemRepository;
-import kea.dpang.item.repository.ReviewRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final ReviewRepository reviewRepository;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
     private final StringRedisTemplate redisTemplate;
 
@@ -101,8 +101,8 @@ public class ItemServiceImpl implements ItemService {
 
     // 상품 정보 목록 조회
     @Override
-    public List<Item> getCartItems(List<Long> itemId) {
-        return itemRepository.findCartItemsByItemId(itemId);
+    public List<Item> getCartItems(List<Long> itemIds) {
+        return itemRepository.findCartItemsByItemId(itemIds);
     }
 
     // 상품 정보 조회
