@@ -9,7 +9,6 @@ import lombok.Data;
 public class ItemThumbnailDto {
 
     private Long itemId;
-    private Long sellerId;
     private String itemName;
     private int itemPrice;
     private int discountRate;
@@ -19,7 +18,6 @@ public class ItemThumbnailDto {
 
     public ItemThumbnailDto(Item item) {
         this.itemId = item.getItemId();
-        this.sellerId = item.getSellerId();
         this.itemName = item.getItemName();
         this.itemPrice = item.getItemPrice();
         this.discountRate = item.getDiscountRate();

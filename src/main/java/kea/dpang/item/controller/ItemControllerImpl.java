@@ -6,6 +6,7 @@ import kea.dpang.item.service.ItemServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/items")
+@Slf4j
 public class ItemControllerImpl implements ItemController {
 
     private final ItemServiceImpl itemService;
@@ -37,11 +38,13 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.created(location).body(item);
     }
 
+    // pageable : 페이지 번호, 페이지 크기, 정렬 방법
     @Override
     @GetMapping
     @Operation(summary = "상품 리스트 조회 (프론트엔드)", description = "페이지 정보에 따라 상품 리스트를 조회합니다.")
     public ResponseEntity<List<ItemThumbnailDto>> getItemListForFrontend(Pageable pageable) {
-        return null;
+        List<ItemThumbnailDto> items = itemService.getItemList();
+        return ResponseEntity.ok(items);
     }
 
     @Override
