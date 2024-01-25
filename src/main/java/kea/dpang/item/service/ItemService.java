@@ -28,19 +28,19 @@ public interface ItemService {
     /**
      * 새로운 상품을 등록합니다.
      *
-     * @param createItemDto 등록할 상품의 정보가 담긴 DTO
+     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
      * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
-    ItemResponseDto createItem(ItemCreateDto createItemDto);
+    ItemResponseDto createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 상품의 정보를 업데이트합니다.
      *
      * @param itemId 업데이트할 상품의 ID
-     * @param updateItemDto 업데이트할 상품의 정보가 담긴 DTO
+     * @param itemUpdateDto 업데이트할 상품의 정보가 담긴 DTO
      * @return 업데이트된 상품의 정보가 담긴 Detail DTO
      */
-    ItemResponseDto updateItem(Long itemId, ItemUpdateDto updateItemDto);
+    ItemResponseDto updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.

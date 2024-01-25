@@ -51,14 +51,6 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    // 상품 조회수 증가
-    @Override
-    @Transactional
-    public void incrementItemViewCount(Long itemId) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
-    }
-
     // 인기 상품 조회
     @Override
     @Transactional(readOnly = true)
@@ -95,33 +87,5 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         itemRepository.delete(item);
-    }
-  
-    // =============================카트 관련 기능===============================
-
-    // 상품 정보 목록 조회
-    @Override
-    public List<Item> getCartItems(List<Long> itemIds) {
-        return itemRepository.findCartItemsByItemId(itemIds);
-    }
-
-    // 상품 정보 조회
-    @Override
-    public Item getCartItem(Long itemId) {
-        return itemRepository.findCartItemByItemId(itemId);
-    }
-
-    // ==========================위시리스트 관련 기능==============================
-
-    // 상품 정보 목록 조회
-    @Override
-    public List<Item> getWishlistItems(List<Long> itemId) {
-        return null;
-    }
-
-    // 상품 정보 조회
-    @Override
-    public Item getWishlistItem(Long itemId) {
-        return null;
     }
 }
