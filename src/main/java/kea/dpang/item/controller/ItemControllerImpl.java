@@ -43,7 +43,7 @@ public class ItemControllerImpl implements ItemController {
     @GetMapping
     @Operation(summary = "상품 리스트 조회 (프론트엔드)", description = "페이지 정보에 따라 상품 리스트를 조회합니다.")
     public ResponseEntity<List<ItemThumbnailDto>> getItemListForFrontend(Pageable pageable) {
-        List<ItemThumbnailDto> items = itemService.getItemList();
+        List<ItemThumbnailDto> items = itemService.getItemListForFrontend(pageable);
         return ResponseEntity.ok(items);
     }
 
@@ -51,8 +51,8 @@ public class ItemControllerImpl implements ItemController {
     @GetMapping("/{itemId}}")
     @Operation(summary = "상품 리스트 조회 (백엔드)", description = "지정된 상품 ID 리스트에 대한 상품 정보를 조회합니다.")
     public ResponseEntity<List<ItemThumbnailDto>> getItemListForBackend(@RequestBody List<Long> itemId) {
-            List<ItemThumbnailDto> items = itemService.getItemList();
-            return ResponseEntity.ok(items);
+        List<ItemThumbnailDto> items = itemService.getItemListForBackend();
+        return ResponseEntity.ok(items);
     }
 
     @Override

@@ -6,6 +6,7 @@ import kea.dpang.item.dto.ItemThumbnailDto;
 import kea.dpang.item.dto.ItemUpdateDto;
 import kea.dpang.item.dto.PopularItemDto;
 import kea.dpang.item.entity.Item;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public interface ItemService {
     /**
      * 상품 목록을 조회합니다.
      */
-    List<ItemThumbnailDto> getItemList();
+    List<ItemThumbnailDto> getItemListForFrontend(Pageable pageable);
+
+    List<ItemThumbnailDto> getItemListForBackend();
 
 
     /**
