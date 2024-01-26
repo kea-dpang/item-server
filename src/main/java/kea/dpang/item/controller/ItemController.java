@@ -20,14 +20,14 @@ public interface ItemController {
      *
      * @param pageable 페이지 정보
      */
-    ResponseEntity<List<ItemThumbnailDto>> getItemListForFrontend(Pageable pageable);
+    ResponseEntity<List<ItemSimpleFrontendDto>> getItemListForFrontend(Pageable pageable);
 
     /**
      * 상품 리스트를 조회합니다. (백엔드 서비스 용)
      *
      * @param itemIdList 상품 ID 리스트
      */
-    ResponseEntity<List<ItemThumbnailDto>> getItemListForBackend(List<Long> itemIdList);
+    ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(List<Long> itemIdList);
 
     /**
      * 상품 ID를 통해 상세한 상품 정보를 조회합니다.

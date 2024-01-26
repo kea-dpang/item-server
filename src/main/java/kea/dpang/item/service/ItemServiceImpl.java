@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,19 +45,18 @@ public class ItemServiceImpl implements ItemService {
 
     // 상품 리스트 조회(프론트)
     @Override
-    public List<ItemThumbnailDto> getItemListForFrontend(Pageable pageable) {
-        Page<Item> pagedItems = itemRepository.findAll(pageable);
-        List<Item> items = pagedItems.getContent();
+    public List<ItemSimpleFrontendDto> getItemListForFrontend(Pageable pageable) {
+        Page<Item> items = itemRepository.findAll(pageable);
         return items.stream()
-                .map(ItemThumbnailDto::new)
+                .map(ItemSimpleFrontendDto::new)
                 .collect(Collectors.toList());
     }
 
     // 상품 리스트 조회(백엔드)
-    public List<ItemThumbnailDto> getItemListForBackend() {
+    public List<ItemSimpleBackendDto> getItemListForBackend() {
         List<Item> items = itemRepository.findAll();
         return items.stream()
-                .map(ItemThumbnailDto::new)
+                .map(ItemSimpleBackendDto::new)
                 .collect(Collectors.toList());
     }
 

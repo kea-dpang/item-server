@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemThumbnailDto {
+public class ItemSimpleFrontendDto {
 
     private Long itemId;
     private String itemName;
@@ -16,7 +16,7 @@ public class ItemThumbnailDto {
     private Boolean wishlistCheck;
     private String itemImage;
 
-    public ItemThumbnailDto(Item item) {
+    public ItemSimpleFrontendDto(Item item) {
         this.itemId = item.getItemId();
         this.itemName = item.getItemName();
         this.itemPrice = item.getItemPrice();
