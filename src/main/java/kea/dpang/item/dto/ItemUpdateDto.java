@@ -17,6 +17,7 @@ public class ItemUpdateDto {
     private int itemPrice;
     private int discountPrice;
     private int eventPrice;
+    private int stockQuantity;
     private int minStock;
     private int maxStock;
     private String itemImage;

@@ -52,4 +52,8 @@ public interface ItemService {
      */
     List<PopularItemDto> getPopularItems();
 
+
+    void increaseStock(Long itemId, int quantity);
+    void decreaseStock(Long itemId, int quantity);
+
 }

@@ -48,7 +48,7 @@ public class ItemControllerImpl implements ItemController {
     }
 
     @Override
-    @GetMapping("/{itemId}")
+    @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회 (백엔드)", description = "지정된 상품 ID 리스트에 대한 상품 정보를 조회합니다.")
     public ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(@RequestBody List<Long> itemId) {
         List<ItemSimpleBackendDto> items = itemService.getItemListForBackend();
@@ -94,4 +94,5 @@ public class ItemControllerImpl implements ItemController {
 
         return ResponseEntity.noContent().build();
     }
+
 }

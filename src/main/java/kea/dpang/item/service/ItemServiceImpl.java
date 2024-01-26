@@ -97,4 +97,23 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         itemRepository.delete(item);
     }
+
+    // 재고 수량 증가
+    @Override
+    @Transactional
+    public void increaseStock(Long itemId, int quantity) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+        item.increaseStock(quantity);
+    }
+
+    // 재고 수량 감소
+    @Override
+    @Transactional
+    public void decreaseStock(Long itemId, int quantity) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+        item.decreaseStock(quantity);
+    }
+
 }

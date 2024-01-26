@@ -23,6 +23,7 @@ public class ItemResponseDto {
     private int discountRate;
     private int discountPrice;
     private String description;
+    private int stockQuantity;
     private int minStock;
     private int maxStock;
     private String itemImage;
@@ -40,6 +41,7 @@ public class ItemResponseDto {
         this.reviews = item.getReviews();
         this.discountRate = item.getDiscountRate();
         this.discountPrice = item.getDiscountPrice();
+        this.stockQuantity = item.getStockQuantity();
         this.minStock = item.getMinStock();
         this.maxStock = item.getMaxStock();
         this.description = item.getDescription();

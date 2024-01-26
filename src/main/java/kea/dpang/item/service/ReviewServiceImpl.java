@@ -2,6 +2,7 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Review;
+
 import kea.dpang.item.exception.ReviewNotFoundException;
 import kea.dpang.item.repository.ReviewRepository;
 
@@ -52,7 +53,5 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException(reviewId));
         reviewRepository.delete(review);
     }
-
-
 
 }
