@@ -98,6 +98,15 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.delete(item);
     }
 
+    // 재고 수량 조회
+    @Override
+    @Transactional
+    public int getStockQuantity(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+        return item.getStockQuantity();
+    }
+
     // 재고 수량 증가
     @Override
     @Transactional

@@ -52,6 +52,7 @@ public interface ItemService {
      */
     List<PopularItemDto> getPopularItems();
 
+    int getStockQuantity(Long itemId);
 
     void increaseStock(Long itemId, int quantity);
 
