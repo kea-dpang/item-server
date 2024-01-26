@@ -7,9 +7,10 @@ import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,21 +43,21 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    // 상품 리스트 조회
+    // 상품 리스트 조회(프론트)
     @Override
-    public List<ItemThumbnailDto> getItemList() {
-        List<Item> items = itemRepository.findAll();
+    public List<ItemSimpleFrontendDto> getItemListForFrontend(Pageable pageable) {
+        Page<Item> items = itemRepository.findAll(pageable);
         return items.stream()
-                .map(ItemThumbnailDto::new)
+                .map(ItemSimpleFrontendDto::new)
                 .collect(Collectors.toList());
     }
 
-    // 상품 조회수 증가
-    @Override
-    @Transactional
-    public void incrementItemViewCount(Long itemId) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.increment(ITEM_VIEW_COUNT_KEY + ":" + itemId);
+    // 상품 리스트 조회(백엔드)
+    public List<ItemSimpleBackendDto> getItemListForBackend() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(ItemSimpleBackendDto::new)
+                .collect(Collectors.toList());
     }
 
     // 인기 상품 조회
@@ -95,33 +96,5 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         itemRepository.delete(item);
-    }
-  
-    // =============================카트 관련 기능===============================
-
-    // 상품 정보 목록 조회
-    @Override
-    public List<Item> getCartItems(List<Long> itemIds) {
-        return itemRepository.findCartItemsByItemId(itemIds);
-    }
-
-    // 상품 정보 조회
-    @Override
-    public Item getCartItem(Long itemId) {
-        return itemRepository.findCartItemByItemId(itemId);
-    }
-
-    // ==========================위시리스트 관련 기능==============================
-
-    // 상품 정보 목록 조회
-    @Override
-    public List<Item> getWishlistItems(List<Long> itemId) {
-        return null;
-    }
-
-    // 상품 정보 조회
-    @Override
-    public Item getWishlistItem(Long itemId) {
-        return null;
     }
 }

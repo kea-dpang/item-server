@@ -1,11 +1,7 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.ItemCreateDto;
-import kea.dpang.item.dto.ItemResponseDto;
-import kea.dpang.item.dto.ItemThumbnailDto;
-import kea.dpang.item.dto.ItemUpdateDto;
-import kea.dpang.item.dto.PopularItemDto;
-import kea.dpang.item.entity.Item;
+import kea.dpang.item.dto.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,25 +18,27 @@ public interface ItemService {
     /**
      * 상품 목록을 조회합니다.
      */
-    List<ItemThumbnailDto> getItemList();
+    List<ItemSimpleFrontendDto> getItemListForFrontend(Pageable pageable);
+
+    List<ItemSimpleBackendDto> getItemListForBackend();
 
 
     /**
      * 새로운 상품을 등록합니다.
      *
-     * @param createItemDto 등록할 상품의 정보가 담긴 DTO
+     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
      * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
-    ItemResponseDto createItem(ItemCreateDto createItemDto);
+    ItemResponseDto createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 상품의 정보를 업데이트합니다.
      *
      * @param itemId 업데이트할 상품의 ID
-     * @param updateItemDto 업데이트할 상품의 정보가 담긴 DTO
+     * @param itemUpdateDto 업데이트할 상품의 정보가 담긴 DTO
      * @return 업데이트된 상품의 정보가 담긴 Detail DTO
      */
-    ItemResponseDto updateItem(Long itemId, ItemUpdateDto updateItemDto);
+    ItemResponseDto updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.
@@ -54,19 +52,4 @@ public interface ItemService {
      */
     List<PopularItemDto> getPopularItems();
 
-    /**
-     * 상품 조회수를 증가시킵니다.
-     * @param itemId 조회수를 증가시킬 상품의 ID
-     */
-    void incrementItemViewCount(Long itemId);
-
-    // =============================카트 관련 기능===============================
-
-    List<Item> getCartItems(List<Long> itemId);
-
-    Item getCartItem(Long itemId);
-
-    List<Item> getWishlistItems(List<Long> itemId);
-
-    Item getWishlistItem(Long itemId);
 }

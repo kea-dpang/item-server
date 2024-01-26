@@ -76,11 +76,6 @@ public class Item extends BaseEntity {
     )
     private Set<Tag> tags = new HashSet<>();
 
-
-    // 조회 발생 시점 기록
-    @Column(nullable = false)
-    private LocalDateTime viewDateTime;
-
     // 상품 상세정보
     @Column(length = 1000)
     private String description;
