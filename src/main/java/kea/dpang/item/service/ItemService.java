@@ -54,6 +54,7 @@ public interface ItemService {
 
 
     void increaseStock(Long itemId, int quantity);
+
     void decreaseStock(Long itemId, int quantity);
 
 }

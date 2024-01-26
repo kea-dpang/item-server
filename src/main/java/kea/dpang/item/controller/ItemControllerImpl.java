@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 @Slf4j
 public class ItemControllerImpl implements ItemController {
 
@@ -76,7 +76,6 @@ public class ItemControllerImpl implements ItemController {
     }
 
     @Override
-    @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
         ItemResponseDto item = itemService.updateItem(itemId, itemUpdateDto);
@@ -86,7 +85,6 @@ public class ItemControllerImpl implements ItemController {
     }
 
     @Override
-    @DeleteMapping("/{itemId}")
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
     public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
