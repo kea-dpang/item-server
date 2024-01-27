@@ -10,7 +10,7 @@ public class ItemNotFoundException extends RuntimeException {
     private final Long itemId;
 
     public ItemNotFoundException(Long itemId) {
-        super(String.format("회원을 찾을 수 없음: 회원 ID - '%s'", itemId));
+        super(String.format("상품을 찾을 수 없음: 상품 ID - '%s'", itemId));
         this.itemId = itemId;
     }
 }
