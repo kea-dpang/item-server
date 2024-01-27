@@ -62,6 +62,9 @@ public class Item extends BaseEntity {
     // 할인가
     private int discountPrice;
 
+    // 재고 수량
+    private int stockQuantity;
+
     // 최소 재고 수량
     private int minStock;
 
@@ -104,6 +107,7 @@ public class Item extends BaseEntity {
                 .subCategory(dto.getSubCategory())
                 .itemPrice(dto.getItemPrice())
                 .discountPrice(dto.getDiscountPrice())
+                .stockQuantity(dto.getStockQuantity())
                 .minStock(dto.getMinStock())
                 .maxStock(dto.getMaxStock())
                 .itemImage(dto.getItemImage())
@@ -117,10 +121,22 @@ public class Item extends BaseEntity {
         this.subCategory = dto.getSubCategory();
         this.itemPrice = dto.getItemPrice();
         this.discountPrice = dto.getDiscountPrice();
+        this.stockQuantity = dto.getStockQuantity();
         this.minStock = dto.getMinStock();
         this.maxStock = dto.getMaxStock();
         this.itemImage = dto.getItemImage();
         this.images = dto.getImages();
+    }
+
+    public void increaseStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (this.stockQuantity < quantity) {
+            throw new IllegalArgumentException("Not enough stock");
+        }
+        this.stockQuantity -= quantity;
     }
 }
 

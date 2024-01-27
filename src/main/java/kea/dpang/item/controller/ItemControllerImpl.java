@@ -17,13 +17,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 @Slf4j
 public class ItemControllerImpl implements ItemController {
 
     private final ItemServiceImpl itemService;
 
-    @Override
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
     public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateDto itemCreateDto) {
@@ -38,8 +37,6 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.created(location).body(item);
     }
 
-    // pageable : 페이지 번호, 페이지 크기, 정렬 방법
-    @Override
     @GetMapping
     @Operation(summary = "상품 리스트 조회 (프론트엔드)", description = "페이지 정보에 따라 상품 리스트를 조회합니다.")
     public ResponseEntity<List<ItemSimpleFrontendDto>> getItemListForFrontend(Pageable pageable) {
@@ -47,15 +44,13 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok(items);
     }
 
-    @Override
-    @GetMapping("/{itemId}")
+    @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회 (백엔드)", description = "지정된 상품 ID 리스트에 대한 상품 정보를 조회합니다.")
     public ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(@RequestBody List<Long> itemId) {
         List<ItemSimpleBackendDto> items = itemService.getItemListForBackend();
         return ResponseEntity.ok(items);
     }
 
-    @Override
     @GetMapping("/{itemId}")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
     public ResponseEntity<ItemResponseDto> getItem(@PathVariable Long itemId) {
@@ -65,7 +60,6 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @Override
     @GetMapping("/popular")
     @Operation(summary = "인기 상품 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<List<PopularItemDto>> getPopularItems(@RequestBody List<Long> itemIdList, Pageable pageable) {
@@ -75,8 +69,7 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok(popularItems);
     }
 
-    @Override
-    @PutMapping("/{itemId}")
+    @PutMapping
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
         ItemResponseDto item = itemService.updateItem(itemId, itemUpdateDto);
@@ -85,8 +78,7 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @Override
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/{employeeId}")
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
     public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
@@ -94,4 +86,29 @@ public class ItemControllerImpl implements ItemController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{itemId}/stock")
+    @Operation(summary = "재고 수량 조회", description = "재고 수량을 조회합니다.")
+    public ResponseEntity<Integer> getStockQuantity(@PathVariable Long itemId) {
+        int stockQuantity = itemService.getStockQuantity(itemId);
+        log.info("재고 수량 조회 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok(stockQuantity);
+    }
+
+    @PutMapping("/{itemId}/increase/{quantity}")
+    @Operation(summary = "재고 수량 증가", description = "재고 수량을 증가시킵니다.")
+    public ResponseEntity<ItemResponseDto> increaseStock(@PathVariable Long itemId, @PathVariable int quantity) {
+        itemService.increaseStock(itemId, quantity);
+        log.info("재고 수량 증가 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{itemId}/decrease/{quantity}")
+    @Operation(summary = "재고 수량 감소", description = "재고 수량을 감소시킵니다.")
+    public ResponseEntity<ItemResponseDto> decreaseStock(@PathVariable Long itemId, @PathVariable int quantity) {
+        itemService.decreaseStock(itemId, quantity);
+        log.info("재고 수량 감소 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok().build();
+    }
+
 }

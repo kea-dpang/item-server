@@ -60,7 +60,6 @@ public class ReviewControllerImpl implements ReviewController {
     }
 
     @Override
-    @DeleteMapping("/{reviewId}")
     @Operation(summary = "리뷰 삭제", description = "리뷰 정보를 시스템에서 제거합니다.")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
         reviewService.deleteReview(reviewId);
