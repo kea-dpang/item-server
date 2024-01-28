@@ -16,10 +16,7 @@ public class ItemCreateDto {
     private Category category;;
     private SubCategory subCategory;
     private int itemPrice;
-    private int discountPrice;
     private int stockQuantity;
-    private int minStock;
-    private int maxStock;
     private String itemImage;
     private List<String> images;
 }
