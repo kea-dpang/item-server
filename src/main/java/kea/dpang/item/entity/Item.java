@@ -106,10 +106,8 @@ public class Item extends BaseEntity {
                 .category(dto.getCategory())
                 .subCategory(dto.getSubCategory())
                 .itemPrice(dto.getItemPrice())
-                .discountPrice(dto.getDiscountPrice())
                 .stockQuantity(dto.getStockQuantity())
-                .minStock(dto.getMinStock())
-                .maxStock(dto.getMaxStock())
+
                 .itemImage(dto.getItemImage())
                 .images(dto.getImages())
                 .build();
@@ -120,10 +118,7 @@ public class Item extends BaseEntity {
         this.category = dto.getCategory();
         this.subCategory = dto.getSubCategory();
         this.itemPrice = dto.getItemPrice();
-        this.discountPrice = dto.getDiscountPrice();
         this.stockQuantity = dto.getStockQuantity();
-        this.minStock = dto.getMinStock();
-        this.maxStock = dto.getMaxStock();
         this.itemImage = dto.getItemImage();
         this.images = dto.getImages();
     }
