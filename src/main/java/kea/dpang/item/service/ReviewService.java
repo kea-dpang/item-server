@@ -14,6 +14,9 @@ public interface ReviewService {
      */
     ReviewResponseDto getReview(Long reviewId);
 
+
+
+
     /**
      * 새로운 리뷰을 등록합니다.
      *
