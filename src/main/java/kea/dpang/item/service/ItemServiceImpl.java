@@ -7,6 +7,7 @@ import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -29,9 +31,10 @@ public class ItemServiceImpl implements ItemService {
     // 상품 등록
     @Override
     @Transactional
-    public ItemResponseDto createItem(ItemCreateDto dto) {
+    public void createItem(ItemCreateDto dto) {
         Item item = Item.from(dto);
-        return new ItemResponseDto(itemRepository.save(item));
+        new ItemResponseDto(itemRepository.save(item));
+        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
     }
 
     // 상품 조회
@@ -124,5 +127,4 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.decreaseStock(quantity);
     }
-
 }
