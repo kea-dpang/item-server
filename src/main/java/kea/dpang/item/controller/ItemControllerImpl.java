@@ -78,7 +78,7 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok(item);
     }
 
-    @DeleteMapping("/{employeeId}")
+    @DeleteMapping("/{itemId}")
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
     public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);

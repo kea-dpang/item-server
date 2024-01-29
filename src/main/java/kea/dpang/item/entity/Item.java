@@ -7,9 +7,7 @@ import kea.dpang.item.dto.ItemUpdateDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Builder
@@ -21,7 +19,7 @@ public class Item extends BaseEntity {
     // 상품 ID
     @Id
     @Column(name="item_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long itemId;
 
     // 판매처 ID
@@ -70,14 +68,6 @@ public class Item extends BaseEntity {
 
     // 최대 재고 수량
     private int maxStock;
-
-    @ManyToMany
-    @JoinTable(
-            name = "item_tag",
-            joinColumns = @JoinColumn(name = "item_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
 
     // 상품 상세정보
     @Column(length = 1000)
