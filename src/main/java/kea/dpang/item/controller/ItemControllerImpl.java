@@ -1,6 +1,7 @@
 package kea.dpang.item.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.dto.*;
 import kea.dpang.item.service.ItemServiceImpl;
 
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,16 +27,14 @@ public class ItemControllerImpl implements ItemController {
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
-    public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateDto itemCreateDto) {
-        ItemResponseDto item = itemService.createItem(itemCreateDto);
-        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
+    public ResponseEntity<BaseResponse> createItem(@RequestBody ItemCreateDto itemCreateDto) {
+        itemService.createItem(itemCreateDto);
+        // log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{itemId}")
-                .buildAndExpand(item.getItemId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(item);
+        return new ResponseEntity<>(
+                new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping
@@ -111,4 +111,10 @@ public class ItemControllerImpl implements ItemController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/findName")
+    @Operation(summary = "이벤트쪽 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
+    public ResponseEntity<String> getEventItemName(@RequestBody ItemResponseDto dto) {
+        String itemName = dto.getItemName();
+        return ResponseEntity.ok(itemName);
+    }
 }

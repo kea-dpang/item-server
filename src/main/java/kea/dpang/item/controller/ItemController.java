@@ -1,5 +1,6 @@
 package kea.dpang.item.controller;
 
+import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ public interface ItemController {
      *
      * @param itemCreateDto 상품 생성 정보
      */
-    ResponseEntity<ItemResponseDto> createItem(ItemCreateDto itemCreateDto);
+    ResponseEntity<BaseResponse> createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 상품 리스트를 조회합니다. (프론트엔드 용)

@@ -29,7 +29,7 @@ public interface ItemService {
      * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
      * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
-    ItemResponseDto createItem(ItemCreateDto itemCreateDto);
+    void createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 상품의 정보를 업데이트합니다.

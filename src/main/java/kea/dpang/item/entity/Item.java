@@ -107,7 +107,6 @@ public class Item extends BaseEntity {
                 .subCategory(dto.getSubCategory())
                 .itemPrice(dto.getItemPrice())
                 .stockQuantity(dto.getStockQuantity())
-
                 .itemImage(dto.getItemImage())
                 .images(dto.getImages())
                 .build();
