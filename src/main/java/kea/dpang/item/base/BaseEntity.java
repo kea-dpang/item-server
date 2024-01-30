@@ -2,12 +2,14 @@ package kea.dpang.item.base;
 
 import jakarta.persistence.MappedSuperclass;
 
+import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Getter
 @MappedSuperclass
 public class BaseEntity {
     @CreationTimestamp
@@ -15,7 +17,4 @@ public class BaseEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedTime;
-
-    @ColumnDefault("false")
-    private Boolean deleted;
 }
