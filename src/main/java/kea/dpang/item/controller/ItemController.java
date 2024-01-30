@@ -1,62 +1,133 @@
 package kea.dpang.item.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.dto.*;
+import kea.dpang.item.service.ItemServiceImpl;
+
+import kea.dpang.item.service.ReviewServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public interface ItemController {
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/items")
+@Slf4j
+public class ItemController {
 
-    /**
-     * 상품 정보를 시스템에 추가합니다.
-     *
-     * @param itemCreateDto 상품 생성 정보
-     */
-    ResponseEntity<BaseResponse> createItem(ItemCreateDto itemCreateDto);
+    private final ItemServiceImpl itemService;
+    private final ReviewServiceImpl reviewService;
 
-    /**
-     * 상품 리스트를 조회합니다. (프론트엔드 용)
-     *
-     * @param pageable 페이지 정보
-     */
-    ResponseEntity<List<ItemSimpleFrontendDto>> getItemListForFrontend(Pageable pageable);
+    @PostMapping
+    @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
+    public ResponseEntity<BaseResponse> createItem(@RequestBody ItemCreateDto itemCreateDto) {
+        itemService.createItem(itemCreateDto);
 
-    /**
-     * 상품 리스트를 조회합니다. (백엔드 서비스 용)
-     *
-     * @param itemIdList 상품 ID 리스트
-     */
-    ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(List<Long> itemIdList);
+        return new ResponseEntity<>(
+                new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
+                HttpStatus.CREATED
+        );
+    }
 
-    /**
-     * 상품 ID를 통해 상세한 상품 정보를 조회합니다.
-     *
-     * @param itemId 상품 ID
-     */
-    ResponseEntity<ItemResponseDto> getItem(Long itemId);
+    @GetMapping("/cards")
+    @Operation(summary = "상품 카드 리스트 조회", description = "페이지 정보에 따라 상품 카드 리스트를 조회합니다.")
+    public ResponseEntity<List<ItemCardDto>> getItemCard(Pageable pageable) {
+        List<ItemCardDto> items = itemService.getItemCard(pageable);
+        return ResponseEntity.ok(items);
+    }
 
-    /**
-     * 인기 상품을 조회합니다.
-     *
-     * @param itemIdList 인기 상품 ID 리스트
-     * @param pageable   페이지 정보
-     */
-    ResponseEntity<List<PopularItemDto>> getPopularItems(List<Long> itemIdList, Pageable pageable);
+    @GetMapping("/list")
+    public ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(@RequestBody List<Long> itemId) {
+        List<ItemSimpleBackendDto> items = itemService.getItemListForBackend();
+        return ResponseEntity.ok(items);
+    }
 
-    /**
-     * 기존 상품 정보를 업데이트합니다.
-     *
-     * @param itemId        상품 ID
-     * @param itemUpdateDto 수정할 상품 정보
-     */
-    ResponseEntity<ItemResponseDto> updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
+    @GetMapping("/managelist")
+    @Operation(summary = "상품 관리 리스트 조회", description = "페이지 정보에 따라 관리자용 상품 리스트를 조회합니다.")
+    public ResponseEntity<List<ItemManageListDto>> getItemManageList(Pageable pageable) {
+        List<ItemManageListDto> items = itemService.getItemManageList(pageable);
+        return ResponseEntity.ok(items);
+    }
 
-    /**
-     * 상품 정보를 시스템에서 제거합니다.
-     *
-     * @param itemId 상품 ID
-     */
-    ResponseEntity<Void> deleteItem(Long itemId);
+    @GetMapping("/{itemId}")
+    @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
+    public ResponseEntity<ItemResponseDto> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+        ItemResponseDto item = itemService.getItem(itemId);
+        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
+
+        return ResponseEntity.ok(item);
+    }
+
+    @GetMapping("/popular")
+    @Operation(summary = "인기 상품 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
+    public ResponseEntity<List<PopularItemDto>> getPopularItems(@RequestBody List<Long> itemIdList, Pageable pageable) {
+        List<PopularItemDto> popularItems = itemService.getPopularItems();
+        log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
+
+        return ResponseEntity.ok(popularItems);
+    }
+
+    @PutMapping("/{itemId}")
+    @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
+    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
+        ItemResponseDto item = itemService.updateItem(itemId, itemUpdateDto);
+        log.info("상품 정보 업데이트 완료. 상품 ID: {}", item.getItemId());
+
+        return ResponseEntity.ok(item);
+    }
+
+    @DeleteMapping("/{itemId}")
+    @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
+    public ResponseEntity<Void> deleteItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+        itemService.deleteItem(itemId);
+        log.info("상품 정보 삭제 완료. 상품 ID: {}", itemId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{itemId}/reviews")
+    @Operation(summary = "상품별 리뷰 리스트 조회", description = "페이지 정보에 따라 리뷰 리스트를 조회합니다.")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewList(Pageable pageable) {
+        List<ReviewResponseDto> reviews = reviewService.getReviewList(pageable);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/{itemId}/stock")
+    @Operation(summary = "재고 수량 조회", description = "재고 수량을 조회합니다.")
+    public ResponseEntity<Integer> getStockQuantity(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+        int stockQuantity = itemService.getStockQuantity(itemId);
+        log.info("재고 수량 조회 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok(stockQuantity);
+    }
+
+    @PutMapping("/{itemId}/increase/{quantity}")
+    @Operation(summary = "재고 수량 증가", description = "재고 수량을 증가시킵니다.")
+    public ResponseEntity<ItemResponseDto> increaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
+        itemService.increaseStock(itemId, quantity);
+        log.info("재고 수량 증가 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{itemId}/decrease/{quantity}")
+    @Operation(summary = "재고 수량 감소", description = "재고 수량을 감소시킵니다.")
+    public ResponseEntity<ItemResponseDto> decreaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
+        itemService.decreaseStock(itemId, quantity);
+        log.info("재고 수량 감소 완료. 상품 ID: {}", itemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/findName")
+    @Operation(summary = "이벤트쪽 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
+    public ResponseEntity<String> getEventItemName(@RequestBody ItemResponseDto dto) {
+        String itemName = dto.getItemName();
+        return ResponseEntity.ok(itemName);
+    }
 }

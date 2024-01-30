@@ -1,18 +1,25 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
+import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.Review;
-
 import kea.dpang.item.exception.ReviewNotFoundException;
 import kea.dpang.item.repository.ReviewRepository;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -20,9 +27,10 @@ public class ReviewServiceImpl implements ReviewService {
     // 리뷰 등록
     @Override
     @Transactional
-    public ReviewResponseDto createReview(ReviewCreateDto dto) {
+    public void createReview(ReviewCreateDto dto) {
         Review review = Review.from(dto);
-        return new ReviewResponseDto(reviewRepository.save(review));
+        new ReviewResponseDto(reviewRepository.save(review));
+        log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
     }
 
     // 리뷰 조회
@@ -32,6 +40,26 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.findById(reviewId)
                 .map(ReviewResponseDto::new)
                 .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+    }
+
+    // 리뷰 리스트 조회
+    @Override
+    @Transactional
+    public List<ReviewResponseDto> getReviewList(Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAll(pageable);
+        return reviews.stream()
+                .map(ReviewResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // 사용자별 리뷰 리스트 조회
+    @Override
+    @Transactional
+    public List<ReviewPersonalListDto> getReviewPersonalList(Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAll(pageable);
+        return reviews.stream()
+                .map(ReviewPersonalListDto::new)
+                .collect(Collectors.toList());
     }
 
     // 리뷰 수정

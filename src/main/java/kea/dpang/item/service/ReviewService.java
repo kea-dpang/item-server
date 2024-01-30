@@ -1,9 +1,9 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.ReviewCreateDto;
-import kea.dpang.item.dto.ReviewResponseDto;
-import kea.dpang.item.dto.ReviewUpdateDto;
-import kea.dpang.item.entity.Review;
+import kea.dpang.item.dto.*;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface ReviewService {
     /**
@@ -14,8 +14,9 @@ public interface ReviewService {
      */
     ReviewResponseDto getReview(Long reviewId);
 
+    List<ReviewResponseDto> getReviewList(Pageable pageable);
 
-
+    List<ReviewPersonalListDto> getReviewPersonalList(Pageable pageable);
 
     /**
      * 새로운 리뷰을 등록합니다.
@@ -23,7 +24,7 @@ public interface ReviewService {
      * @param reviewCreateDto 등록할 리뷰의 정보가 담긴 DTO
      * @return 등록된 리뷰의 정보가 담긴 Detail DTO
      */
-    ReviewResponseDto createReview(ReviewCreateDto reviewCreateDto);
+   void createReview(ReviewCreateDto reviewCreateDto);
 
     /**
      * 리뷰의 정보를 업데이트합니다.

@@ -6,12 +6,12 @@ import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,20 +46,33 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    // 상품 리스트 조회(프론트)
+    // 상품 카드 리스트 조회
     @Override
-    public List<ItemSimpleFrontendDto> getItemListForFrontend(Pageable pageable) {
+    @Transactional
+    public List<ItemCardDto> getItemCard(Pageable pageable) {
         Page<Item> items = itemRepository.findAll(pageable);
         return items.stream()
-                .map(ItemSimpleFrontendDto::new)
+                .map(ItemCardDto::new)
                 .collect(Collectors.toList());
     }
 
-    // 상품 리스트 조회(백엔드)
+    @Override
+    @Transactional
+    // 백엔드용 상품 리스트 조회
     public List<ItemSimpleBackendDto> getItemListForBackend() {
         List<Item> items = itemRepository.findAll();
         return items.stream()
                 .map(ItemSimpleBackendDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // 관리자용 상품 리스트 조회
+    @Override
+    @Transactional
+    public List<ItemManageListDto> getItemManageList(Pageable pageable) {
+        Page<Item> items = itemRepository.findAll(pageable);
+        return items.stream()
+                .map(ItemManageListDto::new)
                 .collect(Collectors.toList());
     }
 
