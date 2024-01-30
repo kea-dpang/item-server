@@ -6,6 +6,8 @@ import kea.dpang.item.dto.ReviewCreateDto;
 import kea.dpang.item.dto.ReviewUpdateDto;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
