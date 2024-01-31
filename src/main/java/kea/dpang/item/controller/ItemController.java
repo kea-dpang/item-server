@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import kea.dpang.item.base.*;
 import kea.dpang.item.dto.*;
+import kea.dpang.item.entity.Item;
+import kea.dpang.item.feign.dto.ItemInquiryDto;
 import kea.dpang.item.service.ItemServiceImpl;
 import kea.dpang.item.service.ReviewServiceImpl;
 
@@ -158,7 +160,7 @@ public class ItemController {
     }
 
     /* feign */
-    // event-server
+    // 이벤트(Event)
     @GetMapping("/findName")
     @Operation(summary = "이벤트쪽 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
     public ResponseEntity<SuccessResponse<String>> getEventItemName(@RequestParam Long itemId) {
@@ -168,4 +170,17 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+    // 주문(Order)
+    @GetMapping("/inquiryItem")
+    @Operation(summary = "상품 조회", description = "상품 정보를 조회합니다.")
+    public ResponseEntity<SuccessResponse<ItemInquiryDto>> getInquiryItem(@RequestParam Long itemId) {
+        Item item = itemService.getItemInquiry(itemId);
+        ItemInquiryDto itemInquiryDto = new ItemInquiryDto(item);
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품명이 조회되었습니다.", itemInquiryDto),
+                HttpStatus.OK
+        );
+    }
+
 }

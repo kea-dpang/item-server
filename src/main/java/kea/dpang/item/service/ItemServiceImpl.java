@@ -146,9 +146,17 @@ public class ItemServiceImpl implements ItemService {
         return item.getStockQuantity();
     }
 
+    /* feign */
+    // 이벤트 - 상품 이름 조회
     public String getItemName(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
     }
 
+    // 주문 - 상품 정보 조회
+    @Override
+    @Transactional(readOnly = true)
+    public Item getItemInquiry(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
+    }
 }
