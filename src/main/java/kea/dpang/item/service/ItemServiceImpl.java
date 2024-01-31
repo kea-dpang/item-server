@@ -31,13 +31,12 @@ public class ItemServiceImpl implements ItemService {
     // 상품 등록
     @Override
     @Transactional
-    public void createItem(ItemCreateDto dto) {
+    public ItemResponseDto createItem(ItemCreateDto dto) {
         Item item = Item.from(dto);
-        new ItemResponseDto(itemRepository.save(item));
-        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
+        return new ItemResponseDto(itemRepository.save(item));
     }
 
-    // 상품 조회
+    // 상품 상세 정보 조회
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
@@ -56,15 +55,15 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional
-    // 백엔드용 상품 리스트 조회
-    public List<ItemSimpleBackendDto> getItemListForBackend() {
-        List<Item> items = itemRepository.findAll();
-        return items.stream()
-                .map(ItemSimpleBackendDto::new)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    @Transactional
+//    // 백엔드용 상품 리스트 조회
+//    public List<ItemSimpleBackendDto> getItemListForBackend() {
+//        List<Item> items = itemRepository.findAll();
+//        return items.stream()
+//                .map(ItemSimpleBackendDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     // 관리자용 상품 리스트 조회
     @Override
@@ -108,10 +107,14 @@ public class ItemServiceImpl implements ItemService {
     // 상품 삭제
     @Override
     @Transactional
-    public void deleteItem(Long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        itemRepository.delete(item);
+    public void deleteItem(List<Long> itemIds) {
+        for (Long itemId:itemIds){
+
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new ItemNotFoundException(itemId));
+            itemRepository.delete(item);
+        }
+
     }
 
     // 재고 수량 조회
@@ -126,18 +129,26 @@ public class ItemServiceImpl implements ItemService {
     // 재고 수량 증가
     @Override
     @Transactional
-    public void increaseStock(Long itemId, int quantity) {
+    public int increaseStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.increaseStock(quantity);
+        return item.getStockQuantity();
     }
 
     // 재고 수량 감소
     @Override
     @Transactional
-    public void decreaseStock(Long itemId, int quantity) {
+    public int decreaseStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.decreaseStock(quantity);
+        return item.getStockQuantity();
     }
+
+    public String getItemName(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
+    }
+
 }
