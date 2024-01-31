@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
         ResponseEntity<SuccessResponse<String>> responseEntity = userFeignClient.getReviewer(reviewerId);
         String name = responseEntity.getBody().getData();
-        Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId);
+        Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
         return reviews.stream()
                 .map(review -> new ReviewPersonalListDto(review, name))
                 .collect(Collectors.toList());
