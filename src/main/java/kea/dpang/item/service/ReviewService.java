@@ -14,9 +14,9 @@ public interface ReviewService {
      */
     ReviewResponseDto getReview(Long reviewId);
 
-    List<ReviewResponseDto> getReviewList(Pageable pageable);
+    List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable);
 
-    List<ReviewPersonalListDto> getReviewPersonalList(Pageable pageable);
+    List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable);
 
     /**
      * 새로운 리뷰을 등록합니다.

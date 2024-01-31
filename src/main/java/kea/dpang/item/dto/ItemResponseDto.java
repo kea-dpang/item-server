@@ -4,12 +4,14 @@ import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.SubCategory;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Getter
 public class ItemResponseDto {
 
     private Long itemId;

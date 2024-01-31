@@ -25,4 +25,6 @@ public class ReviewPersonalListDto {
         this.content = review.getContent();
         this.rating = review.getRating();
     }
+
+
 }

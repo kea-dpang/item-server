@@ -23,12 +23,12 @@ public interface ItemService {
      */
     List<ItemCardDto> getItemCard(Pageable pageable);
 
-    /**
-     * 백엔드용 상품 목록을 조회 기능 입니다.
-     *
-     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
-     */
-    List<ItemSimpleBackendDto> getItemListForBackend();
+//    /**
+//     * 백엔드용 상품 목록을 조회 기능 입니다.
+//     *
+//     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
+//     */
+//    List<ItemSimpleBackendDto> getItemListForBackend();
 
     /**
      * 관리자용 상품 목록을 페이지 정보에 따라 조회합니다.
@@ -44,7 +44,7 @@ public interface ItemService {
      * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
      * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
-    void createItem(ItemCreateDto itemCreateDto);
+    ItemResponseDto createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 상품의 정보를 업데이트합니다.
@@ -58,9 +58,9 @@ public interface ItemService {
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.
      *
-     * @param itemId 삭제할 상품의 ID
+     * @param itemIds 삭제할 상품의 ID 리스트
      */
-    void deleteItem(Long itemId);
+    void deleteItem(List<Long> itemIds);
 
     /**
      * 인기 상품을 조회합니다.
@@ -83,7 +83,7 @@ public interface ItemService {
      * @param itemId 재고 수량을 증가시킬 상품의 ID
      * @param quantity 증가시킬 재고 수량
      */
-    void increaseStock(Long itemId, int quantity);
+     int increaseStock(Long itemId, int quantity);
 
     /**
      * 주어진 ID에 해당하는 상품의 재고 수량을 감소시킵니다.
@@ -91,6 +91,8 @@ public interface ItemService {
      * @param itemId 재고 수량을 감소시킬 상품의 ID
      * @param quantity 감소시킬 재고 수량
      */
-    void decreaseStock(Long itemId, int quantity);
+    int decreaseStock(Long itemId, int quantity);
+
+    String getItemName(Long ItemId);
 
 }
