@@ -42,7 +42,7 @@ public class ItemController {
 
     @GetMapping("/cardlist")
     @Operation(summary = "상품 카드 리스트 조회", description = "페이지 정보에 따라 상품 카드 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemCardDto>>> getItemCard(Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<ItemCardDto>>> getItemCard(@RequestParam Pageable pageable) {
         List<ItemCardDto> items = itemService.getItemCard(pageable);
         log.info("상품 카드 리스트 조회 완료. 페이지: {}", pageable.getPageNumber());
         return new ResponseEntity<>(
@@ -60,7 +60,7 @@ public class ItemController {
 
     @GetMapping("/managelist")
     @Operation(summary = "상품 관리 리스트 조회", description = "페이지 정보에 따라 관리자용 상품 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemManageListDto>>> getItemManageList(Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<ItemManageListDto>>> getItemManageList(@RequestParam Pageable pageable) {
         List<ItemManageListDto> items = itemService.getItemManageList(pageable);
         log.info("상품 관리 리스트 조회 완료. 페이지: {}", pageable.getPageNumber());
         return new ResponseEntity<>(
@@ -82,7 +82,7 @@ public class ItemController {
 
     @GetMapping("/popular")
     @Operation(summary = "인기 상품 리스트 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(@RequestBody List<Long> itemIdList, Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(@RequestParam List<Long> itemIdList, Pageable pageable) {
         List<PopularItemDto> popularItems = itemService.getPopularItems();
         log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
         return new ResponseEntity<>(
@@ -161,10 +161,10 @@ public class ItemController {
     // event-server
     @GetMapping("/findName")
     @Operation(summary = "이벤트쪽 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
-    public ResponseEntity<SuccessResponse<String>> getEventItemName(@RequestBody Long itemId) {
+    public ResponseEntity<SuccessResponse<String>> getEventItemName(@RequestParam Long itemId) {
         String itemName = itemService.getItemName(itemId);
         return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 조회되었습니다.", itemName),
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품명이 조회되었습니다.", itemName),
                 HttpStatus.OK
         );
     }

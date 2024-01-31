@@ -60,18 +60,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
-        try
-        {
-            ResponseEntity<SuccessResponse<String>> responseEntity = userFeignClient.getReviewer(reviewerId);
-            responseEntity.getBody().getData();
-        }
-        catch (RuntimeException e) {
-            System.out.println(e+"못찾음");
-        }
-
-        Page<Review> reviews = reviewRepository.findAll(pageable);
+        ResponseEntity<SuccessResponse<String>> responseEntity = userFeignClient.getReviewer(reviewerId);
+        String name = responseEntity.getBody().getData();
+        Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId);
         return reviews.stream()
-                .map(ReviewPersonalListDto::new)
+                .map(review -> new ReviewPersonalListDto(review, name))
                 .collect(Collectors.toList());
     }
 
