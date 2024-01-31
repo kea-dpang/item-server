@@ -2,7 +2,9 @@ package kea.dpang.item.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import kea.dpang.item.base.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import kea.dpang.item.base.*;
 import kea.dpang.item.dto.*;
 import kea.dpang.item.service.ReviewServiceImpl;
 
@@ -13,13 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name="Review API", description = "리뷰 관련 API 입니다.")
 @RequestMapping("/api/reviews")
 @Slf4j
 public class ReviewController {
@@ -48,9 +50,14 @@ public class ReviewController {
 
     @GetMapping("/{reviewerId}/reviewlist")
     @Operation(summary = "사용자별 리뷰 리스트 조회", description = "사용자 정보에 따라 리뷰 리스트를 조회합니다.")
-    public ResponseEntity<List<ReviewPersonalListDto>> getReviewPersonalList(Pageable pageable) {
-        List<ReviewPersonalListDto> reviews = reviewService.getReviewPersonalList(pageable);
-        return ResponseEntity.ok(reviews);
+    public ResponseEntity<SuccessResponse<List<ReviewPersonalListDto>>> getReviewPersonalList(@PathVariable @Parameter(description = "리뷰 작성자 ID", example = "1") Long reviewerId, Pageable pageable) {
+        List<ReviewPersonalListDto> reviews = reviewService.getReviewPersonalList(reviewerId, pageable);
+        log.info("리뷰 리스트 조회 완료. 작성자 ID: {}", reviewerId);
+
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "리뷰 리스트가 조회되었습니다.", reviews),
+                HttpStatus.OK
+        );
     }
 
 //    @PutMapping("/{reviewId}")
@@ -62,12 +69,12 @@ public class ReviewController {
 //        return ResponseEntity.ok(review);
 //    }
 
-    @DeleteMapping("/{reviewId}")
-    @Operation(summary = "리뷰 삭제", description = "리뷰 정보를 시스템에서 제거합니다.")
-    public ResponseEntity<Void> deleteReview(@PathVariable @Parameter(description = "리뷰ID", example = "1") Long reviewId) {
-        reviewService.deleteReview(reviewId);
-        log.info("리뷰 삭제 완료. 리뷰 ID: {}", reviewId);
-
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{reviewId}")
+//    @Operation(summary = "리뷰 삭제", description = "리뷰 정보를 시스템에서 제거합니다.")
+//    public ResponseEntity<Void> deleteReview(@PathVariable @Parameter(description = "리뷰ID", example = "1") Long reviewId) {
+//        reviewService.deleteReview(reviewId);
+//        log.info("리뷰 삭제 완료. 리뷰 ID: {}", reviewId);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 }
