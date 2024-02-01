@@ -2,11 +2,8 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.ReviewCreateDto;
-import kea.dpang.item.dto.ReviewUpdateDto;
+import kea.dpang.item.dto.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -26,8 +23,9 @@ public class Review extends BaseEntity {
     private Long reviewerId;
 
     // 상품 ID
-    @Column(name = "item_id", nullable = false)
-    private Long itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item itemId;
 
     // 리뷰 내용
     @Column(name = "review_content", nullable = false)
@@ -40,7 +38,6 @@ public class Review extends BaseEntity {
     public static Review from(ReviewCreateDto dto) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
-                .itemId(dto.getItemId())
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .build();
@@ -51,5 +48,4 @@ public class Review extends BaseEntity {
         this.content = dto.getContent();
         this.rating = dto.getRating();
     }
-
 }

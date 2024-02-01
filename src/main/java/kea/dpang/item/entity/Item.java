@@ -6,7 +6,6 @@ import kea.dpang.item.dto.ItemCreateDto;
 import kea.dpang.item.dto.ItemUpdateDto;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,13 +21,13 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long itemId;
 
-    // 판매처 ID
-    @Column(name="seller_id", nullable = false)
-    private Long sellerId;
-
     // 상품명
     @Column(name="name", nullable = false)
     private String itemName;
+
+    // 판매처 ID
+    @Column(name="seller_id", nullable = false)
+    private Long sellerId;
 
     // 상품 회원 할인가
     @Column(name="price", nullable = false)
@@ -44,15 +43,15 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SubCategory subCategory;
 
-    // 평점
-    private float rating;
+//    // 평점
+//    private float rating;
 
     // 평균 평점
     private float averageRating;
 
     // 리뷰 리스트
-    @ElementCollection
-    private List<String> reviews;
+    @OneToMany(mappedBy = "itemId", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     // 이벤트 할인율
     private int discountRate;
@@ -63,11 +62,11 @@ public class Item extends BaseEntity {
     // 재고 수량
     private int stockQuantity;
 
-    // 최소 재고 수량
-    private int minStock;
+//    // 최소 재고 수량
+//    private int minStock;
 
-    // 최대 재고 수량
-    private int maxStock;
+//    // 최대 재고 수량
+//    private int maxStock;
 
     // 상품 상세정보
     @Column(length = 1000)
@@ -76,18 +75,12 @@ public class Item extends BaseEntity {
     // 상품 사진
     private String itemImage;
 
-    // 상품 썸네일 사진
-    private String thumbnailImage;
-
     // 위시리스트
     private Boolean wishlistCheck;
 
     // 이미지 리스트
     @ElementCollection
     private List<String> images;
-
-    // 상품 점수
-    private Double score;
 
     public static Item from(ItemCreateDto dto) {
         return Item.builder()
