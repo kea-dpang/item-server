@@ -29,7 +29,6 @@ import java.util.List;
 public class ItemController {
 
     private final ItemServiceImpl itemService;
-    private final ReviewServiceImpl reviewService;
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
@@ -44,7 +43,7 @@ public class ItemController {
 
     @GetMapping("/cardlist")
     @Operation(summary = "상품 카드 리스트 조회", description = "페이지 정보에 따라 상품 카드 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemCardDto>>> getItemCard(@RequestParam Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<ItemCardDto>>> getItemCard(Pageable pageable) {
         List<ItemCardDto> items = itemService.getItemCard(pageable);
         log.info("상품 카드 리스트 조회 완료. 페이지: {}", pageable.getPageNumber());
         return new ResponseEntity<>(
@@ -53,16 +52,9 @@ public class ItemController {
         );
     }
 
-//    @GetMapping("/list")
-//    @Operation(summary = "백엔드용")
-//    public ResponseEntity<List<ItemSimpleBackendDto>> getItemListForBackend(@RequestBody List<Long> itemId) {
-//        List<ItemSimpleBackendDto> items = itemService.getItemListForBackend();
-//        return ResponseEntity.ok(items);
-//    }
-
     @GetMapping("/managelist")
     @Operation(summary = "상품 관리 리스트 조회", description = "페이지 정보에 따라 관리자용 상품 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemManageListDto>>> getItemManageList(@RequestParam Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<ItemManageListDto>>> getItemManageList(Pageable pageable) {
         List<ItemManageListDto> items = itemService.getItemManageList(pageable);
         log.info("상품 관리 리스트 조회 완료. 페이지: {}", pageable.getPageNumber());
         return new ResponseEntity<>(
@@ -70,6 +62,17 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+//    @GetMapping("/{itemId}/reviews")
+//    @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 페이지 정보에 따라 리뷰 리스트를 조회합니다.")
+//    public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
+//        List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
+//        log.info("상품별 리뷰 리스트 조회 완료. 상품 ID: {}, 페이지 번호: {}", itemId, pageable.getPageNumber());
+//        return new ResponseEntity<>(
+//                new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
+//                HttpStatus.OK
+//        );
+//    }
 
     @GetMapping("/{itemId}")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
@@ -115,17 +118,6 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/{itemId}/reviews")
-    @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 페이지 정보에 따라 리뷰 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
-        List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
-        log.info("상품별 리뷰 리스트 조회 완료. 상품 ID: {}, 페이지 번호: {}", itemId, pageable.getPageNumber());
-        return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
-                HttpStatus.OK
-        );
-    }
-
     @GetMapping("/{itemId}/stock")
     @Operation(summary = "재고 수량 조회", description = "재고 수량을 조회합니다.")
     public ResponseEntity<SuccessResponse<Integer>> getStockQuantity(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
@@ -162,7 +154,7 @@ public class ItemController {
     /* feign */
     // 이벤트(Event)
     @GetMapping("/findName")
-    @Operation(summary = "이벤트쪽 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
+    @Operation(summary = "(BE) 이벤트 상품명 조회", description = "이벤트에 들어갈 상품명을 조회합니다.")
     public ResponseEntity<SuccessResponse<String>> getEventItemName(@RequestParam Long itemId) {
         String itemName = itemService.getItemName(itemId);
         return new ResponseEntity<>(
@@ -173,7 +165,7 @@ public class ItemController {
 
     // 주문(Order)
     @GetMapping("/inquiryItem")
-    @Operation(summary = "상품 조회", description = "상품 정보를 조회합니다.")
+    @Operation(summary = "(BE) 상품 조회", description = "상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemInquiryDto>> getInquiryItem(@RequestParam Long itemId) {
         Item item = itemService.getItemInquiry(itemId);
         ItemInquiryDto itemInquiryDto = new ItemInquiryDto(item);
@@ -182,4 +174,5 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
 }

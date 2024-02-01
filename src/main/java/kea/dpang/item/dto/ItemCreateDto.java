@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ItemCreateDto {
+
     private Long sellerId;
     private String itemName;
     private Category category;;

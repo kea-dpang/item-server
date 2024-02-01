@@ -15,7 +15,7 @@ public class ItemUpdateDto {
     private Category category;
     private SubCategory subCategory;
     private int itemPrice;
-    private int eventPrice;
+    private int discountRate;
     private int stockQuantity;
     private String itemImage;
     private List<String> images;

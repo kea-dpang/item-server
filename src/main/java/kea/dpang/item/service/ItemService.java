@@ -24,13 +24,6 @@ public interface ItemService {
      */
     List<ItemCardDto> getItemCard(Pageable pageable);
 
-//    /**
-//     * 백엔드용 상품 목록을 조회 기능 입니다.
-//     *
-//     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
-//     */
-//    List<ItemSimpleBackendDto> getItemListForBackend();
-
     /**
      * 관리자용 상품 목록을 페이지 정보에 따라 조회합니다.
      *
@@ -101,5 +94,15 @@ public interface ItemService {
 
     // 주문
     Item getItemInquiry(Long itemId);
+
+    // 판매처
+    String getSellerName(Long SellerId);
+
+    /**
+     * 백엔드용 상품 목록 조회 기능 입니다.
+     *
+     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
+     */
+    List<ItemSimpleBackendDto> getItemListForBackend();
 
 }
