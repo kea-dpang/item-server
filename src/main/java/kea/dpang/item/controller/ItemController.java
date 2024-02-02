@@ -43,7 +43,7 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/cardlist")
+    @GetMapping("/card/list")
     @Operation(summary = "상품 카드 리스트 조회", description = "페이지 정보에 따라 상품 카드 리스트를 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemCardDto>>> getItemCard(Pageable pageable) {
         List<ItemCardDto> items = itemService.getItemCard(pageable);
@@ -54,7 +54,7 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/managelist")
+    @GetMapping("/manage/list")
     @Operation(summary = "상품 관리 리스트 조회", description = "페이지 정보에 따라 관리자용 상품 리스트를 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemManageListDto>>> getItemManageList(Pageable pageable) {
         List<ItemManageListDto> items = itemService.getItemManageList(pageable);
@@ -87,7 +87,7 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/popular/list")
     @Operation(summary = "인기 상품 리스트 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(@RequestParam List<Long> itemIdList, Pageable pageable) {
         List<PopularItemDto> popularItems = itemService.getPopularItems();
@@ -109,11 +109,11 @@ public class ItemController {
         );
     }
 
-    @DeleteMapping("/{itemIds}")
+    @DeleteMapping("/{itemId}/list")
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
-    public ResponseEntity<BaseResponse> deleteItem(@PathVariable @Parameter(description = "상품ID", example = "1") List<Long> itemIds) {
-        itemService.deleteItem(itemIds);
-        log.info("상품 정보 삭제 완료. 상품 ID 리스트: {}", itemIds);
+    public ResponseEntity<BaseResponse> deleteItem(@PathVariable @Parameter(description = "상품ID", example = "1") List<Long> itemId) {
+        itemService.deleteItem(itemId);
+        log.info("상품 정보 삭제 완료. 상품 ID 리스트: {}", itemId);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.NO_CONTENT.value(), "상품이 삭제되었습니다."),
                 HttpStatus.NO_CONTENT
@@ -131,27 +131,16 @@ public class ItemController {
         );
     }
 
-    @PutMapping("/{itemId}/increase/{quantity}")
-    @Operation(summary = "재고 수량 증가", description = "재고 수량을 증가시킵니다.")
-    public ResponseEntity<SuccessResponse<StockManageDto>> increaseStock(
+    @PutMapping("/{itemId}/stock/{quantity}")
+    @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
+    public ResponseEntity<SuccessResponse<StockManageDto>> changeStock(
             @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId,
             @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity
     ) {
-        StockManageDto increaseStock = itemService.increaseStock(itemId, quantity);
-        log.info("재고 수량 증가 완료. 상품 ID: {}", itemId);
+        StockManageDto stockManageDto = itemService.changeStock(itemId, quantity);
+        log.info("재고 수량 변경 완료. 상품 ID: {}", itemId);
         return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 증가되었습니다.", increaseStock),
-                HttpStatus.OK
-        );
-    }
-
-    @PutMapping("/{itemId}/decrease/{quantity}")
-    @Operation(summary = "재고 수량 감소", description = "재고 수량을 감소시킵니다.")
-    public ResponseEntity<SuccessResponse<StockManageDto>> decreaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
-        StockManageDto decreaseStock = itemService.decreaseStock(itemId, quantity);
-        log.info("재고 수량 감소 완료. 상품 ID: {}", itemId);
-        return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 조회되었습니다.", decreaseStock),
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다.", stockManageDto),
                 HttpStatus.OK
         );
     }
@@ -170,7 +159,7 @@ public class ItemController {
 
     // 주문(Order)
     @GetMapping("/inquiryItem")
-    @Operation(summary = "(BE) 상품 조회", description = "상품 정보를 조회합니다.")
+    @Operation(summary = "(BE) 상품 정보 조회", description = "상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemInquiryDto>> getInquiryItem(@RequestParam Long itemId) {
         Item item = itemService.getItemInquiry(itemId);
         ItemInquiryDto itemInquiryDto = new ItemInquiryDto(item);
@@ -182,7 +171,7 @@ public class ItemController {
 
     // 유저(User) - 장바구니 및 위시리스트에 전달할 상품 정보 리스트
     @GetMapping("/cart/inquiryItem")
-    @Operation(summary = "(BE) 상품 정보 조회", description = "상품의 일부 정보를 조회합니다.")
+    @Operation(summary = "(BE) 상품 요약 정보 조회", description = "상품의 일부 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemSimpleListDto>>> getCartInquiryItem(@RequestParam List<Long> itemIds) {
         List<ItemSimpleListDto> data = itemService.getCartItemsInquiry(itemIds);
         return new ResponseEntity<>(
