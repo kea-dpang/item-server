@@ -8,8 +8,8 @@ import kea.dpang.item.base.*;
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.feign.dto.ItemInquiryDto;
+import kea.dpang.item.dto.StockManageDto;
 import kea.dpang.item.service.ItemServiceImpl;
-import kea.dpang.item.service.ReviewServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +33,8 @@ public class ItemController {
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
     public ResponseEntity<BaseResponse> createItem(@RequestBody ItemCreateDto itemCreateDto) {
-        ItemResponseDto item = itemService.createItem(itemCreateDto);
-        log.info("새로운 상품 등록 완료. 상품 ID: {}", item.getItemId());
+        itemService.createItem(itemCreateDto);
+        log.info("새로운 상품 등록 완료.");
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
                 HttpStatus.CREATED
@@ -99,8 +99,8 @@ public class ItemController {
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
-        ItemResponseDto item = itemService.updateItem(itemId, itemUpdateDto);
-        log.info("상품 정보 업데이트 완료. 상품 ID: {}", item.getItemId());
+        itemService.updateItem(itemId, itemUpdateDto);
+        log.info("상품 정보 업데이트 완료");
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 수정되었습니다."),
                 HttpStatus.CREATED
@@ -131,8 +131,11 @@ public class ItemController {
 
     @PutMapping("/{itemId}/increase/{quantity}")
     @Operation(summary = "재고 수량 증가", description = "재고 수량을 증가시킵니다.")
-    public ResponseEntity<SuccessResponse<Integer>> increaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
-        int increaseStock = itemService.increaseStock(itemId, quantity);
+    public ResponseEntity<SuccessResponse<StockManageDto>> increaseStock(
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId,
+            @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity
+    ) {
+        StockManageDto increaseStock = itemService.increaseStock(itemId, quantity);
         log.info("재고 수량 증가 완료. 상품 ID: {}", itemId);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 증가되었습니다.", increaseStock),
@@ -142,8 +145,8 @@ public class ItemController {
 
     @PutMapping("/{itemId}/decrease/{quantity}")
     @Operation(summary = "재고 수량 감소", description = "재고 수량을 감소시킵니다.")
-    public ResponseEntity<SuccessResponse<Integer>> decreaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
-        int decreaseStock = itemService.decreaseStock(itemId, quantity);
+    public ResponseEntity<SuccessResponse<StockManageDto>> decreaseStock(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity) {
+        StockManageDto decreaseStock = itemService.decreaseStock(itemId, quantity);
         log.info("재고 수량 감소 완료. 상품 ID: {}", itemId);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 조회되었습니다.", decreaseStock),

@@ -2,13 +2,12 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
-import kea.dpang.item.entity.Review;
 import kea.dpang.item.exception.ItemNotFoundException;
-import kea.dpang.item.exception.ReviewNotFoundException;
-import kea.dpang.item.feign.SellerFeignClient;
+import kea.dpang.item.feign.SellerServiceFeignClient;
+import kea.dpang.item.feign.dto.ItemSimpleListDto;
+import kea.dpang.item.dto.StockManageDto;
 import kea.dpang.item.repository.ItemRepository;
 
-import kea.dpang.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,16 +28,16 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final SellerFeignClient sellerFeignClient;
+    private final SellerServiceFeignClient sellerFeignClient;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
     private final StringRedisTemplate redisTemplate;
 
     // 상품 등록
     @Override
     @Transactional
-    public ItemResponseDto createItem(ItemCreateDto dto) {
+    public void createItem(ItemCreateDto dto) {
         Item item = Item.from(dto);
-        return new ItemResponseDto(itemRepository.save(item));
+        itemRepository.save(item);
     }
 
     // 상품 상세 정보 조회
@@ -48,7 +47,8 @@ public class ItemServiceImpl implements ItemService {
         String sellerName = getSellerName(itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        return new ItemResponseDto(item, sellerName);
+        ItemResponseDto itemResponseDto = item.toItemResponseDto(sellerName);
+        return item.toItemResponseDto(sellerName);
     }
 
     // 상품 카드 리스트 조회
@@ -92,11 +92,10 @@ public class ItemServiceImpl implements ItemService {
     // 상품 수정
     @Override
     @Transactional
-    public ItemResponseDto updateItem(Long itemId, ItemUpdateDto dto) {
+    public void updateItem(Long itemId, ItemUpdateDto dto) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.updateInformation(dto);
-        return new ItemResponseDto(itemRepository.save(item));
     }
 
     // 상품 삭제
@@ -124,21 +123,27 @@ public class ItemServiceImpl implements ItemService {
     // 재고 수량 증가
     @Override
     @Transactional
-    public int increaseStock(Long itemId, int quantity) {
+    public StockManageDto increaseStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.increaseStock(quantity);
-        return item.getStockQuantity();
+        return StockManageDto.builder()
+                .stockQuantity(item.getStockQuantity())
+                .itemId(item.getItemId())
+                .build();
     }
 
     // 재고 수량 감소
     @Override
     @Transactional
-    public int decreaseStock(Long itemId, int quantity) {
+    public StockManageDto decreaseStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
         item.decreaseStock(quantity);
-        return item.getStockQuantity();
+        return StockManageDto.builder()
+                .stockQuantity(item.getStockQuantity())
+                .itemId(item.getItemId())
+                .build();
     }
 
     /* feign */
@@ -163,13 +168,13 @@ public class ItemServiceImpl implements ItemService {
         return sellerFeignClient.getSeller(sellerId).getBody().getData();
     }
 
-    // 장바구니, 위시리스트 - 백엔드용 상품 리스트 조회
+    // 장바구니, 위시리스트 - 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemSimpleBackendDto> getItemListForBackend() {
+    public List<ItemSimpleListDto> getItemSimpleList() {
         List<Item> items = itemRepository.findAll();
         return items.stream()
-                .map(ItemSimpleBackendDto::new)
+                .map(ItemSimpleListDto::new)
                 .collect(Collectors.toList());
     }
 }

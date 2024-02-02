@@ -1,4 +1,4 @@
-package kea.dpang.item.dto;
+package kea.dpang.item.feign.dto;
 
 import kea.dpang.item.entity.Item;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemSimpleBackendDto {
+public class ItemSimpleListDto {
 
     private Long itemId;
     private String itemName;
@@ -15,7 +15,7 @@ public class ItemSimpleBackendDto {
     private int discountPrice;
     private String itemImage;
 
-    public ItemSimpleBackendDto(Item item) {
+    public ItemSimpleListDto(Item item) {
         this.itemId = item.getItemId();
         this.itemName = item.getItemName();
         this.itemPrice = item.getItemPrice();
