@@ -18,5 +18,4 @@ public class ItemCreateDto {
     private int itemPrice;
     private int stockQuantity;
     private String itemImage;
-    private List<String> images;
 }

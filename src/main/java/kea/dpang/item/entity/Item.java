@@ -3,10 +3,12 @@ package kea.dpang.item.entity;
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
 import kea.dpang.item.dto.ItemCreateDto;
+import kea.dpang.item.dto.ItemResponseDto;
 import kea.dpang.item.dto.ItemUpdateDto;
 import lombok.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -75,12 +77,12 @@ public class Item extends BaseEntity {
     // 상품 사진
     private String itemImage;
 
-    // 위시리스트
-    private Boolean wishlistCheck;
-
     // 이미지 리스트
     @ElementCollection
     private List<String> images;
+
+    // 위시리스트
+    private Boolean wishlistCheck;
 
     public static Item from(ItemCreateDto dto) {
         return Item.builder()
@@ -91,7 +93,27 @@ public class Item extends BaseEntity {
                 .itemPrice(dto.getItemPrice())
                 .stockQuantity(dto.getStockQuantity())
                 .itemImage(dto.getItemImage())
-                .images(dto.getImages())
+                .build();
+    }
+
+    public ItemResponseDto toItemResponseDto(String sellerName){
+        return ItemResponseDto.builder()
+                .itemId(this.getItemId())
+                .itemName(this.getItemName())
+                .sellerId(this.getSellerId())
+                .sellerName(sellerName)
+                .category(this.getCategory())
+                .subCategory(this.getSubCategory())
+                .itemPrice(this.getItemPrice())
+                .averageRating(this.getAverageRating())
+                .reviewId(this.getReviews().stream().map((Review::getReviewId)).collect(Collectors.toList()))
+                .discountRate(this.getDiscountRate())
+                .discountPrice(this.getDiscountPrice())
+                .description(this.getDescription())
+                .stockQuantity(this.getStockQuantity())
+                .itemImage(this.getItemImage())
+                .images(this.getImages())
+                .wishlistCheck(this.getWishlistCheck())
                 .build();
     }
 

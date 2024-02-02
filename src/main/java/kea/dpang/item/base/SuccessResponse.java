@@ -1,6 +1,5 @@
 package kea.dpang.item.base;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

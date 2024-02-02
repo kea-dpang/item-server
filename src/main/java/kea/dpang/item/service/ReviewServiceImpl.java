@@ -2,10 +2,9 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.*;
-import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.exception.ReviewNotFoundException;
-import kea.dpang.item.feign.UserFeignClient;
+import kea.dpang.item.feign.UserServiceFeignClient;
 import kea.dpang.item.repository.ReviewRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final UserFeignClient userFeignClient;
+    private final UserServiceFeignClient userFeignClient;
 
     // 리뷰 등록
     @Override
