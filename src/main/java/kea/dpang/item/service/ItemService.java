@@ -76,21 +76,12 @@ public interface ItemService {
     int getStockQuantity(Long itemId);
 
     /**
-     * 주어진 ID에 해당하는 상품의 재고 수량을 증가시킵니다.
+     * 주어진 ID에 해당하는 상품의 재고 수량을 업데이트 합니다.
      *
-     * @param itemId 재고 수량을 증가시킬 상품의 ID
-     * @param quantity 증가시킬 재고 수량
+     * @param itemId 재고 수량을 수정시킬 상품의 ID
+     * @param quantity 수정시킬 재고 수량
      */
-    StockManageDto increaseStock(Long itemId, int quantity);
-
-    /**
-     * 주어진 ID에 해당하는 상품의 재고 수량을 감소시킵니다.
-     *
-     * @param itemId 재고 수량을 감소시킬 상품의 ID
-     * @param quantity 감소시킬 재고 수량
-     */
-    StockManageDto decreaseStock(Long itemId, int quantity);
-
+    StockManageDto changeStock(Long itemId, int quantity);
 
     /* feign */
     // 이벤트
@@ -99,14 +90,11 @@ public interface ItemService {
     // 주문
     Item getItemInquiry(Long itemId);
 
-    // 판매처
-    String getSellerName(Long SellerId);
-
+    // 사용자
     /**
      * 장바구니, 위시리스트 // 백엔드용 상품 리스트 조회
      *
      * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
      */
-
     List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds);
 }

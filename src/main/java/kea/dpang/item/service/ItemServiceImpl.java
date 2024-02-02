@@ -121,26 +121,13 @@ public class ItemServiceImpl implements ItemService {
         return item.getStockQuantity();
     }
 
-    // 재고 수량 증가
+    // 재고 수량 증감
     @Override
     @Transactional
-    public StockManageDto increaseStock(Long itemId, int quantity) {
+    public StockManageDto changeStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.increaseStock(quantity);
-        return StockManageDto.builder()
-                .stockQuantity(item.getStockQuantity())
-                .itemId(item.getItemId())
-                .build();
-    }
-
-    // 재고 수량 감소
-    @Override
-    @Transactional
-    public StockManageDto decreaseStock(Long itemId, int quantity) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.decreaseStock(quantity);
+        item.changeStock(quantity);
         return StockManageDto.builder()
                 .stockQuantity(item.getStockQuantity())
                 .itemId(item.getItemId())
@@ -149,6 +136,8 @@ public class ItemServiceImpl implements ItemService {
 
     /* feign */
     // 이벤트 - 상품명 조회
+    @Override
+    @Transactional
     public String getItemName(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
@@ -160,13 +149,6 @@ public class ItemServiceImpl implements ItemService {
     public Item getItemInquiry(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-    }
-
-    // 판매처 - 판매처명 조회
-    @Override
-    @Transactional(readOnly = true)
-    public String getSellerName(Long sellerId) {
-        return sellerServiceFeignClient.getSeller(sellerId).getBody().getData();
     }
 
     // 장바구니, 위시리스트 - 상품 리스트 조회
