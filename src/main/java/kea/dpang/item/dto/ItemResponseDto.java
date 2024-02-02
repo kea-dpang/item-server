@@ -4,6 +4,7 @@ import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.entity.SubCategory;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,51 +30,28 @@ public class ItemResponseDto {
     private int discountPrice;
     private String description;
     private int stockQuantity;
-//    private int minStock;
-//    private int maxStock;
     private String itemImage;
     private List<String> images;
     private Boolean wishlistCheck;
 
-    public ItemResponseDto(Item item) {
-        this.itemId = item.getItemId();
-        this.itemName = item.getItemName();
-        this.sellerId = item.getSellerId();
-        this.category = item.getCategory();
-        this.subCategory = item.getSubCategory();
-        this.itemPrice = item.getItemPrice();
-        this.averageRating = item.getAverageRating();
-        this.reviewId = item.getReviews().stream().map(Review::getReviewId).collect(Collectors.toList());
-        this.discountRate = item.getDiscountRate();
-        this.discountPrice = item.getDiscountPrice();
-        this.stockQuantity = item.getStockQuantity();
-//        this.minStock = item.getMinStock();
-//        this.maxStock = item.getMaxStock();
-        this.description = item.getDescription();
-        this.itemImage = item.getItemImage();
-        this.images = item.getImages();
-        this.wishlistCheck = item.getWishlistCheck();
-    }
-
-    public ItemResponseDto(Item item, String sellerName) {
-        this.itemId = item.getItemId();
-        this.itemName = item.getItemName();
-        this.sellerId = item.getSellerId();
+    @Builder
+    public ItemResponseDto(Long itemId, String itemName, Long sellerId, String sellerName, Category category, SubCategory subCategory, int itemPrice, float averageRating, List<Long> reviewId, int discountRate, int discountPrice, String description, int stockQuantity, String itemImage, List<String> images, Boolean wishlistCheck) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.sellerId = sellerId;
         this.sellerName = sellerName;
-        this.category = item.getCategory();
-        this.subCategory = item.getSubCategory();
-        this.itemPrice = item.getItemPrice();
-        this.averageRating = item.getAverageRating();
-        this.reviewId = item.getReviews().stream().map(Review::getReviewId).collect(Collectors.toList());
-        this.discountRate = item.getDiscountRate();
-        this.discountPrice = item.getDiscountPrice();
-        this.stockQuantity = item.getStockQuantity();
-//        this.minStock = item.getMinStock();
-//        this.maxStock = item.getMaxStock();
-        this.description = item.getDescription();
-        this.itemImage = item.getItemImage();
-        this.images = item.getImages();
-        this.wishlistCheck = item.getWishlistCheck();
+        this.category = category;
+        this.subCategory = subCategory;
+        this.itemPrice = itemPrice;
+        this.averageRating = averageRating;
+        this.reviewId = reviewId;
+        this.discountRate = discountRate;
+        this.discountPrice = discountPrice;
+        this.description = description;
+        this.stockQuantity = stockQuantity;
+        this.itemImage = itemImage;
+        this.images = images;
+        this.wishlistCheck = wishlistCheck;
     }
 }
 
