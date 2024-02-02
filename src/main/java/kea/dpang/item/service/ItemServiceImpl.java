@@ -45,9 +45,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        String sellerName = getSellerName(itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
+        String sellerName = getSellerName(item.getSellerId());
         return new ItemResponseDto(item, sellerName);
     }
 
