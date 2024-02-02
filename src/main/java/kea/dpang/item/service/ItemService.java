@@ -2,6 +2,8 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.feign.dto.ItemIdsRequestDto;
+import kea.dpang.item.feign.dto.ItemSimpleListDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -99,10 +101,10 @@ public interface ItemService {
     String getSellerName(Long SellerId);
 
     /**
-     * 백엔드용 상품 목록 조회 기능 입니다.
+     * 장바구니, 위시리스트 // 백엔드용 상품 리스트 조회
      *
      * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
      */
-    List<ItemSimpleBackendDto> getItemListForBackend();
+    List<ItemSimpleListDto> getCartItemsInquiry(ItemIdsRequestDto itemIdsRequestDto);
 
 }

@@ -7,9 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.*;
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.feign.dto.ItemIdsRequestDto;
 import kea.dpang.item.feign.dto.ItemInquiryDto;
+import kea.dpang.item.feign.dto.ItemSimpleListDto;
 import kea.dpang.item.service.ItemServiceImpl;
-import kea.dpang.item.service.ReviewServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -171,6 +172,17 @@ public class ItemController {
         ItemInquiryDto itemInquiryDto = new ItemInquiryDto(item);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품명이 조회되었습니다.", itemInquiryDto),
+                HttpStatus.OK
+        );
+    }
+
+    // 유저(User) - 장바구니 및 위시리스트에 전달할 상품 정보 리스트
+    @GetMapping("/cart/inquiryItem")
+    @Operation(summary = "(BE) 상품 정보 조회", description = "상품의 일부 정보를 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<ItemSimpleListDto>>> getCartInquiryItem(@RequestBody ItemIdsRequestDto itemIdsRequestDto) {
+        List<ItemSimpleListDto> data = itemService.getCartItemsInquiry(itemIdsRequestDto);
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품 목록 전달 성공", data),
                 HttpStatus.OK
         );
     }
