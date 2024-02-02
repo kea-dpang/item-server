@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class ErrorResponseDto {
+
     private String message;
 }
 

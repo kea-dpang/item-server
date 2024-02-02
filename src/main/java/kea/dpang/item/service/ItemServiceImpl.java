@@ -2,9 +2,13 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.entity.Review;
 import kea.dpang.item.exception.ItemNotFoundException;
+import kea.dpang.item.exception.ReviewNotFoundException;
+import kea.dpang.item.feign.SellerFeignClient;
 import kea.dpang.item.repository.ItemRepository;
 
+import kea.dpang.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final SellerFeignClient sellerFeignClient;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
     private final StringRedisTemplate redisTemplate;
 
@@ -40,9 +45,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        return itemRepository.findById(itemId)
-                .map(ItemResponseDto::new)
+        String sellerName = getSellerName(itemId);
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
+        return new ItemResponseDto(item, sellerName);
     }
 
     // 상품 카드 리스트 조회
@@ -54,16 +60,6 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemCardDto::new)
                 .collect(Collectors.toList());
     }
-
-//    @Override
-//    @Transactional
-//    // 백엔드용 상품 리스트 조회
-//    public List<ItemSimpleBackendDto> getItemListForBackend() {
-//        List<Item> items = itemRepository.findAll();
-//        return items.stream()
-//                .map(ItemSimpleBackendDto::new)
-//                .collect(Collectors.toList());
-//    }
 
     // 관리자용 상품 리스트 조회
     @Override
@@ -99,7 +95,6 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDto updateItem(Long itemId, ItemUpdateDto dto) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-
         item.updateInformation(dto);
         return new ItemResponseDto(itemRepository.save(item));
     }
@@ -146,9 +141,35 @@ public class ItemServiceImpl implements ItemService {
         return item.getStockQuantity();
     }
 
+    /* feign */
+    // 이벤트 - 상품명 조회
     public String getItemName(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
     }
 
+    // 주문 - 상품 정보 조회
+    @Override
+    @Transactional(readOnly = true)
+    public Item getItemInquiry(Long itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+    }
+
+    // 판매처 - 판매처명 조회
+    @Override
+    @Transactional(readOnly = true)
+    public String getSellerName(Long sellerId) {
+        return sellerFeignClient.getSeller(sellerId).getBody().getData();
+    }
+
+    // 장바구니, 위시리스트 - 백엔드용 상품 리스트 조회
+    @Override
+    @Transactional
+    public List<ItemSimpleBackendDto> getItemListForBackend() {
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(ItemSimpleBackendDto::new)
+                .collect(Collectors.toList());
+    }
 }

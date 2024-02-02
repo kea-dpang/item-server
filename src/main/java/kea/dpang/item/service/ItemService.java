@@ -1,6 +1,7 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.dto.*;
+import kea.dpang.item.entity.Item;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -22,13 +23,6 @@ public interface ItemService {
      * @return 조회된 상품 카드 목록이 담긴 DTO 리스트
      */
     List<ItemCardDto> getItemCard(Pageable pageable);
-
-//    /**
-//     * 백엔드용 상품 목록을 조회 기능 입니다.
-//     *
-//     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
-//     */
-//    List<ItemSimpleBackendDto> getItemListForBackend();
 
     /**
      * 관리자용 상품 목록을 페이지 정보에 따라 조회합니다.
@@ -93,6 +87,22 @@ public interface ItemService {
      */
     int decreaseStock(Long itemId, int quantity);
 
+
+    /* feign */
+    // 이벤트
     String getItemName(Long ItemId);
+
+    // 주문
+    Item getItemInquiry(Long itemId);
+
+    // 판매처
+    String getSellerName(Long SellerId);
+
+    /**
+     * 백엔드용 상품 목록 조회 기능 입니다.
+     *
+     * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
+     */
+    List<ItemSimpleBackendDto> getItemListForBackend();
 
 }
