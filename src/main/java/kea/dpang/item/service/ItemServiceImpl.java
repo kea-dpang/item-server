@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final SellerServiceFeignClient sellerFeignClient;
+    private final SellerServiceFeignClient sellerServiceFeignClient;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
     private final StringRedisTemplate redisTemplate;
 
@@ -44,10 +44,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        String sellerName = getSellerName(itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        ItemResponseDto itemResponseDto = item.toItemResponseDto(sellerName);
+        String sellerName = sellerServiceFeignClient.getSeller(item.getSellerId()).getBody().getData();
         return item.toItemResponseDto(sellerName);
     }
 
@@ -165,7 +164,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public String getSellerName(Long sellerId) {
-        return sellerFeignClient.getSeller(sellerId).getBody().getData();
+        return sellerServiceFeignClient.getSeller(sellerId).getBody().getData();
     }
 
     // 장바구니, 위시리스트 - 상품 리스트 조회
