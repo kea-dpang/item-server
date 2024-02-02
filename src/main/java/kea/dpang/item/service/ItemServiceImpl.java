@@ -168,8 +168,8 @@ public class ItemServiceImpl implements ItemService {
     // 장바구니, 위시리스트 - 백엔드용 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemSimpleListDto> getCartItemsInquiry(ItemIdsRequestDto requestDto) {
-        List<Item> items = itemRepository.findAll();
+    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds) {
+        List<Item> items = itemRepository.findAllByItemIdIn(itemIds);
         return items.stream()
                 .map(ItemSimpleListDto::new)
                 .collect(Collectors.toList());

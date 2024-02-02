@@ -179,8 +179,8 @@ public class ItemController {
     // 유저(User) - 장바구니 및 위시리스트에 전달할 상품 정보 리스트
     @GetMapping("/cart/inquiryItem")
     @Operation(summary = "(BE) 상품 정보 조회", description = "상품의 일부 정보를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemSimpleListDto>>> getCartInquiryItem(@RequestBody ItemIdsRequestDto itemIdsRequestDto) {
-        List<ItemSimpleListDto> data = itemService.getCartItemsInquiry(itemIdsRequestDto);
+    public ResponseEntity<SuccessResponse<List<ItemSimpleListDto>>> getCartInquiryItem(@RequestParam List<Long> itemIds) {
+        List<ItemSimpleListDto> data = itemService.getCartItemsInquiry(itemIds);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 목록 전달 성공", data),
                 HttpStatus.OK

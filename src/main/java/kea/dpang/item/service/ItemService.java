@@ -105,6 +105,6 @@ public interface ItemService {
      *
      * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
      */
-    List<ItemSimpleListDto> getCartItemsInquiry(ItemIdsRequestDto itemIdsRequestDto);
+    List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds);
 
 }
