@@ -6,6 +6,8 @@ import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
 import kea.dpang.item.dto.StockManageDto;
+import kea.dpang.item.exception.ReviewNotFoundException;
+import kea.dpang.item.feign.dto.ItemIdsRequestDto;
 import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -170,8 +172,8 @@ public class ItemServiceImpl implements ItemService {
     // 장바구니, 위시리스트 - 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemSimpleListDto> getItemSimpleList() {
-        List<Item> items = itemRepository.findAll();
+    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds) {
+        List<Item> items = itemRepository.findAllByItemIdIn(itemIds);
         return items.stream()
                 .map(ItemSimpleListDto::new)
                 .collect(Collectors.toList());

@@ -2,7 +2,6 @@ package kea.dpang.item.feign.dto;
 
 import kea.dpang.item.entity.Item;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -10,7 +9,6 @@ import lombok.Getter;
  *
  * @property id 조회할 상품의 고유 식별자 ID
  */
-@Data
 @AllArgsConstructor
 @Getter
 public class ItemInquiryDto {
