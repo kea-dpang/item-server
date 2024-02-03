@@ -1,4 +1,4 @@
-package kea.dpang.item.dto;
+package kea.dpang.item.dto.Item;
 
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -12,6 +12,7 @@ import java.util.List;
 public class ItemCreateDto {
 
     private Long sellerId;
+    private String sellerName;
     private String itemName;
     private Category category;;
     private SubCategory subCategory;

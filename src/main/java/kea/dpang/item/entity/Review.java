@@ -2,7 +2,8 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Review.ReviewCreateDto;
+import kea.dpang.item.dto.Review.ReviewUpdateDto;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.repository.ItemRepository;
 import lombok.*;

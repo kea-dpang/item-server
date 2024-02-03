@@ -1,13 +1,13 @@
-package kea.dpang.item.dto;
+package kea.dpang.item.dto.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ReviewUpdateDto {
-
-    private Long reviewId;
+public class ReviewCreateDto {
+    private Long reviewerId;
+    private Long itemId;
     private String content;
     private Double rating;
 }

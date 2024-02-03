@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import kea.dpang.item.base.*;
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Review.ReviewCreateDto;
+import kea.dpang.item.dto.Review.ReviewPersonalListDto;
 import kea.dpang.item.service.ReviewServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController

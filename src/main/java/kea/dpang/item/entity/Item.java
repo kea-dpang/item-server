@@ -2,9 +2,9 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.ItemCreateDto;
-import kea.dpang.item.dto.ItemResponseDto;
-import kea.dpang.item.dto.ItemUpdateDto;
+import kea.dpang.item.dto.Item.ItemCreateDto;
+import kea.dpang.item.dto.Item.ItemResponseDto;
+import kea.dpang.item.dto.Item.ItemUpdateDto;
 import lombok.*;
 
 import java.util.List;
@@ -30,6 +30,10 @@ public class Item extends BaseEntity {
     // 판매처 ID
     @Column(name="seller_id", nullable = false)
     private Long sellerId;
+
+    // 판매처명
+    @Column(name="seller_name", nullable = false)
+    private String sellerName;
 
     // 상품 회원 할인가
     @Column(name="price", nullable = false)
@@ -78,6 +82,7 @@ public class Item extends BaseEntity {
     public static Item from(ItemCreateDto dto) {
         return Item.builder()
                 .sellerId(dto.getSellerId())
+                .sellerName(dto.getSellerName())
                 .itemName(dto.getItemName())
                 .category(dto.getCategory())
                 .subCategory(dto.getSubCategory())
