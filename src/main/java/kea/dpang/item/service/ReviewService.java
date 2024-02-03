@@ -16,8 +16,8 @@ public interface ReviewService {
 //     * @return 조회된 리뷰의 정보가 담긴 Detail DTO
 //     */
 //    ReviewResponseDto getReview(Long reviewId);
-//
-//    List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable);
+
+    List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable);
 
     List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable);
 

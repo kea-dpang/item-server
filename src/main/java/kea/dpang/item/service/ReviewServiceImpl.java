@@ -51,16 +51,16 @@ public class ReviewServiceImpl implements ReviewService {
 //                .map(ReviewResponseDto::new)
 //                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 //    }
-//
-//    // 리뷰 리스트 조회
-//    @Override
-//    @Transactional
-//    public List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable) {
-//        Page<Review> reviews = reviewRepository.findAll(pageable);
-//        return reviews.stream()
-//                .map(ReviewResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
+
+    // 리뷰 리스트 조회
+    @Override
+    @Transactional
+    public List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAll(pageable);
+        return reviews.stream()
+                .map(ReviewResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
     // 사용자별 리뷰 리스트 조회
     @Override
