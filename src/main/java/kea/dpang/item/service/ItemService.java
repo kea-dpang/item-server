@@ -1,14 +1,25 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
-import kea.dpang.item.dto.StockManageDto;
+import kea.dpang.item.dto.Stock.StockManageDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ItemService {
+
+    /**
+     * 새로운 상품을 등록합니다.
+     *
+     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
+     * @return 등록된 상품의 정보가 담긴 Detail DTO
+     */
+    void createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
@@ -32,15 +43,9 @@ public interface ItemService {
      * @param pageable 페이지 정보
      * @return 조회된 상품 목록이 담긴 DTO 리스트
      */
-    List<ItemManageListDto> getItemManageList(Pageable pageable);
+   Page<ItemManageListDto> getItemManageList(Pageable pageable);
 
-    /**
-     * 새로운 상품을 등록합니다.
-     *
-     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
-     * @return 등록된 상품의 정보가 담긴 Detail DTO
-     */
-    void createItem(ItemCreateDto itemCreateDto);
+    Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, List<String> brandNames, Double minPrice, Double maxPrice, String keyword, Pageable pageable);
 
     /**
      * 상품의 정보를 업데이트합니다.
@@ -74,21 +79,12 @@ public interface ItemService {
     int getStockQuantity(Long itemId);
 
     /**
-     * 주어진 ID에 해당하는 상품의 재고 수량을 증가시킵니다.
+     * 주어진 ID에 해당하는 상품의 재고 수량을 업데이트 합니다.
      *
-     * @param itemId 재고 수량을 증가시킬 상품의 ID
-     * @param quantity 증가시킬 재고 수량
+     * @param itemId 재고 수량을 수정시킬 상품의 ID
+     * @param quantity 수정시킬 재고 수량
      */
-    StockManageDto increaseStock(Long itemId, int quantity);
-
-    /**
-     * 주어진 ID에 해당하는 상품의 재고 수량을 감소시킵니다.
-     *
-     * @param itemId 재고 수량을 감소시킬 상품의 ID
-     * @param quantity 감소시킬 재고 수량
-     */
-    StockManageDto decreaseStock(Long itemId, int quantity);
-
+    StockManageDto changeStock(Long itemId, int quantity);
 
     /* feign */
     // 이벤트
@@ -97,14 +93,11 @@ public interface ItemService {
     // 주문
     Item getItemInquiry(Long itemId);
 
-    // 판매처
-    String getSellerName(Long SellerId);
-
+    // 사용자
     /**
-     * 백엔드용 상품 목록 조회 기능 입니다.
+     * 장바구니, 위시리스트 // 백엔드용 상품 리스트 조회
      *
      * @return 조회된 모든 상품 목록이 담긴 DTO 리스트
      */
-    List<ItemSimpleListDto> getItemSimpleList();
-
+    List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds);
 }

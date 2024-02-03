@@ -1,11 +1,13 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
-import kea.dpang.item.dto.StockManageDto;
+import kea.dpang.item.dto.Stock.StockManageDto;
 import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final SellerServiceFeignClient sellerFeignClient;
+    private final SellerServiceFeignClient sellerServiceFeignClient;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
     private final StringRedisTemplate redisTemplate;
 
@@ -44,10 +46,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        String sellerName = getSellerName(itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        ItemResponseDto itemResponseDto = item.toItemResponseDto(sellerName);
+        String sellerName = sellerServiceFeignClient.getSeller(item.getSellerId()).getBody().getData();
         return item.toItemResponseDto(sellerName);
     }
 
@@ -64,11 +65,12 @@ public class ItemServiceImpl implements ItemService {
     // 관리자용 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemManageListDto> getItemManageList(Pageable pageable) {
+    public Page<ItemManageListDto> getItemManageList(Pageable pageable) {
         Page<Item> items = itemRepository.findAll(pageable);
-        return items.stream()
-                .map(ItemManageListDto::new)
-                .collect(Collectors.toList());
+//        return items.stream()
+//                .map(ItemManageListDto::new)
+//                .collect(Collectors.toList());
+        return items.map(ItemManageListDto::new);
     }
 
     // 인기 상품 조회
@@ -88,6 +90,15 @@ public class ItemServiceImpl implements ItemService {
             return new PopularItemDto(itemId, itemName, score);
         }).toList();
     }
+
+    // 상품 검색
+    @Override
+    @Transactional
+    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, List<String> sellerNames, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerNames, minPrice, maxPrice, keyword, pageable);
+        return items.map(ItemCardDto::new);
+    }
+
 
     // 상품 수정
     @Override
@@ -120,26 +131,13 @@ public class ItemServiceImpl implements ItemService {
         return item.getStockQuantity();
     }
 
-    // 재고 수량 증가
+    // 재고 수량 증감
     @Override
     @Transactional
-    public StockManageDto increaseStock(Long itemId, int quantity) {
+    public StockManageDto changeStock(Long itemId, int quantity) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.increaseStock(quantity);
-        return StockManageDto.builder()
-                .stockQuantity(item.getStockQuantity())
-                .itemId(item.getItemId())
-                .build();
-    }
-
-    // 재고 수량 감소
-    @Override
-    @Transactional
-    public StockManageDto decreaseStock(Long itemId, int quantity) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.decreaseStock(quantity);
+        item.changeStock(quantity);
         return StockManageDto.builder()
                 .stockQuantity(item.getStockQuantity())
                 .itemId(item.getItemId())
@@ -148,6 +146,8 @@ public class ItemServiceImpl implements ItemService {
 
     /* feign */
     // 이벤트 - 상품명 조회
+    @Override
+    @Transactional
     public String getItemName(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
@@ -161,18 +161,11 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
     }
 
-    // 판매처 - 판매처명 조회
-    @Override
-    @Transactional(readOnly = true)
-    public String getSellerName(Long sellerId) {
-        return sellerFeignClient.getSeller(sellerId).getBody().getData();
-    }
-
     // 장바구니, 위시리스트 - 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemSimpleListDto> getItemSimpleList() {
-        List<Item> items = itemRepository.findAll();
+    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemId) {
+        List<Item> items = itemRepository.findAllByItemIdIn(itemId);
         return items.stream()
                 .map(ItemSimpleListDto::new)
                 .collect(Collectors.toList());

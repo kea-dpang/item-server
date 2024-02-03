@@ -2,15 +2,15 @@ package kea.dpang.item.feign.dto;
 
 import kea.dpang.item.entity.Item;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * 상품 조회를 위한 DTO
  *
  * @property id 조회할 상품의 고유 식별자 ID
  */
-@Data
 @AllArgsConstructor
+@Getter
 public class ItemInquiryDto {
 
     private Long itemId;
