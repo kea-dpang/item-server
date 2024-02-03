@@ -12,9 +12,8 @@ import java.util.List;
 public class ItemCreateDto {
 
     private Long sellerId;
-    private String sellerName;
     private String itemName;
-    private Category category;;
+    private Category category;
     private SubCategory subCategory;
     private int itemPrice;
     private int stockQuantity;
