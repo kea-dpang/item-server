@@ -76,11 +76,19 @@ public class Item extends BaseEntity {
     private Boolean wishlistCheck;
 
     public static Item from(ItemCreateDto dto) {
+        // SubCagegory null 허용 로직.
+        SubCategory subCategory = null;
+        if (dto.getSubCategory() != null && !dto.getSubCategory().isEmpty()) {
+            try {
+                subCategory = SubCategory.valueOf(dto.getSubCategory());
+            } catch (IllegalArgumentException e) {
+            }
+        }
         return Item.builder()
                 .sellerId(dto.getSellerId())
                 .itemName(dto.getItemName())
                 .category(dto.getCategory())
-                .subCategory(dto.getSubCategory())
+                .subCategory(subCategory)
                 .itemPrice(dto.getItemPrice())
                 .stockQuantity(dto.getStockQuantity())
                 .itemImage(dto.getItemImage())

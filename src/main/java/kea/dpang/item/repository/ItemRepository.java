@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE " +
             "(:category = '전체' OR i.category = :category) AND " +
-            "(:subCategory = '전체' OR i.subCategory = :subCategory) AND " +
+            "(:subCategory IS NULL OR i.subCategory = :subCategory) AND " +
             "(:minPrice = 0 OR i.itemPrice >= :minPrice) AND " +
             "(:maxPrice = 2000000 OR i.itemPrice <= :maxPrice) AND " +
             "(i.itemName LIKE %:keyword%)")
