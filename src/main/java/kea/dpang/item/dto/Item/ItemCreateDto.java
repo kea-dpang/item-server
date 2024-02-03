@@ -14,7 +14,7 @@ public class ItemCreateDto {
     private Long sellerId;
     private String itemName;
     private Category category;
-    private SubCategory subCategory;
+    private String subCategory;
     private int itemPrice;
     private int stockQuantity;
     private String itemImage;
