@@ -1,13 +1,13 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
-import kea.dpang.item.dto.StockManageDto;
-import kea.dpang.item.exception.ReviewNotFoundException;
-import kea.dpang.item.feign.dto.ItemIdsRequestDto;
+import kea.dpang.item.dto.Stock.StockManageDto;
 import kea.dpang.item.repository.ItemRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -65,11 +65,12 @@ public class ItemServiceImpl implements ItemService {
     // 관리자용 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemManageListDto> getItemManageList(Pageable pageable) {
+    public Page<ItemManageListDto> getItemManageList(Pageable pageable) {
         Page<Item> items = itemRepository.findAll(pageable);
-        return items.stream()
-                .map(ItemManageListDto::new)
-                .collect(Collectors.toList());
+//        return items.stream()
+//                .map(ItemManageListDto::new)
+//                .collect(Collectors.toList());
+        return items.map(ItemManageListDto::new);
     }
 
     // 인기 상품 조회
@@ -89,6 +90,15 @@ public class ItemServiceImpl implements ItemService {
             return new PopularItemDto(itemId, itemName, score);
         }).toList();
     }
+
+    // 상품 검색
+    @Override
+    @Transactional
+    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, List<String> sellerNames, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerNames, minPrice, maxPrice, keyword, pageable);
+        return items.map(ItemCardDto::new);
+    }
+
 
     // 상품 수정
     @Override
@@ -154,8 +164,8 @@ public class ItemServiceImpl implements ItemService {
     // 장바구니, 위시리스트 - 상품 리스트 조회
     @Override
     @Transactional
-    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemIds) {
-        List<Item> items = itemRepository.findAllByItemIdIn(itemIds);
+    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemId) {
+        List<Item> items = itemRepository.findAllByItemIdIn(itemId);
         return items.stream()
                 .map(ItemSimpleListDto::new)
                 .collect(Collectors.toList());

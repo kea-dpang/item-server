@@ -1,16 +1,25 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.*;
+import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
+import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
-import kea.dpang.item.dto.StockManageDto;
-import kea.dpang.item.feign.dto.ItemIdsRequestDto;
-import kea.dpang.item.feign.dto.ItemSimpleListDto;
+import kea.dpang.item.dto.Stock.StockManageDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ItemService {
+
+    /**
+     * 새로운 상품을 등록합니다.
+     *
+     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
+     * @return 등록된 상품의 정보가 담긴 Detail DTO
+     */
+    void createItem(ItemCreateDto itemCreateDto);
 
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
@@ -34,15 +43,9 @@ public interface ItemService {
      * @param pageable 페이지 정보
      * @return 조회된 상품 목록이 담긴 DTO 리스트
      */
-    List<ItemManageListDto> getItemManageList(Pageable pageable);
+   Page<ItemManageListDto> getItemManageList(Pageable pageable);
 
-    /**
-     * 새로운 상품을 등록합니다.
-     *
-     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
-     * @return 등록된 상품의 정보가 담긴 Detail DTO
-     */
-    void createItem(ItemCreateDto itemCreateDto);
+    Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, List<String> brandNames, Double minPrice, Double maxPrice, String keyword, Pageable pageable);
 
     /**
      * 상품의 정보를 업데이트합니다.

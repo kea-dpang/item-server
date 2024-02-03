@@ -1,4 +1,4 @@
-package kea.dpang.item.dto;
+package kea.dpang.item.dto.Item;
 
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
