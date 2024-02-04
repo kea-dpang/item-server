@@ -10,7 +10,7 @@ public class ReviewNotFoundException extends RuntimeException {
     private final Long reviewId;
 
     public ReviewNotFoundException(Long reviewId) {
-        super(String.format("상품을 찾을 수 없음: 상품 ID - '%s'", reviewId));
+        super(String.format("리뷰를 찾을 수 없음: 리뷰 ID - '%s'", reviewId));
         this.reviewId = reviewId;
     }
 }

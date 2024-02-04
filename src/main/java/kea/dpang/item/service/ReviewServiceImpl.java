@@ -4,7 +4,6 @@ import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.Review.ReviewCreateDto;
 import kea.dpang.item.dto.Review.ReviewPersonalListDto;
 import kea.dpang.item.dto.Review.ReviewResponseDto;
-import kea.dpang.item.dto.Review.ReviewUpdateDto;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.exception.ReviewNotFoundException;
 import kea.dpang.item.feign.UserServiceFeignClient;
@@ -42,21 +41,11 @@ public class ReviewServiceImpl implements ReviewService {
         log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
     }
 
-//    // 사용하지 않는 기능이라 지웠어용.
-//    // 리뷰 조회
-//    @Override
-//    @Transactional(readOnly = true)
-//    public ReviewResponseDto getReview(Long reviewId) {
-//        return reviewRepository.findById(reviewId)
-//                .map(ReviewResponseDto::new)
-//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
-//    }
-
-    // 리뷰 리스트 조회
+    // 상품별 리뷰 리스트 조회
     @Override
     @Transactional
     public List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable) {
-        Page<Review> reviews = reviewRepository.findAll(pageable);
+        Page<Review> reviews = reviewRepository.findByItemIdItemId(itemId, pageable);
         return reviews.stream()
                 .map(ReviewResponseDto::new)
                 .collect(Collectors.toList());
@@ -68,31 +57,40 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
         ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(reviewerId);
         String name = responseEntity.getBody().getData().getName();
-
         Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
         return reviews.stream()
                 .map(review -> new ReviewPersonalListDto(review, name))
                 .collect(Collectors.toList());
     }
 
-    // 리뷰 수정
-    @Override
-    @Transactional
-    public ReviewResponseDto updateReview(Long reviewId, ReviewUpdateDto dto) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 
-        review.updateInformation(dto);
-        return new ReviewResponseDto(reviewRepository.save(review));
-    }
+//    // 리뷰 조회
+//    @Override
+//    @Transactional(readOnly = true)
+//    public ReviewResponseDto getReview(Long reviewId) {
+//        return reviewRepository.findById(reviewId)
+//                .map(ReviewResponseDto::new)
+//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+//    }
 
-    // 리뷰 삭제
-    @Override
-    @Transactional
-    public void deleteReview(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
-        reviewRepository.delete(review);
-    }
+//    // 리뷰 수정
+//    @Override
+//    @Transactional
+//    public ReviewResponseDto updateReview(Long reviewId, ReviewUpdateDto dto) {
+//        Review review = reviewRepository.findById(reviewId)
+//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+//
+//        review.updateInformation(dto);
+//        return new ReviewResponseDto(reviewRepository.save(review));
+//    }
+
+//    // 리뷰 삭제
+//    @Override
+//    @Transactional
+//    public void deleteReview(Long reviewId) {
+//        Review review = reviewRepository.findById(reviewId)
+//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+//        reviewRepository.delete(review);
+//    }
 
 }

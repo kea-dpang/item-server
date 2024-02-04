@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByReviewerId(Long reviewerId, Pageable pageable);
+    Page<Review> findByItemIdItemId(Long itemId, Pageable pageable);
 }
