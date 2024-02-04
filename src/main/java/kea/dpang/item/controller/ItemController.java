@@ -9,7 +9,6 @@ import kea.dpang.item.dto.item.ItemCreateDto;
 import kea.dpang.item.dto.item.ItemResponseDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
-import kea.dpang.item.dto.stock.StockManageDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.service.ItemService;
@@ -130,14 +129,15 @@ public class ItemController {
     // Todo: List로 변경됨에 따라 DTO 및 URL 수정 필요
     @PutMapping("/{itemId}/stock/{quantity}/update")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
-    public ResponseEntity<SuccessResponse<StockManageDto>> changeStock(
+    public ResponseEntity<BaseResponse> changeStock(
             @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId,
             @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity
     ) {
-        StockManageDto stockManageDto = itemService.changeStock(itemId, quantity);
+        itemService.changeStock(itemId, quantity);
         log.info("재고 수량 변경 완료. 상품 ID: {}", itemId);
+
         return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다.", stockManageDto),
+                new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),
                 HttpStatus.OK
         );
     }

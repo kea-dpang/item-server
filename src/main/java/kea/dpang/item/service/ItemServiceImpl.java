@@ -3,7 +3,6 @@ package kea.dpang.item.service;
 import kea.dpang.item.dto.item.ItemCreateDto;
 import kea.dpang.item.dto.item.ItemResponseDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
-import kea.dpang.item.dto.stock.StockManageDto;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
@@ -98,7 +97,7 @@ public class ItemServiceImpl implements ItemService {
     // 재고 수량 증감
     @Override
     @Transactional
-    public StockManageDto changeStock(Long itemId, int quantity) {
+    public void changeStock(Long itemId, int quantity) {
         log.info("item ID로부터 재고 수량 증감을 시작합니다 : {}", itemId);
 
         Item item = itemRepository.findById(itemId)
@@ -108,11 +107,6 @@ public class ItemServiceImpl implements ItemService {
         log.info("재고 수량 증감을 시작합니다 : {}", item.getItemId());
         item.changeStock(quantity);
         log.info("재고 수량 증감이 성공적으로 완료되었습니다. 변경된 재고 수량은 : {}", item.getStockQuantity());
-
-        return StockManageDto.builder()
-                .stockQuantity(item.getStockQuantity())
-                .itemId(item.getItemId())
-                .build();
     }
 
 }

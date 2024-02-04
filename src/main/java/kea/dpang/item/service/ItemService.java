@@ -3,7 +3,6 @@ package kea.dpang.item.service;
 import kea.dpang.item.dto.item.ItemCreateDto;
 import kea.dpang.item.dto.item.ItemResponseDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
-import kea.dpang.item.dto.stock.StockManageDto;
 
 import java.util.List;
 
@@ -24,6 +23,10 @@ public interface ItemService {
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
     ItemResponseDto getItem(Long itemId);
+
+    // Todo: 필터링 상품 리스트 조회
+
+    // Todo: 인기 상품 리스트 조회
 
     /**
      * 상품의 정보를 업데이트합니다.
@@ -47,5 +50,5 @@ public interface ItemService {
      * @param itemId   재고 수량을 수정시킬 상품의 ID
      * @param quantity 수정시킬 재고 수량
      */
-    StockManageDto changeStock(Long itemId, int quantity);
+    void changeStock(Long itemId, int quantity);
 }
