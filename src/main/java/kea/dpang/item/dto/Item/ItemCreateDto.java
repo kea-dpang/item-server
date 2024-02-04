@@ -12,10 +12,9 @@ import java.util.List;
 public class ItemCreateDto {
 
     private Long sellerId;
-    private String sellerName;
     private String itemName;
-    private Category category;;
-    private SubCategory subCategory;
+    private Category category;
+    private String subCategory;
     private int itemPrice;
     private int stockQuantity;
     private String itemImage;

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import kea.dpang.item.base.*;
 import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.dto.Review.ReviewResponseDto;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -14,6 +15,7 @@ import kea.dpang.item.dto.Stock.StockManageDto;
 import kea.dpang.item.feign.dto.ItemSimpleListDto;
 import kea.dpang.item.service.ItemServiceImpl;
 
+import kea.dpang.item.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +35,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemServiceImpl itemService;
+    private final ReviewServiceImpl reviewService;
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
@@ -76,19 +79,20 @@ public class ItemController {
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(),"상품 상세 정보가 조회되었습니다.", item),
                 HttpStatus.OK
+
         );
     }
 
-//    @GetMapping("/{itemId}/reviews")
-//    @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
-//    public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
-//        List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
-//        log.info("상품별 리뷰 리스트 조회 완료. 상품 ID: {}, 페이지 번호: {}", itemId, pageable.getPageNumber());
-//        return new ResponseEntity<>(
-//                new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
-//                HttpStatus.OK
-//        );
-//    }
+    @GetMapping("/{itemId}/reviews")
+    @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
+        List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
+        log.info("상품별 리뷰 리스트 조회 완료. 상품 ID: {}, 페이지 번호: {}", itemId, pageable.getPageNumber());
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
+                HttpStatus.OK
+        );
+    }
 
     @GetMapping("/popular/list")
     @Operation(summary = "인기 상품 리스트 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
@@ -106,12 +110,11 @@ public class ItemController {
     public ResponseEntity<SuccessResponse<Page<ItemCardDto>>> filterItems(
             @RequestParam(defaultValue = "전체") Category category,
             @RequestParam(defaultValue = "전체") SubCategory subCategory,
-            @RequestParam(defaultValue = "전체") List<String> sellerNames,
             @RequestParam(defaultValue = "0") Double minPrice,
             @RequestParam(defaultValue = "10000000") Double maxPrice,
             @RequestParam(defaultValue = "") String keyword,
             Pageable pageable) {
-        Page<ItemCardDto> items = itemService.filterItems(category, subCategory, sellerNames, minPrice, maxPrice, keyword, pageable);
+        Page<ItemCardDto> items = itemService.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 필터링이 완료되었습니다.", items),
                 HttpStatus.OK

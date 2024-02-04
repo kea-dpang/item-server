@@ -94,8 +94,8 @@ public class ItemServiceImpl implements ItemService {
     // 상품 검색
     @Override
     @Transactional
-    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, List<String> sellerNames, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
-        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerNames, minPrice, maxPrice, keyword, pageable);
+    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        Page<Item> items = itemRepository.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
         return items.map(ItemCardDto::new);
     }
 

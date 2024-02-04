@@ -38,7 +38,7 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/{reviewerId}/reviewlist")
+    @GetMapping("/{reviewerId}/review/list")
     @Operation(summary = "사용자별 리뷰 리스트 조회", description = "사용자 정보에 따라 리뷰 리스트를 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ReviewPersonalListDto>>> getReviewPersonalList(@PathVariable @Parameter(description = "리뷰 작성자 ID", example = "1") Long reviewerId, Pageable pageable) {
         List<ReviewPersonalListDto> reviews = reviewService.getReviewPersonalList(reviewerId, pageable);

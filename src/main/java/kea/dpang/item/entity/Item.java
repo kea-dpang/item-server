@@ -31,10 +31,6 @@ public class Item extends BaseEntity {
     @Column(name="seller_id", nullable = false)
     private Long sellerId;
 
-    // 판매처명
-    @Column(name="seller_name", nullable = false)
-    private String sellerName;
-
     // 상품 회원 할인가
     @Column(name="price", nullable = false)
     private int itemPrice;
@@ -80,12 +76,19 @@ public class Item extends BaseEntity {
     private Boolean wishlistCheck;
 
     public static Item from(ItemCreateDto dto) {
+        // SubCagegory null 허용 로직.
+        SubCategory subCategory = null;
+        if (dto.getSubCategory() != null && !dto.getSubCategory().isEmpty()) {
+            try {
+                subCategory = SubCategory.valueOf(dto.getSubCategory());
+            } catch (IllegalArgumentException e) {
+            }
+        }
         return Item.builder()
                 .sellerId(dto.getSellerId())
-                .sellerName(dto.getSellerName())
                 .itemName(dto.getItemName())
                 .category(dto.getCategory())
-                .subCategory(dto.getSubCategory())
+                .subCategory(subCategory)
                 .itemPrice(dto.getItemPrice())
                 .stockQuantity(dto.getStockQuantity())
                 .itemImage(dto.getItemImage())

@@ -46,10 +46,4 @@ public class Review extends BaseEntity {
                 .rating(dto.getRating())
                 .build();
     }
-
-    public void updateInformation(ReviewUpdateDto dto) {
-        this.reviewId = dto.getReviewId();
-        this.content = dto.getContent();
-        this.rating = dto.getRating();
-    }
 }
