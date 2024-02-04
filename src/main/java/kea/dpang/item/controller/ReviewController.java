@@ -7,7 +7,7 @@ import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.review.ReviewCreateDto;
 import kea.dpang.item.dto.review.ReviewPersonalListDto;
-import kea.dpang.item.service.ReviewServiceImpl;
+import kea.dpang.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class ReviewController {
 
-    private final ReviewServiceImpl reviewService;
+    private final ReviewService reviewService;
 
     @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰 정보를 시스템에 추가합니다.")

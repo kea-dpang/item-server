@@ -12,8 +12,8 @@ import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.dto.stock.StockManageDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
-import kea.dpang.item.service.ItemServiceImpl;
-import kea.dpang.item.service.ReviewServiceImpl;
+import kea.dpang.item.service.ItemService;
+import kea.dpang.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,8 +31,8 @@ import java.util.List;
 @Slf4j
 public class ItemController {
 
-    private final ItemServiceImpl itemService;
-    private final ReviewServiceImpl reviewService;
+    private final ItemService itemService;
+    private final ReviewService reviewService;
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
