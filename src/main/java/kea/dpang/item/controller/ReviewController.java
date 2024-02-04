@@ -3,15 +3,13 @@ package kea.dpang.item.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import kea.dpang.item.base.*;
+import kea.dpang.item.base.BaseResponse;
+import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.Review.ReviewCreateDto;
 import kea.dpang.item.dto.Review.ReviewPersonalListDto;
 import kea.dpang.item.service.ReviewServiceImpl;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name="Review API", description = "리뷰 관련 API 입니다.")
+@Tag(name = "Review API", description = "리뷰 관련 API 입니다.")
 @RequestMapping("/api/reviews")
 @Slf4j
 public class ReviewController {

@@ -1,6 +1,5 @@
 package kea.dpang.item.dto.Review;
 
-import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;

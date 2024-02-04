@@ -3,10 +3,12 @@ package kea.dpang.item.entity;
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
 import kea.dpang.item.dto.Review.ReviewCreateDto;
-import kea.dpang.item.dto.Review.ReviewUpdateDto;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.repository.ItemRepository;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -41,7 +43,7 @@ public class Review extends BaseEntity {
     public static Review from(ReviewCreateDto dto, ItemRepository itemRepository) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
-                .itemId(itemRepository.findById(dto.getItemId()).orElseThrow(()->new ItemNotFoundException(dto.getItemId())))
+                .itemId(itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId())))
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .build();

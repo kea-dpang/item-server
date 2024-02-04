@@ -5,15 +5,12 @@ import kea.dpang.item.dto.Review.ReviewCreateDto;
 import kea.dpang.item.dto.Review.ReviewPersonalListDto;
 import kea.dpang.item.dto.Review.ReviewResponseDto;
 import kea.dpang.item.entity.Review;
-import kea.dpang.item.exception.ReviewNotFoundException;
 import kea.dpang.item.feign.UserServiceFeignClient;
 import kea.dpang.item.feign.dto.UserDetailDto;
 import kea.dpang.item.repository.ItemRepository;
 import kea.dpang.item.repository.ReviewRepository;
-
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

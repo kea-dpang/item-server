@@ -11,7 +11,7 @@ public class StockManageDto {
     private int stockQuantity;
 
     @Builder
-    public StockManageDto(Long itemId, int stockQuantity){
+    public StockManageDto(Long itemId, int stockQuantity) {
         this.itemId = itemId;
         this.stockQuantity = stockQuantity;
     }

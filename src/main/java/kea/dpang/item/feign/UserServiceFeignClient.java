@@ -12,5 +12,5 @@ public interface UserServiceFeignClient {
 
     // 리뷰 작성자 이름을 받아오기 위한 API
     @GetMapping("/api/users/{userId}")
-    ResponseEntity<SuccessResponse<UserDetailDto>> getReviewer (@PathVariable Long userId);
+    ResponseEntity<SuccessResponse<UserDetailDto>> getReviewer(@PathVariable Long userId);
 }
