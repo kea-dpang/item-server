@@ -37,7 +37,6 @@ public class ItemController {
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
     public ResponseEntity<BaseResponse> createItem(@RequestBody ItemCreateDto itemCreateDto) {
         itemService.createItem(itemCreateDto);
-        log.info("새로운 상품 등록 완료.");
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
                 HttpStatus.CREATED
@@ -57,6 +56,7 @@ public class ItemController {
             Pageable pageable
     ) {
         // TODO("상품 리스트 조회 API 구현 필요");
+
 //        Page<ItemResponseDto> items = itemService.getItemList(pageable);
 //        log.info("상품 리스트 조회 완료. 페이지 번호: {}", pageable.getPageNumber());
 //        return new ResponseEntity<>(
@@ -71,7 +71,6 @@ public class ItemController {
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
         ItemResponseDto item = itemService.getItem(itemId);
-        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 상세 정보가 조회되었습니다.", item),
                 HttpStatus.OK
@@ -83,7 +82,6 @@ public class ItemController {
     @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
         List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
-        log.info("상품별 리뷰 리스트 조회 완료. 상품 ID: {}, 페이지 번호: {}", itemId, pageable.getPageNumber());
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
                 HttpStatus.OK
@@ -107,7 +105,6 @@ public class ItemController {
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
         itemService.updateItem(itemId, itemUpdateDto);
-        log.info("상품 정보 업데이트 완료");
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 수정되었습니다."),
                 HttpStatus.CREATED
@@ -118,7 +115,6 @@ public class ItemController {
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
     public ResponseEntity<BaseResponse> deleteItem(@RequestBody @Parameter(description = "상품ID", example = "1") List<Long> itemId) {
         itemService.deleteItem(itemId);
-        log.info("상품 정보 삭제 완료. 상품 ID 리스트: {}", itemId);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.NO_CONTENT.value(), "상품이 삭제되었습니다."),
                 HttpStatus.NO_CONTENT
@@ -134,8 +130,6 @@ public class ItemController {
             @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity
     ) {
         itemService.changeStock(itemId, quantity);
-        log.info("재고 수량 변경 완료. 상품 ID: {}", itemId);
-
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),
                 HttpStatus.OK

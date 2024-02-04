@@ -40,7 +40,6 @@ public class ReviewController {
     @Operation(summary = "사용자별 리뷰 리스트 조회", description = "사용자 정보에 따라 리뷰 리스트를 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ReviewPersonalListDto>>> getReviewPersonalList(@PathVariable @Parameter(description = "리뷰 작성자 ID", example = "1") Long reviewerId, Pageable pageable) {
         List<ReviewPersonalListDto> reviews = reviewService.getReviewPersonalList(reviewerId, pageable);
-        log.info("리뷰 리스트 조회 완료. 작성자 ID: {}, 페이지 번호: {}", reviewerId, pageable.getPageNumber());
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "리뷰 리스트가 조회되었습니다.", reviews),
                 HttpStatus.OK
