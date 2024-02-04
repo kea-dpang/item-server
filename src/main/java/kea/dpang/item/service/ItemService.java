@@ -3,6 +3,11 @@ package kea.dpang.item.service;
 import kea.dpang.item.dto.item.ItemCreateDto;
 import kea.dpang.item.dto.item.ItemResponseDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.StockUpdateDto;
+import kea.dpang.item.entity.Category;
+import kea.dpang.item.entity.SubCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,7 +17,6 @@ public interface ItemService {
      * 새로운 상품을 등록합니다.
      *
      * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
-     * @return 등록된 상품의 정보가 담긴 Detail DTO
      */
     void createItem(ItemCreateDto itemCreateDto);
 
@@ -25,6 +29,15 @@ public interface ItemService {
     ItemResponseDto getItem(Long itemId);
 
     // Todo: 필터링 상품 리스트 조회
+    Page<ItemResponseDto> getItemList(
+            Category category,
+            SubCategory subCategory,
+            Double minPrice,
+            Double maxPrice,
+            String keyword,
+            Long sellerId,
+            Pageable pageable
+    );
 
     // Todo: 인기 상품 리스트 조회
 
@@ -33,7 +46,6 @@ public interface ItemService {
      *
      * @param itemId        업데이트할 상품의 ID
      * @param itemUpdateDto 업데이트할 상품의 정보가 담긴 DTO
-     * @return 업데이트된 상품의 정보가 담긴 Detail DTO
      */
     void updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
 
@@ -47,8 +59,7 @@ public interface ItemService {
     /**
      * 주어진 ID에 해당하는 상품의 재고 수량을 업데이트 합니다.
      *
-     * @param itemId   재고 수량을 수정시킬 상품의 ID
-     * @param quantity 수정시킬 재고 수량
+     * @param dto 업데이트할 상품의 재고 정보가 담긴 DTO
      */
-    void changeStock(Long itemId, int quantity);
+    void changeStock(List<StockUpdateDto> dto);
 }

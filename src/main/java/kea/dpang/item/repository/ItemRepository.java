@@ -31,5 +31,14 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             @Param("keyword") String keyword,
             Pageable pageable);
 
+    Page<Item> findAllByCategoryAndSubCategoryAndItemPriceBetweenAndItemNameContainsAndSellerId(
+            Category category,
+            SubCategory subCategory,
+            Double minPrice,
+            Double maxPrice,
+            String keyword,
+            Long sellerId,
+            Pageable pageable);
+
 }
 

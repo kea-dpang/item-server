@@ -8,6 +8,7 @@ import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.item.ItemCreateDto;
 import kea.dpang.item.dto.item.ItemResponseDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+
     private final ReviewService reviewService;
 
     @PostMapping
@@ -43,27 +45,25 @@ public class ItemController {
         );
     }
 
-    // Todo: 상품 조회 <- 필터링
     @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<Page<ItemResponseDto>>> getItemList(
-            @RequestParam(defaultValue = "전체") Category category,
-            @RequestParam(defaultValue = "전체") SubCategory subCategory,
+            @RequestParam Category category,
+            @RequestParam SubCategory subCategory,
             @RequestParam(defaultValue = "0") Double minPrice,
             @RequestParam(defaultValue = "10000000") Double maxPrice,
-            @RequestParam(defaultValue = "") String keyword,
-            // Todo: 판매처 필터링
+            @RequestParam String keyword,
+            @RequestParam Long sellerId,
             Pageable pageable
     ) {
-        // TODO("상품 리스트 조회 API 구현 필요");
+        // 카테고리 따로, 브랜드 따로. 같이 들어오는 경우는 없다 (by 프런트 유지연)
 
-//        Page<ItemResponseDto> items = itemService.getItemList(pageable);
-//        log.info("상품 리스트 조회 완료. 페이지 번호: {}", pageable.getPageNumber());
-//        return new ResponseEntity<>(
-//                new SuccessResponse<>(HttpStatus.OK.value(), "상품 리스트가 조회되었습니다.", items),
-//                HttpStatus.OK
-//        );
-        return null;
+        Page<ItemResponseDto> items = itemService.getItemList(category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
+
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품 리스트가 조회되었습니다.", items),
+                HttpStatus.OK
+        );
     }
 
 
@@ -74,7 +74,6 @@ public class ItemController {
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 상세 정보가 조회되었습니다.", item),
                 HttpStatus.OK
-
         );
     }
 
@@ -122,18 +121,18 @@ public class ItemController {
     }
 
 
-    // Todo: List로 변경됨에 따라 DTO 및 URL 수정 필요
-    @PutMapping("/{itemId}/stock/{quantity}/update")
+    @PutMapping("/stock/update")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
-            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId,
-            @PathVariable @Parameter(description = "재고 수량 입력", example = "100") int quantity
+            @RequestBody @Parameter(description = "재고 변경 정보") List<StockUpdateDto> stockUpdateDtos
     ) {
-        itemService.changeStock(itemId, quantity);
+        itemService.changeStock(stockUpdateDtos);
+
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),
                 HttpStatus.OK
         );
     }
+
 
 }
