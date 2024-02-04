@@ -1,9 +1,9 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.Item.ItemCreateDto;
-import kea.dpang.item.dto.Item.ItemResponseDto;
-import kea.dpang.item.dto.Item.ItemUpdateDto;
-import kea.dpang.item.dto.Stock.StockManageDto;
+import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.ItemResponseDto;
+import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.stock.StockManageDto;
 
 import java.util.List;
 

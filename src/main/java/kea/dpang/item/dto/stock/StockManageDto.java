@@ -1,4 +1,4 @@
-package kea.dpang.item.dto.Stock;
+package kea.dpang.item.dto.stock;
 
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.Item.ItemUpdateDto;
+import kea.dpang.item.dto.item.ItemUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

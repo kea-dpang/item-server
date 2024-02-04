@@ -1,9 +1,9 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.Item.ItemCreateDto;
-import kea.dpang.item.dto.Item.ItemResponseDto;
-import kea.dpang.item.dto.Item.ItemUpdateDto;
-import kea.dpang.item.dto.Stock.StockManageDto;
+import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.ItemResponseDto;
+import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.stock.StockManageDto;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        log.info("Item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
+        log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
@@ -67,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void updateItem(Long itemId, ItemUpdateDto dto) {
-        log.info("Item ID로부터 아이템 수정을 시작합니다 : {}", itemId);
+        log.info("item ID로부터 아이템 수정을 시작합니다 : {}", itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
 
@@ -81,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(List<Long> itemIds) {
-        log.info("Item ID 리스트로부터 아이템 삭제를 시작합니다 : {}", itemIds);
+        log.info("item ID 리스트로부터 아이템 삭제를 시작합니다 : {}", itemIds);
 
         for (Long itemId : itemIds) {
             Item item = itemRepository.findById(itemId)
@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public StockManageDto changeStock(Long itemId, int quantity) {
-        log.info("Item ID로부터 재고 수량 증감을 시작합니다 : {}", itemId);
+        log.info("item ID로부터 재고 수량 증감을 시작합니다 : {}", itemId);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));

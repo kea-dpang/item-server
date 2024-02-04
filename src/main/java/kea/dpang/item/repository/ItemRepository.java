@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    // itemId 필드가 itemIds 리스트에 포함된 모든 Item 엔티티를 조회합니다.
+    // itemId 필드가 itemIds 리스트에 포함된 모든 item 엔티티를 조회합니다.
     List<Item> findAllByItemIdIn(List<Long> itemId);
 
     @Query("SELECT i FROM Item i WHERE " +

@@ -1,9 +1,9 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.Review.ReviewCreateDto;
-import kea.dpang.item.dto.Review.ReviewPersonalListDto;
-import kea.dpang.item.dto.Review.ReviewResponseDto;
+import kea.dpang.item.dto.review.ReviewCreateDto;
+import kea.dpang.item.dto.review.ReviewPersonalListDto;
+import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.feign.UserServiceFeignClient;
 import kea.dpang.item.feign.dto.UserDetailDto;
@@ -74,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
 //    @Override
 //    @Transactional
 //    public ReviewResponseDto updateReview(Long reviewId, ReviewUpdateDto dto) {
-//        Review review = reviewRepository.findById(reviewId)
+//        review review = reviewRepository.findById(reviewId)
 //                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 //
 //        review.updateInformation(dto);
@@ -85,7 +85,7 @@ public class ReviewServiceImpl implements ReviewService {
 //    @Override
 //    @Transactional
 //    public void deleteReview(Long reviewId) {
-//        Review review = reviewRepository.findById(reviewId)
+//        review review = reviewRepository.findById(reviewId)
 //                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 //        reviewRepository.delete(review);
 //    }

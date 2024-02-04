@@ -1,4 +1,4 @@
-package kea.dpang.item.dto.Item;
+package kea.dpang.item.dto.item;
 
 import jakarta.persistence.Convert;
 import kea.dpang.item.converter.StringToSubCategoryConverter;

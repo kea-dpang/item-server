@@ -5,11 +5,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.Item.ItemCreateDto;
-import kea.dpang.item.dto.Item.ItemResponseDto;
-import kea.dpang.item.dto.Item.ItemUpdateDto;
-import kea.dpang.item.dto.Review.ReviewResponseDto;
-import kea.dpang.item.dto.Stock.StockManageDto;
+import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.ItemResponseDto;
+import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.review.ReviewResponseDto;
+import kea.dpang.item.dto.stock.StockManageDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.service.ItemServiceImpl;
@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Item API", description = "상품 관련 API 입니다.")
+@Tag(name = "item API", description = "상품 관련 API 입니다.")
 @RequestMapping("/api/items")
 @Slf4j
 public class ItemController {

@@ -1,4 +1,4 @@
-package kea.dpang.item.dto.Review;
+package kea.dpang.item.dto.review;
 
 import kea.dpang.item.entity.Review;
 import lombok.AllArgsConstructor;
