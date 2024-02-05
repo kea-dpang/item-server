@@ -46,30 +46,4 @@ public class ReviewController {
         );
     }
 
-//    @GetMapping("/{reviewId}")
-//    @Operation(summary = "상품별 리뷰 조회", description = "리뷰를 조회합니다.")
-//    public ResponseEntity<ReviewResponseDto> getReview(@PathVariable @Parameter(description = "리뷰ID", example = "1") Long reviewId) {
-//        ReviewResponseDto review = reviewService.getReview(reviewId);
-//        log.info("리뷰 정보 조회 완료. 리뷰 ID: {}", review.getReviewId());
-//
-//        return ResponseEntity.ok(review);
-//    }
-
-//    @PutMapping("/{reviewId}")
-//    @Operation(summary = "리뷰 수정", description = "기존 리뷰 정보를 업데이트합니다.")
-//    public ResponseEntity<ReviewResponseDto> updateReview(@PathVariable @Parameter(description = "리뷰ID", example = "1") Long reviewId, @RequestBody ReviewUpdateDto reviewUpdateDto) {
-//        ReviewResponseDto review = reviewService.updateReview(reviewId, reviewUpdateDto);
-//        log.info("리뷰 정보 업데이트 완료. 리뷰 ID: {}", review.getReviewId());
-//
-//        return ResponseEntity.ok(review);
-//    }
-
-//    @DeleteMapping("/{reviewId}")
-//    @Operation(summary = "리뷰 삭제", description = "리뷰 정보를 시스템에서 제거합니다.")
-//    public ResponseEntity<Void> deleteReview(@PathVariable @Parameter(description = "리뷰ID", example = "1") Long reviewId) {
-//        reviewService.deleteReview(reviewId);
-//        log.info("리뷰 삭제 완료. 리뷰 ID: {}", reviewId);
-//
-//        return ResponseEntity.noContent().build();
-//    }
 }
