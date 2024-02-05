@@ -34,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReview(CreateReviewRequestDto dto) {
         Review review = Review.from(dto, itemRepository);
         new ReviewDto(reviewRepository.save(review));
-        log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
+        log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getId());
     }
 
     // 상품별 리뷰 리스트 조회

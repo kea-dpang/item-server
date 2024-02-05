@@ -20,7 +20,7 @@ public class PersonalReviewDto {
     private Double rating;
 
     public PersonalReviewDto(Review review, String reviewerName) {
-        this.reviewId = review.getReviewId();
+        this.reviewId = review.getId();
         this.reviewerId = review.getReviewerId();
         this.reviewerName = reviewerName;
         this.createdTime = review.getCreatedTime();

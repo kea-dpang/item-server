@@ -17,7 +17,7 @@ public class ReviewDto {
     private Double rating;
 
     public ReviewDto(Review review) {
-        this.reviewId = review.getReviewId();
+        this.reviewId = review.getId();
         this.reviewerId = review.getReviewerId();
         this.createdTime = review.getCreatedTime();
         this.itemId = review.getItemId().getItemId();
