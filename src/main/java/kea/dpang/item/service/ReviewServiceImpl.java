@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
         Page<Review> reviews = reviewRepository.findByItemIdItemId(itemId, pageable);
         return reviews.stream()
                 .map(ReviewDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 사용자별 리뷰 리스트 조회
@@ -57,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
         Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
         return reviews.stream()
                 .map(review -> new PersonalReviewDto(review, name))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
