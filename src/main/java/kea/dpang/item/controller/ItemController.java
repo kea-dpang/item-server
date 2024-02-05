@@ -65,7 +65,7 @@ public class ItemController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 리스트 정보에 따라 조회합니다.")
+    @Operation(summary = "상품 리스트 조회", description = "(백엔드) 상품 리스트를 리스트 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemDto>>> getItemList(
             @RequestParam(defaultValue = "") List<Long> itemIds
     ) {
@@ -156,7 +156,7 @@ public class ItemController {
 
 
     @PutMapping("/stock")
-    @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
+    @Operation(summary = "재고 수량 변경", description = "(백엔드) 재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
             @RequestBody @Parameter(description = "재고 변경 정보") StockUpdateRequestListDto request
     ) {
