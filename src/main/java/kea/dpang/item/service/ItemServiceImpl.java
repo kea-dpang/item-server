@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +25,8 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final SellerServiceFeignClient sellerServiceFeignClient;
-    private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
-    private final StringRedisTemplate redisTemplate;
+    private static final String ITEM_VIEW_COUNT_KEY = "item:viewcount";
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 상품 등록
     @Override
@@ -69,6 +70,25 @@ public class ItemServiceImpl implements ItemService {
     // 상품 상세 정보 조회
     @Override
     @Transactional(readOnly = true)
+    public List<PopularItemDto> getPopularItems() {
+        // Redis에서 조회수를 기반으로 인기 상품 ID와 점수를 가져옴
+        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
+                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
+
+        // 가져온 데이터를 PopularItemDto 리스트로 변환
+        return items.stream().map(item -> {
+            Long itemId = Long.valueOf(item.getValue());
+            Double score = item.getScore();
+            String itemName = "Item " + itemId;
+
+            return new PopularItemDto(itemId, itemName, score);
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void incrementViewCount(Long itemId) {
+        redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
+      
     public ItemDetailDto getItemDetailInfo(Long itemId) {
         log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
 
@@ -87,15 +107,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
-        log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 판매자ID = {}, 페이지 요청 정보 = {}", category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
+    public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         Page<Item> items = itemRepository.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
 
         log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
         String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
 
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
-        return items.map(item -> new ItemDetailDto(item, sellerName));
     }
 
 
