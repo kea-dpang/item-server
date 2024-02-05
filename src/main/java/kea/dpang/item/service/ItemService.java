@@ -70,6 +70,8 @@ public interface ItemService {
      */
     List<PopularItemDto> getPopularItems();
 
+    void incrementViewCount(Long itemId);
+
     /**
      * 주어진 ID에 해당하는 상품의 재고 수량을 조회합니다.
      *

@@ -32,7 +32,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final SellerServiceFeignClient sellerServiceFeignClient;
     private static final String ITEM_VIEW_COUNT_KEY = "item:viewcount";
-
     private final RedisTemplate<String, String> redisTemplate;
 
     // 상품 등록
@@ -90,6 +89,11 @@ public class ItemServiceImpl implements ItemService {
 
             return new PopularItemDto(itemId, itemName, score);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void incrementViewCount(Long itemId) {
+        redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
     }
 
     // 상품 검색

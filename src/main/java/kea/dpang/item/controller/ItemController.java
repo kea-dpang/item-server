@@ -72,18 +72,18 @@ public class ItemController {
         );
     }
 
-//    @GetMapping("/{itemId}/detail")
-//    @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
-//    public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
-//        ItemResponseDto item = itemService.getItem(itemId);
-//        redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
-//        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
-//        return new ResponseEntity<>(
-//                new SuccessResponse<>(HttpStatus.OK.value(),"상품 상세 정보가 조회되었습니다.", item),
-//                HttpStatus.OK
-//
-//        );
-//    }
+    @GetMapping("/{itemId}/detail")
+    @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
+    public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+        ItemResponseDto item = itemService.getItem(itemId);
+        itemService.incrementViewCount(itemId);
+        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(),"상품 상세 정보가 조회되었습니다.", item),
+                HttpStatus.OK
+
+        );
+    }
 
 
     @GetMapping("/{itemId}/reviews")
