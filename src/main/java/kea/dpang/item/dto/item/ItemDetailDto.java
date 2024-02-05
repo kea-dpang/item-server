@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemResponseDto {
+public class ItemDetailDto {
     private Long itemId;
     private String itemName;
     private Long sellerId;
@@ -30,7 +30,7 @@ public class ItemResponseDto {
     private String itemImage;
     private List<String> images;
 
-    public ItemResponseDto(Item item, String sellerName) {
+    public ItemDetailDto(Item item, String sellerName) {
         this.itemId = item.getItemId();
         this.itemName = item.getItemName();
         this.sellerId = item.getSellerId();

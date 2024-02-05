@@ -1,7 +1,7 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.dto.item.ItemCreateDto;
-import kea.dpang.item.dto.item.ItemResponseDto;
+import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.entity.Category;
@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     // 상품 상세 정보 조회
     @Override
     @Transactional(readOnly = true)
-    public ItemResponseDto getItem(Long itemId) {
+    public ItemDetailDto getItem(Long itemId) {
         log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
 
         Item item = itemRepository.findById(itemId)
@@ -64,11 +64,11 @@ public class ItemServiceImpl implements ItemService {
 
         log.info("판매자 이름 조회가 성공적으로 완료되었습니다. 조회된 판매자 이름은 : {}", sellerName);
 
-        return new ItemResponseDto(item, sellerName);
+        return new ItemDetailDto(item, sellerName);
     }
 
     @Override
-    public Page<ItemResponseDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
+    public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 판매자ID = {}, 페이지 요청 정보 = {}", category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
         Page<Item> items = itemRepository.findAllByCategoryAndSubCategoryAndItemPriceBetweenAndItemNameContainsAndSellerId(category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
 
@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
         String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
 
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
-        return items.map(item -> new ItemResponseDto(item, sellerName));
+        return items.map(item -> new ItemDetailDto(item, sellerName));
     }
 
 

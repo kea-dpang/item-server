@@ -1,7 +1,7 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.dto.item.ItemCreateDto;
-import kea.dpang.item.dto.item.ItemResponseDto;
+import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.entity.Category;
@@ -26,10 +26,10 @@ public interface ItemService {
      * @param itemId 조회할 상품의 ID
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
-    ItemResponseDto getItem(Long itemId);
+    ItemDetailDto getItem(Long itemId);
 
     // Todo: 필터링 상품 리스트 조회
-    Page<ItemResponseDto> getItemList(
+    Page<ItemDetailDto> getItemList(
             Category category,
             SubCategory subCategory,
             Double minPrice,
