@@ -2,7 +2,7 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.UpdateItemRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public class Item extends BaseEntity {
     // 위시리스트
     private Boolean wishlistCheck;
 
-    public void update(ItemUpdateDto dto) {
+    public void update(UpdateItemRequestDto dto) {
         this.itemName = dto.getItemName();
         this.category = dto.getCategory();
         this.subCategory = dto.getSubCategory();

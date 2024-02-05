@@ -2,7 +2,7 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.UpdateItemRequestDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
@@ -83,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
     // 상품 수정
     @Override
     @Transactional
-    public void updateItem(Long itemId, ItemUpdateDto dto) {
+    public void updateItem(Long itemId, UpdateItemRequestDto dto) {
         log.info("item ID로부터 아이템 수정을 시작합니다 : {}", itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));

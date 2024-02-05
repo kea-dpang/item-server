@@ -2,7 +2,7 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.UpdateItemRequestDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -45,9 +45,9 @@ public interface ItemService {
      * 상품의 정보를 업데이트합니다.
      *
      * @param itemId        업데이트할 상품의 ID
-     * @param itemUpdateDto 업데이트할 상품의 정보가 담긴 DTO
+     * @param updateItemRequestDto 업데이트할 상품의 정보가 담긴 DTO
      */
-    void updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
+    void updateItem(Long itemId, UpdateItemRequestDto updateItemRequestDto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.

@@ -7,7 +7,7 @@ import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.ItemUpdateDto;
+import kea.dpang.item.dto.item.UpdateItemRequestDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Category;
@@ -112,8 +112,8 @@ public class ItemController {
 
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
-    public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
-        itemService.updateItem(itemId, itemUpdateDto);
+    public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody UpdateItemRequestDto updateItemRequestDto) {
+        itemService.updateItem(itemId, updateItemRequestDto);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 수정되었습니다."),
                 HttpStatus.CREATED
