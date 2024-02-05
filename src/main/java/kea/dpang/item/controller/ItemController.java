@@ -67,7 +67,7 @@ public class ItemController {
     }
 
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/{itemId}/detail")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
         ItemResponseDto item = itemService.getItem(itemId);
