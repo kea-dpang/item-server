@@ -43,7 +43,7 @@ public class ReviewController {
             @PathVariable @Parameter(description = "리뷰 작성자 ID", example = "1") Long reviewerId,
             Pageable pageable
     ) {
-        List<PersonalReviewDto> reviews = reviewService.getReviewPersonalList(reviewerId, pageable);
+        List<PersonalReviewDto> reviews = reviewService.getPersonalReviewList(reviewerId, pageable);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "리뷰 리스트가 조회되었습니다.", reviews),

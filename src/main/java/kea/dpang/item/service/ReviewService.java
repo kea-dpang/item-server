@@ -30,7 +30,7 @@ public interface ReviewService {
      * @param pageable   페이지 정보
      * @param reviewerId 조회할 리뷰 작성자(사용자)의 ID
      */
-    List<PersonalReviewDto> getReviewPersonalList(Long reviewerId, Pageable pageable);
+    List<PersonalReviewDto> getPersonalReviewList(Long reviewerId, Pageable pageable);
 
 //    /**
 //     * 주어진 ID에 해당하는 리뷰의 정보를 조회합니다.

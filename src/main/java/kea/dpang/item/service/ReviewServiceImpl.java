@@ -51,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
     // 사용자별 리뷰 리스트 조회
     @Override
     @Transactional
-    public List<PersonalReviewDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
+    public List<PersonalReviewDto> getPersonalReviewList(Long reviewerId, Pageable pageable) {
         ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(reviewerId);
         String name = responseEntity.getBody().getData().getName();
         Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
