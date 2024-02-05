@@ -49,7 +49,7 @@ public class Item extends BaseEntity {
     private float averageRating;
 
     // 리뷰 리스트
-    @OneToMany(mappedBy = "itemId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
     // 할인율

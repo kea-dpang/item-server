@@ -29,7 +29,7 @@ public class Review extends BaseEntity {
     // 상품 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item itemId;
+    private Item item;
 
     // 리뷰 내용
     @Column(name = "review_content", nullable = false)
@@ -42,7 +42,7 @@ public class Review extends BaseEntity {
     public static Review from(CreateReviewRequestDto dto, Item item) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
-                .itemId(item)
+                .item(item)
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .build();

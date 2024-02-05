@@ -20,7 +20,7 @@ public class ReviewDto {
         this.reviewId = review.getId();
         this.reviewerId = review.getReviewerId();
         this.createdTime = review.getCreatedTime();
-        this.itemId = review.getItemId().getItemId();
+        this.itemId = review.getItem().getItemId();
         this.content = review.getContent();
         this.rating = review.getRating();
     }
