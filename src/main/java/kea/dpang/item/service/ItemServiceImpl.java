@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 판매자ID = {}, 페이지 요청 정보 = {}", category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
-        Page<Item> items = itemRepository.findByCategoryAndSubCategoryAndPriceBetweenAndNameContainingAndSellerId(category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
+        Page<Item> items = itemRepository.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
 
         log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
         String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
