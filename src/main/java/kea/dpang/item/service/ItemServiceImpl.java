@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -116,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
-        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
+        Page<Item> items = filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
 
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
         return items.map(item -> {
@@ -127,6 +128,37 @@ public class ItemServiceImpl implements ItemService {
 
             return new ItemDetailDto(item, sellerName);
         });
+    }
+
+    public Page<Item> filterItems(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+
+        Specification<Item> spec = Specification.where(null);
+
+        if (category != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("category"), category));
+        }
+
+        if (subCategory != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("subCategory"), subCategory));
+        }
+
+        if (sellerId != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("sellerId"), sellerId));
+        }
+
+        if (minPrice != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+        }
+
+        if (maxPrice != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+        }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"), "%" + keyword + "%"));
+        }
+
+        return itemRepository.findAll(spec, pageable);
     }
 
     // 상품 수정
