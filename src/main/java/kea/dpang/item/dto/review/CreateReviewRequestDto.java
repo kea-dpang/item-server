@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ReviewCreateDto {
+public class CreateReviewRequestDto {
     private Long reviewerId;
     private Long itemId;
     private String content;

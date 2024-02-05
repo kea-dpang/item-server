@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.review.ReviewCreateDto;
+import kea.dpang.item.dto.review.CreateReviewRequestDto;
 import kea.dpang.item.dto.review.ReviewPersonalListDto;
 import kea.dpang.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     @Operation(summary = "리뷰 등록", description = "리뷰 정보를 시스템에 추가합니다.")
-    public ResponseEntity<BaseResponse> createReview(@RequestBody ReviewCreateDto reviewCreateDto) {
-        reviewService.createReview(reviewCreateDto);
+    public ResponseEntity<BaseResponse> createReview(@RequestBody CreateReviewRequestDto createReviewRequestDto) {
+        reviewService.createReview(createReviewRequestDto);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "리뷰가 등록되었습니다."),
                 HttpStatus.CREATED

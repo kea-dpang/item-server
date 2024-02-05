@@ -2,7 +2,7 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.review.ReviewCreateDto;
+import kea.dpang.item.dto.review.CreateReviewRequestDto;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.repository.ItemRepository;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class Review extends BaseEntity {
     @Column(name = "rating", nullable = false)
     private Double rating;
 
-    public static Review from(ReviewCreateDto dto, ItemRepository itemRepository) {
+    public static Review from(CreateReviewRequestDto dto, ItemRepository itemRepository) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
                 .itemId(itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId())))

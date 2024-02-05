@@ -1,7 +1,7 @@
 package kea.dpang.item.service;
 
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.review.ReviewCreateDto;
+import kea.dpang.item.dto.review.CreateReviewRequestDto;
 import kea.dpang.item.dto.review.ReviewPersonalListDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Review;
@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
     // 리뷰 등록
     @Override
     @Transactional
-    public void createReview(ReviewCreateDto dto) {
+    public void createReview(CreateReviewRequestDto dto) {
         Review review = Review.from(dto, itemRepository);
         new ReviewResponseDto(reviewRepository.save(review));
         log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
