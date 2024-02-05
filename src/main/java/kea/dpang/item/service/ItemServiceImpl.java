@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +31,9 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final SellerServiceFeignClient sellerServiceFeignClient;
-    private static final String ITEM_VIEW_COUNT_KEY = "item:viewCount";
-    private final StringRedisTemplate redisTemplate;
+    private static final String ITEM_VIEW_COUNT_KEY = "item:viewcount";
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 상품 등록
     @Override
@@ -77,25 +78,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<PopularItemDto> getPopularItems() {
-        // Redis에서 조회수를 기준으로 인기 상품 ID와 점수를 가져옴.
+        // Redis에서 조회수를 기반으로 인기 상품 ID와 점수를 가져옴
         Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
                 .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
 
-        // 가져온 데이터를 PopularItemDto 리스트로 변환.
+        // 가져온 데이터를 PopularItemDto 리스트로 변환
         return items.stream().map(item -> {
             Long itemId = Long.valueOf(item.getValue());
             Double score = item.getScore();
             String itemName = "Item " + itemId;
 
             return new PopularItemDto(itemId, itemName, score);
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     // 상품 검색
     @Override
     @Transactional
-    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
-        Page<Item> items = itemRepository.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
+    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         return items.map(ItemCardDto::new);
     }
 

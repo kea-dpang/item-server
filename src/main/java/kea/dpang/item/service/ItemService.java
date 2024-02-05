@@ -45,7 +45,7 @@ public interface ItemService {
      */
    Page<ItemManageListDto> getItemManageList(Pageable pageable);
 
-    Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Pageable pageable);
+    Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable);
 
     /**
      * 상품의 정보를 업데이트합니다.

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @Tag(name="Item API", description = "상품 관련 API 입니다.")
@@ -71,17 +72,19 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/{itemId}")
-    @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
-    public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
-        ItemResponseDto item = itemService.getItem(itemId);
-        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
-        return new ResponseEntity<>(
-                new SuccessResponse<>(HttpStatus.OK.value(),"상품 상세 정보가 조회되었습니다.", item),
-                HttpStatus.OK
+//    @GetMapping("/{itemId}/detail")
+//    @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
+//    public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+//        ItemResponseDto item = itemService.getItem(itemId);
+//        redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
+//        log.info("상품 상세 정보 조회 완료. 상품 ID: {}", item.getItemId());
+//        return new ResponseEntity<>(
+//                new SuccessResponse<>(HttpStatus.OK.value(),"상품 상세 정보가 조회되었습니다.", item),
+//                HttpStatus.OK
+//
+//        );
+//    }
 
-        );
-    }
 
     @GetMapping("/{itemId}/reviews")
     @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
@@ -94,11 +97,11 @@ public class ItemController {
         );
     }
 
+
     @GetMapping("/popular/list")
-    @Operation(summary = "인기 상품 리스트 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
+    @Operation(summary = "인기 상품 리스트 조회", description = "인기 상품 정보를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(@RequestParam List<Long> itemIdList, Pageable pageable) {
         List<PopularItemDto> popularItems = itemService.getPopularItems();
-        log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(),"인기 상품 리스트가 조회되었습니다.", popularItems),
                 HttpStatus.OK
@@ -110,18 +113,19 @@ public class ItemController {
     public ResponseEntity<SuccessResponse<Page<ItemCardDto>>> filterItems(
             @RequestParam(defaultValue = "전체") Category category,
             @RequestParam(defaultValue = "전체") SubCategory subCategory,
+            @RequestParam(required = false) Long sellerId,
             @RequestParam(defaultValue = "0") Double minPrice,
             @RequestParam(defaultValue = "10000000") Double maxPrice,
             @RequestParam(defaultValue = "") String keyword,
             Pageable pageable) {
-        Page<ItemCardDto> items = itemService.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
+        Page<ItemCardDto> items = itemService.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 필터링이 완료되었습니다.", items),
                 HttpStatus.OK
         );
     }
 
-    @PutMapping("/{itemId}/update")
+    @PutMapping
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
         itemService.updateItem(itemId, itemUpdateDto);
@@ -181,7 +185,7 @@ public class ItemController {
     }
 
     // 주문(Order)
-    @GetMapping("/inquiryItem")
+    @GetMapping("/{itemId}")
     @Operation(summary = "(BE) 상품 정보 조회", description = "상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemInquiryDto>> getInquiryItem(@RequestParam Long itemId) {
         Item item = itemService.getItemInquiry(itemId);
