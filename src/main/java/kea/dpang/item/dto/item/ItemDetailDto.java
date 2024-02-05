@@ -15,36 +15,36 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDetailDto {
-    private Long itemId;
-    private String itemName;
+    private Long id;
+    private String name;
     private Long sellerId;
     private String sellerName;
     private Category category;
     private SubCategory subCategory;
-    private int itemPrice;
+    private int price;
     private float averageRating;
     private int discountRate;
     private int discountPrice;
     private String description;
     private int stockQuantity;
-    private String itemImage;
-    private List<String> images;
+    private String thumbnailImage;
+    private List<String> informationImages;
 
     public ItemDetailDto(Item item, String sellerName) {
-        this.itemId = item.getId();
-        this.itemName = item.getName();
+        this.id = item.getId();
+        this.name = item.getName();
         this.sellerId = item.getSellerId();
         this.sellerName = sellerName;
         this.category = item.getCategory();
         this.subCategory = item.getSubCategory();
-        this.itemPrice = item.getPrice();
+        this.price = item.getPrice();
         this.averageRating = item.getAverageRating();
         this.discountRate = item.getDiscountRate();
         this.discountPrice = item.getDiscountPrice();
         this.description = item.getDescription();
         this.stockQuantity = item.getStockQuantity();
-        this.itemImage = item.getThumbnailImage();
-        this.images = item.getInformationImages();
+        this.thumbnailImage = item.getThumbnailImage();
+        this.informationImages = item.getInformationImages();
     }
 }
 

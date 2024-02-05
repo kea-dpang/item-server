@@ -1,9 +1,6 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.item.CreateItemRequestDto;
-import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.UpdateItemRequestDto;
-import kea.dpang.item.dto.item.UpdateStockRequestDto;
+import kea.dpang.item.dto.item.*;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import org.springframework.data.domain.Page;
@@ -28,7 +25,8 @@ public interface ItemService {
      */
     ItemDetailDto getItem(Long itemId);
 
-    // Todo: 필터링 상품 리스트 조회
+    List<ItemDto> getItemList(List<Long> itemIds);
+
     Page<ItemDetailDto> getItemList(
             Category category,
             SubCategory subCategory,
@@ -44,8 +42,8 @@ public interface ItemService {
     /**
      * 상품의 정보를 업데이트합니다.
      *
-     * @param itemId        업데이트할 상품의 ID
-     * @param dto 업데이트할 상품의 정보가 담긴 DTO
+     * @param itemId 업데이트할 상품의 ID
+     * @param dto    업데이트할 상품의 정보가 담긴 DTO
      */
     void updateItem(Long itemId, UpdateItemRequestDto dto);
 
