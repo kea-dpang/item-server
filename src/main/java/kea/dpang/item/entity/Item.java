@@ -72,9 +72,6 @@ public class Item extends BaseEntity {
     @ElementCollection
     private List<String> images;
 
-    // 위시리스트
-    private Boolean wishlistCheck;
-
     public void update(UpdateItemRequestDto dto) {
         this.name = dto.getItemName();
         this.category = dto.getCategory();

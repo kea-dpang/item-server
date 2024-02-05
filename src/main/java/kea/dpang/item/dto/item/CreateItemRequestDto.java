@@ -40,7 +40,6 @@ public class CreateItemRequestDto {
                 .description("") // 초기 상품 설명을 빈 문자열로 설정
                 .itemImage(this.getItemImage())
                 .images(this.getImages())
-                .wishlistCheck(false) // 초기 위시리스트 체크를 false로 설정
                 .build();
     }
 
