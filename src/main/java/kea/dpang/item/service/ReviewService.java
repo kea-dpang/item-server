@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ReviewService {
+
     /**
      * 새로운 리뷰을 등록합니다.
      *
-     * @param createReviewRequestDto 등록할 리뷰의 정보가 담긴 DTO
+     * @param dto 등록할 리뷰의 정보가 담긴 DTO
      * @return 등록된 리뷰의 정보가 담긴 Detail DTO
      */
-    void createReview(CreateReviewRequestDto createReviewRequestDto);
+    void createReview(CreateReviewRequestDto dto);
 
     /**
      * 상품별 리뷰을 조회합니다.
