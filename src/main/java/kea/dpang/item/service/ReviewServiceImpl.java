@@ -3,7 +3,7 @@ package kea.dpang.item.service;
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.review.CreateReviewRequestDto;
 import kea.dpang.item.dto.review.PersonalReviewDto;
-import kea.dpang.item.dto.review.ReviewResponseDto;
+import kea.dpang.item.dto.review.ReviewDto;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.feign.UserServiceFeignClient;
 import kea.dpang.item.feign.dto.UserDetailDto;
@@ -34,17 +34,17 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void createReview(CreateReviewRequestDto dto) {
         Review review = Review.from(dto, itemRepository);
-        new ReviewResponseDto(reviewRepository.save(review));
+        new ReviewDto(reviewRepository.save(review));
         log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
     }
 
     // 상품별 리뷰 리스트 조회
     @Override
     @Transactional
-    public List<ReviewResponseDto> getReviewList(Long itemId, Pageable pageable) {
+    public List<ReviewDto> getReviewList(Long itemId, Pageable pageable) {
         Page<Review> reviews = reviewRepository.findByItemIdItemId(itemId, pageable);
         return reviews.stream()
-                .map(ReviewResponseDto::new)
+                .map(ReviewDto::new)
                 .collect(Collectors.toList());
     }
 

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.item.*;
-import kea.dpang.item.dto.review.ReviewResponseDto;
+import kea.dpang.item.dto.review.ReviewDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.service.ItemService;
@@ -86,8 +86,8 @@ public class ItemController {
 
     @GetMapping("/{itemId}/reviews")
     @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ReviewResponseDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
-        List<ReviewResponseDto> reviews = reviewService.getReviewList(itemId, pageable);
+    public ResponseEntity<SuccessResponse<List<ReviewDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
+        List<ReviewDto> reviews = reviewService.getReviewList(itemId, pageable);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
                 HttpStatus.OK
