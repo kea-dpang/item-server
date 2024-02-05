@@ -39,8 +39,6 @@ public interface ItemService {
             Pageable pageable
     );
 
-
-    Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable);
     // Todo: 인기 상품 리스트 조회
 
     /**
@@ -57,23 +55,6 @@ public interface ItemService {
      * @param itemIds 삭제할 상품의 ID 리스트
      */
     void deleteItem(List<Long> itemIds);
-
-    /**
-     * 인기 상품을 조회합니다.
-     *
-     * @return 조회된 인기 상품 목록이 담긴 DTO 리스트
-     */
-    List<PopularItemDto> getPopularItems();
-
-    void incrementViewCount(Long itemId);
-
-    /**
-     * 주어진 ID에 해당하는 상품의 재고 수량을 조회합니다.
-     *
-     * @param itemId 재고 수량을 조회할 상품의 ID
-     * @return 조회된 재고 수량
-     */
-    int getStockQuantity(Long itemId);
 
     /**
      * 주어진 ID에 해당하는 상품의 재고 수량을 업데이트 합니다.
