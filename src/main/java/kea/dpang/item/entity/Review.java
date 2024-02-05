@@ -3,8 +3,6 @@ package kea.dpang.item.entity;
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
 import kea.dpang.item.dto.review.CreateReviewRequestDto;
-import kea.dpang.item.exception.ItemNotFoundException;
-import kea.dpang.item.repository.ItemRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,11 +15,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "reviews")
 public class Review extends BaseEntity {
+
     // 리뷰 ID
     @Id
     @Column(name = "item_review_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long id;
 
     // 리뷰 작성자 ID
     @Column(name = "reviewer_id", nullable = false)
@@ -40,10 +39,10 @@ public class Review extends BaseEntity {
     @Column(name = "rating", nullable = false)
     private Double rating;
 
-    public static Review from(CreateReviewRequestDto dto, ItemRepository itemRepository) {
+    public static Review from(CreateReviewRequestDto dto, Item item) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
-                .itemId(itemRepository.findById(dto.getItemId()).orElseThrow(() -> new ItemNotFoundException(dto.getItemId())))
+                .itemId(item)
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .build();

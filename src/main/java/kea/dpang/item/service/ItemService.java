@@ -16,9 +16,9 @@ public interface ItemService {
     /**
      * 새로운 상품을 등록합니다.
      *
-     * @param createItemRequestDto 등록할 상품의 정보가 담긴 DTO
+     * @param dto 등록할 상품의 정보가 담긴 DTO
      */
-    void createItem(CreateItemRequestDto createItemRequestDto);
+    void createItem(CreateItemRequestDto dto);
 
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
@@ -45,9 +45,9 @@ public interface ItemService {
      * 상품의 정보를 업데이트합니다.
      *
      * @param itemId        업데이트할 상품의 ID
-     * @param updateItemRequestDto 업데이트할 상품의 정보가 담긴 DTO
+     * @param dto 업데이트할 상품의 정보가 담긴 DTO
      */
-    void updateItem(Long itemId, UpdateItemRequestDto updateItemRequestDto);
+    void updateItem(Long itemId, UpdateItemRequestDto dto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.
