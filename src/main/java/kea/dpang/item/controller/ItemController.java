@@ -121,7 +121,7 @@ public class ItemController {
     }
 
 
-    @PutMapping("/stock/update")
+    @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
             @RequestBody @Parameter(description = "재고 변경 정보") List<StockUpdateDto> stockUpdateDtos
