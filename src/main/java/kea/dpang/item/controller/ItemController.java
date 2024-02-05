@@ -159,9 +159,9 @@ public class ItemController {
     @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
-            @RequestBody @Parameter(description = "재고 변경 정보") List<UpdateStockRequestDto> dto
+            @RequestBody @Parameter(description = "재고 변경 정보") StockUpdateRequestListDto request
     ) {
-        itemService.changeStock(dto);
+        itemService.changeStock(request.getStockUpdateRequests());
 
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),
