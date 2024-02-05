@@ -65,8 +65,8 @@ public class Item extends BaseEntity {
     @Column(length = 1000)
     private String description;
 
-    // 상품 사진
-    private String itemImage;
+    // 상품 썸네일 사진
+    private String thumbnailImage;
 
     // 이미지 리스트
     @ElementCollection
@@ -79,7 +79,7 @@ public class Item extends BaseEntity {
         this.price = dto.getItemPrice();
         this.discountRate = dto.getDiscountRate();
         this.stockQuantity = dto.getStockQuantity();
-        this.itemImage = dto.getItemImage();
+        this.thumbnailImage = dto.getItemImage();
         this.images = dto.getImages();
     }
 

@@ -26,7 +26,7 @@ public class PersonalReviewDto {
                 reviewerName,
                 review.getCreatedTime(),
                 review.getItem().getId(),
-                review.getItem().getItemImage(),
+                review.getItem().getThumbnailImage(),
                 review.getContent(),
                 review.getRating()
         );

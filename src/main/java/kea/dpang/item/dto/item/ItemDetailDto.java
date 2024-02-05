@@ -43,7 +43,7 @@ public class ItemDetailDto {
         this.discountPrice = item.getDiscountPrice();
         this.description = item.getDescription();
         this.stockQuantity = item.getStockQuantity();
-        this.itemImage = item.getItemImage();
+        this.itemImage = item.getThumbnailImage();
         this.images = item.getImages();
     }
 }

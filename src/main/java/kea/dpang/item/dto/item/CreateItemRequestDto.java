@@ -38,7 +38,7 @@ public class CreateItemRequestDto {
                 .discountPrice(0) // 초기 할인가를 0으로 설정
                 .stockQuantity(this.getStockQuantity())
                 .description("") // 초기 상품 설명을 빈 문자열로 설정
-                .itemImage(this.getItemImage())
+                .thumbnailImage(this.getItemImage())
                 .images(this.getImages())
                 .build();
     }
