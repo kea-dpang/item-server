@@ -69,9 +69,12 @@ public class ItemController {
     public ResponseEntity<SuccessResponse<List<ItemDto>>> getItemList(
             @RequestBody GetItemListRequestDto dto
     ) {
-        // Todo: 상품 리스트로 조회
+        List<ItemDto> itemList = itemService.getItemList(dto.getItemIds());
 
-        return null;
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품 리스트가 조회되었습니다.", itemList),
+                HttpStatus.OK
+        );
     }
 
 

@@ -1,9 +1,6 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.item.CreateItemRequestDto;
-import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.UpdateItemRequestDto;
-import kea.dpang.item.dto.item.UpdateStockRequestDto;
+import kea.dpang.item.dto.item.*;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.SubCategory;
@@ -45,6 +42,15 @@ public class ItemServiceImpl implements ItemService {
             log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
             throw e;
         }
+    }
+
+    @Override
+    public List<ItemDto> getItemList(List<Long> itemIds) {
+        log.info("item ID 리스트로부터 아이템 리스트 조회를 시작합니다 : {}", itemIds);
+        return itemRepository.findAllById(itemIds)
+                .stream()
+                .map(ItemDto::new)
+                .toList();
     }
 
     // 상품 상세 정보 조회
