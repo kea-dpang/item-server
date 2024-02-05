@@ -83,6 +83,7 @@ public class ItemController {
             @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId
     ) {
         ItemDto item = itemService.getItemInfo(itemId);
+        itemService.incrementViewCount(itemId);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 정보가 조회되었습니다.", item),
@@ -118,16 +119,13 @@ public class ItemController {
     }
 
     @GetMapping("/popular/list")
-    @Operation(summary = "인기 상품 리스트 조회", description = "지정된 상품 ID 리스트에 대한 인기 상품 정보를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemDetailDto>>> getPopularItems(Pageable pageable) {
-        // Todo: 인기 상품 리스트 조회 API 구현 필요
-//        List<PopularItemDto> popularItems = itemService.getPopularItems();
-//        log.info("인기 상품 목록 조회 완료. 조회된 인기 상품 수: {}", popularItems.size());
-//        return new ResponseEntity<>(
-//                new SuccessResponse<>(HttpStatus.OK.value(), "인기 상품 리스트가 조회되었습니다.", popularItems),
-//                HttpStatus.OK
-//        );
-        return null;
+    @Operation(summary = "인기 상품 리스트 조회", description = "인기 상품 정보를 페이지 정보에 따라 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(@RequestParam List<Long> itemIdList, Pageable pageable) {
+        List<PopularItemDto> popularItems = itemService.getPopularItems();
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(),"인기 상품 리스트가 조회되었습니다.", popularItems),
+                HttpStatus.OK
+        );
     }
 
     @PutMapping("/{itemId}")

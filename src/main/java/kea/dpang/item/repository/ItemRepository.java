@@ -14,6 +14,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE " +
             "(:category IS NULL OR i.category = :category) AND " +
             "(:subCategory IS NULL OR i.subCategory = :subCategory) AND " +
+            "(:sellerId IS NULL OR i.sellerId = :sellerId) AND " +
             "(:minPrice = 0 OR i.price >= :minPrice) AND " +
             "(:maxPrice = 2000000 OR i.price <= :maxPrice) AND " +
             "(i.name LIKE %:keyword%)")
@@ -21,19 +22,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> filterItems(
             @Param("category") Category category,
             @Param("subCategory") SubCategory subCategory,
+            @Param("sellerId") Long sellerId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             @Param("keyword") String keyword,
             Pageable pageable);
-
-    Page<Item> findByCategoryAndSubCategoryAndPriceBetweenAndNameContainingAndSellerId(
-            Category category,
-            SubCategory subCategory,
-            Double minPrice,
-            Double maxPrice,
-            String keyword,
-            Long sellerId,
-            Pageable pageable);
-
 }
 
