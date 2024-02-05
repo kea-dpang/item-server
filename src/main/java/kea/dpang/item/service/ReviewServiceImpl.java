@@ -2,7 +2,7 @@ package kea.dpang.item.service;
 
 import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.review.CreateReviewRequestDto;
-import kea.dpang.item.dto.review.ReviewPersonalListDto;
+import kea.dpang.item.dto.review.PersonalReviewDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Review;
 import kea.dpang.item.feign.UserServiceFeignClient;
@@ -51,12 +51,12 @@ public class ReviewServiceImpl implements ReviewService {
     // 사용자별 리뷰 리스트 조회
     @Override
     @Transactional
-    public List<ReviewPersonalListDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
+    public List<PersonalReviewDto> getReviewPersonalList(Long reviewerId, Pageable pageable) {
         ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(reviewerId);
         String name = responseEntity.getBody().getData().getName();
         Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
         return reviews.stream()
-                .map(review -> new ReviewPersonalListDto(review, name))
+                .map(review -> new PersonalReviewDto(review, name))
                 .collect(Collectors.toList());
     }
 

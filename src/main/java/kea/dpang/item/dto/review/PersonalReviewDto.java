@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class ReviewPersonalListDto {
+public class PersonalReviewDto {
 
     private Long reviewId;
     private Long reviewerId;
@@ -19,7 +19,7 @@ public class ReviewPersonalListDto {
     private String content;
     private Double rating;
 
-    public ReviewPersonalListDto(Review review, String reviewerName) {
+    public PersonalReviewDto(Review review, String reviewerName) {
         this.reviewId = review.getReviewId();
         this.reviewerId = review.getReviewerId();
         this.reviewerName = reviewerName;
