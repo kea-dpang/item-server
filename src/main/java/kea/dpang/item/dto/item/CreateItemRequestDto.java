@@ -26,10 +26,10 @@ public class CreateItemRequestDto {
 
     public Item toItem() {
         return Item.builder()
-                .itemId(null)
-                .itemName(this.getItemName())
+                .id(null)
+                .name(this.getItemName())
                 .sellerId(this.getSellerId())
-                .itemPrice(this.getItemPrice())
+                .price(this.getItemPrice())
                 .category(this.getCategory())
                 .subCategory(this.getSubCategory())
                 .averageRating(0.0f) // 초기 평점을 0으로 설정

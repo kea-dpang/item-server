@@ -21,27 +21,27 @@ public class Item extends BaseEntity {
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long itemId;
+    private Long id;
 
     // 상품명
-    @Column(name = "name", nullable = false)
-    private String itemName;
+    @Column(name = "item_name", nullable = false)
+    private String name;
 
     // 판매처 ID
     @Column(name = "seller_id", nullable = false)
     private Long sellerId;
 
     // 상품 회원 할인가
-    @Column(name = "price", nullable = false)
-    private int itemPrice;
+    @Column(name = "item_price", nullable = false)
+    private int price;
 
     // 상품 분류 카테고리
-    @Column(name = "category")
+    @Column(name = "item_category")
     @Enumerated(EnumType.STRING)
     private Category category;
 
     // 상품 분류 서브카테고리
-    @Column(name = "sub_category")
+    @Column(name = "item_sub_category")
     @Enumerated(EnumType.STRING)
     private SubCategory subCategory;
 
@@ -76,10 +76,10 @@ public class Item extends BaseEntity {
     private Boolean wishlistCheck;
 
     public void update(UpdateItemRequestDto dto) {
-        this.itemName = dto.getItemName();
+        this.name = dto.getItemName();
         this.category = dto.getCategory();
         this.subCategory = dto.getSubCategory();
-        this.itemPrice = dto.getItemPrice();
+        this.price = dto.getItemPrice();
         this.discountRate = dto.getDiscountRate();
         this.stockQuantity = dto.getStockQuantity();
         this.itemImage = dto.getItemImage();

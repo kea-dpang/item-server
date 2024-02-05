@@ -9,19 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface ItemRepository extends JpaRepository<Item, Long> {
-
-    // itemId 필드가 itemIds 리스트에 포함된 모든 item 엔티티를 조회합니다.
-    List<Item> findAllByItemIdIn(List<Long> itemId);
 
     @Query("SELECT i FROM Item i WHERE " +
             "(:category IS NULL OR i.category = :category) AND " +
             "(:subCategory IS NULL OR i.subCategory = :subCategory) AND " +
-            "(:minPrice = 0 OR i.itemPrice >= :minPrice) AND " +
-            "(:maxPrice = 2000000 OR i.itemPrice <= :maxPrice) AND " +
-            "(i.itemName LIKE %:keyword%)")
+            "(:minPrice = 0 OR i.price >= :minPrice) AND " +
+            "(:maxPrice = 2000000 OR i.price <= :maxPrice) AND " +
+            "(i.name LIKE %:keyword%)")
 //            "(i.itemName LIKE %:keyword% OR i.description LIKE %:keyword%)")
     Page<Item> filterItems(
             @Param("category") Category category,
@@ -31,7 +26,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             @Param("keyword") String keyword,
             Pageable pageable);
 
-    Page<Item> findAllByCategoryAndSubCategoryAndItemPriceBetweenAndItemNameContainsAndSellerId(
+    Page<Item> findByCategoryAndSubCategoryAndPriceBetweenAndNameContainingAndSellerId(
             Category category,
             SubCategory subCategory,
             Double minPrice,

@@ -52,7 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public List<ReviewDto> getReviewList(Long itemId, Pageable pageable) {
-        Page<Review> reviews = reviewRepository.findByItemItemId(itemId, pageable);
+        Page<Review> reviews = reviewRepository.findByItemId(itemId, pageable);
         return reviews.stream()
                 .map(ReviewDto::new)
                 .toList();
