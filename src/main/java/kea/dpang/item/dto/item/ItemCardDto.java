@@ -1,4 +1,4 @@
-package kea.dpang.item.dto.Item;
+package kea.dpang.item.dto.item;
 
 import kea.dpang.item.entity.Item;
 import lombok.AllArgsConstructor;

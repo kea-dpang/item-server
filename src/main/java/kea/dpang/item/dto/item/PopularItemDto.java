@@ -1,7 +1,5 @@
-package kea.dpang.item.dto.Item;
+package kea.dpang.item.dto.item;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import kea.dpang.item.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
