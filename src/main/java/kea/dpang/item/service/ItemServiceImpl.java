@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
         try {
             Item item = dto.toItem();
             itemRepository.save(item);
-            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getItemId());
+            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
 
         } catch (Exception e) {
             log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
@@ -56,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
 
-        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getItemId());
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
 
         log.info("판매자 이름 조회를 시작합니다 : {}", item.getSellerId());
 
@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 판매자ID = {}, 페이지 요청 정보 = {}", category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
-        Page<Item> items = itemRepository.findAllByCategoryAndSubCategoryAndItemPriceBetweenAndItemNameContainsAndSellerId(category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
+        Page<Item> items = itemRepository.findByCategoryAndSubCategoryAndPriceBetweenAndNameContainingAndSellerId(category, subCategory, minPrice, maxPrice, keyword, sellerId, pageable);
 
         log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
         String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
@@ -88,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
 
-        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getItemId());
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
 
         log.info("ItemUpdateDto로부터 아이템 수정을 시작합니다 : {}", dto);
         item.update(dto);
@@ -104,10 +104,10 @@ public class ItemServiceImpl implements ItemService {
             Item item = itemRepository.findById(itemId)
                     .orElseThrow(() -> new ItemNotFoundException(itemId));
 
-            log.info("아이템 삭제를 시작합니다 : {}", item.getItemId());
+            log.info("아이템 삭제를 시작합니다 : {}", item.getId());
             itemRepository.delete(item);
 
-            log.info("아이템 삭제가 성공적으로 완료되었습니다. 삭제된 아이템의 ID는 : {}", item.getItemId());
+            log.info("아이템 삭제가 성공적으로 완료되었습니다. 삭제된 아이템의 ID는 : {}", item.getId());
         }
 
     }
@@ -124,9 +124,9 @@ public class ItemServiceImpl implements ItemService {
 
             Item item = itemRepository.findById(itemId)
                     .orElseThrow(() -> new ItemNotFoundException(itemId));
-            log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getItemId());
+            log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
 
-            log.info("재고 수량 변경을 시작합니다 : {}", item.getItemId());
+            log.info("재고 수량 변경을 시작합니다 : {}", item.getId());
 
             if (quantity > 0) {
                 item.increaseStock(quantity);

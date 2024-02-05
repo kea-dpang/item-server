@@ -31,20 +31,20 @@ public class ItemDetailDto {
     private List<String> images;
 
     public ItemDetailDto(Item item, String sellerName) {
-        this.itemId = item.getItemId();
-        this.itemName = item.getItemName();
+        this.itemId = item.getId();
+        this.itemName = item.getName();
         this.sellerId = item.getSellerId();
         this.sellerName = sellerName;
         this.category = item.getCategory();
         this.subCategory = item.getSubCategory();
-        this.itemPrice = item.getItemPrice();
+        this.itemPrice = item.getPrice();
         this.averageRating = item.getAverageRating();
         this.discountRate = item.getDiscountRate();
         this.discountPrice = item.getDiscountPrice();
         this.description = item.getDescription();
         this.stockQuantity = item.getStockQuantity();
-        this.itemImage = item.getItemImage();
-        this.images = item.getImages();
+        this.itemImage = item.getThumbnailImage();
+        this.images = item.getInformationImages();
     }
 }
 

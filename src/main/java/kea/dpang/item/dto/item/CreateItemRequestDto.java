@@ -26,10 +26,10 @@ public class CreateItemRequestDto {
 
     public Item toItem() {
         return Item.builder()
-                .itemId(null)
-                .itemName(this.getItemName())
+                .id(null)
+                .name(this.getItemName())
                 .sellerId(this.getSellerId())
-                .itemPrice(this.getItemPrice())
+                .price(this.getItemPrice())
                 .category(this.getCategory())
                 .subCategory(this.getSubCategory())
                 .averageRating(0.0f) // 초기 평점을 0으로 설정
@@ -38,9 +38,8 @@ public class CreateItemRequestDto {
                 .discountPrice(0) // 초기 할인가를 0으로 설정
                 .stockQuantity(this.getStockQuantity())
                 .description("") // 초기 상품 설명을 빈 문자열로 설정
-                .itemImage(this.getItemImage())
-                .images(this.getImages())
-                .wishlistCheck(false) // 초기 위시리스트 체크를 false로 설정
+                .thumbnailImage(this.getItemImage())
+                .informationImages(this.getImages())
                 .build();
     }
 
