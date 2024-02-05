@@ -60,34 +60,4 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
-
-//    // 리뷰 조회
-//    @Override
-//    @Transactional(readOnly = true)
-//    public ReviewResponseDto getReview(Long reviewId) {
-//        return reviewRepository.findById(reviewId)
-//                .map(ReviewResponseDto::new)
-//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
-//    }
-
-//    // 리뷰 수정
-//    @Override
-//    @Transactional
-//    public ReviewResponseDto updateReview(Long reviewId, ReviewUpdateDto dto) {
-//        review review = reviewRepository.findById(reviewId)
-//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
-//
-//        review.updateInformation(dto);
-//        return new ReviewResponseDto(reviewRepository.save(review));
-//    }
-
-//    // 리뷰 삭제
-//    @Override
-//    @Transactional
-//    public void deleteReview(Long reviewId) {
-//        review review = reviewRepository.findById(reviewId)
-//                .orElseThrow(() -> new ReviewNotFoundException(reviewId));
-//        reviewRepository.delete(review);
-//    }
-
 }
