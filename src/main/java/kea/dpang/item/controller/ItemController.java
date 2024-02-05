@@ -34,8 +34,9 @@ public class ItemController {
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
-    public ResponseEntity<BaseResponse> createItem(@RequestBody CreateItemRequestDto createItemRequestDto) {
-        itemService.createItem(createItemRequestDto);
+    public ResponseEntity<BaseResponse> createItem(@RequestBody CreateItemRequestDto dto) {
+        itemService.createItem(dto);
+
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
                 HttpStatus.CREATED
@@ -76,8 +77,11 @@ public class ItemController {
 
     @GetMapping("/{itemId}/detail")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
-    public ResponseEntity<SuccessResponse<ItemDetailDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
+    public ResponseEntity<SuccessResponse<ItemDetailDto>> getItem(
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId
+    ) {
         ItemDetailDto item = itemService.getItem(itemId);
+
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 상세 정보가 조회되었습니다.", item),
                 HttpStatus.OK
@@ -86,8 +90,11 @@ public class ItemController {
 
     @GetMapping("/{itemId}/reviews")
     @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ReviewDto>>> getReviewList(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable) {
+    public ResponseEntity<SuccessResponse<List<ReviewDto>>> getReviewList(
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable
+    ) {
         List<ReviewDto> reviews = reviewService.getReviewList(itemId, pageable);
+
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품별 리뷰 리스트가 조회되었습니다.", reviews),
                 HttpStatus.OK
@@ -109,8 +116,10 @@ public class ItemController {
 
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
-    public ResponseEntity<BaseResponse> updateItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody UpdateItemRequestDto updateItemRequestDto) {
-        itemService.updateItem(itemId, updateItemRequestDto);
+    public ResponseEntity<BaseResponse> updateItem(
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, @RequestBody UpdateItemRequestDto dto
+    ) {
+        itemService.updateItem(itemId, dto);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 수정되었습니다."),
                 HttpStatus.CREATED
@@ -119,8 +128,11 @@ public class ItemController {
 
     @DeleteMapping
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
-    public ResponseEntity<BaseResponse> deleteItem(@RequestBody @Parameter(description = "상품ID", example = "1") List<Long> itemId) {
+    public ResponseEntity<BaseResponse> deleteItem(
+            @RequestBody @Parameter(description = "상품ID", example = "1") List<Long> itemId
+    ) {
         itemService.deleteItem(itemId);
+
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.NO_CONTENT.value(), "상품이 삭제되었습니다."),
                 HttpStatus.NO_CONTENT
@@ -131,9 +143,9 @@ public class ItemController {
     @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
-            @RequestBody @Parameter(description = "재고 변경 정보") List<UpdateStockRequestDto> updateStockRequestDtos
+            @RequestBody @Parameter(description = "재고 변경 정보") List<UpdateStockRequestDto> dto
     ) {
-        itemService.changeStock(updateStockRequestDtos);
+        itemService.changeStock(dto);
 
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),
