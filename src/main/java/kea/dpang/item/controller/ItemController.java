@@ -45,7 +45,7 @@ public class ItemController {
         );
     }
 
-    @GetMapping("/list")
+    @GetMapping
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<Page<ItemResponseDto>>> getItemList(
             @RequestParam Category category,
@@ -64,6 +64,16 @@ public class ItemController {
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 리스트가 조회되었습니다.", items),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 리스트 정보에 따라 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<ItemResponseDto>>> getItemList(
+            @RequestBody List<Long> itemIds
+    ) {
+        // Todo: 상품 리스트로 조회
+
+        return null;
     }
 
 
