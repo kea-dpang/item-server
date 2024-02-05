@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -103,7 +104,9 @@ public class ItemServiceImpl implements ItemService {
 
         log.info("판매자 이름 조회를 시작합니다 : {}", item.getSellerId());
 
-        String sellerName = sellerServiceFeignClient.getSeller(item.getSellerId()).getBody().getData().toLowerCase();
+        String sellerName = Objects.requireNonNull(sellerServiceFeignClient.getSeller(item.getSellerId()).getBody())
+                .getData()
+                .getName();
 
         log.info("판매자 이름 조회가 성공적으로 완료되었습니다. 조회된 판매자 이름은 : {}", sellerName);
 
@@ -116,7 +119,9 @@ public class ItemServiceImpl implements ItemService {
         Page<Item> items = itemRepository.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
 
         log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
-        String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
+        String sellerName = Objects.requireNonNull(sellerServiceFeignClient.getSeller(sellerId).getBody())
+                .getData()
+                .getName();
 
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
         return items.map(item -> new ItemDetailDto(item, sellerName));
