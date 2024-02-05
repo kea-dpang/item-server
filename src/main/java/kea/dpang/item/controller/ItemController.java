@@ -129,9 +129,9 @@ public class ItemController {
     @DeleteMapping
     @Operation(summary = "상품 삭제", description = "상품 ID에 해당하는 상품 정보를 삭제합니다.")
     public ResponseEntity<BaseResponse> deleteItem(
-            @RequestBody @Parameter(description = "상품ID", example = "1") List<Long> itemId
+            @RequestBody DeleteItemRequestDto dto
     ) {
-        itemService.deleteItem(itemId);
+        itemService.deleteItem(dto.getItemIds());
 
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.NO_CONTENT.value(), "상품이 삭제되었습니다."),
