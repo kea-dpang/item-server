@@ -67,9 +67,9 @@ public class ItemController {
     @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 리스트 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemDto>>> getItemList(
-            @RequestBody GetItemListRequestDto dto
+            @RequestParam(defaultValue = "") List<Long> itemIds
     ) {
-        List<ItemDto> itemList = itemService.getItemList(dto.getItemIds());
+        List<ItemDto> itemList = itemService.getItemList(itemIds);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 리스트가 조회되었습니다.", itemList),
