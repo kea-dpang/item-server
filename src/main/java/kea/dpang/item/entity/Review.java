@@ -2,11 +2,11 @@ package kea.dpang.item.entity;
 
 import jakarta.persistence.*;
 import kea.dpang.item.base.BaseEntity;
-import kea.dpang.item.dto.Review.ReviewCreateDto;
-import kea.dpang.item.dto.Review.ReviewUpdateDto;
-import kea.dpang.item.exception.ItemNotFoundException;
-import kea.dpang.item.repository.ItemRepository;
-import lombok.*;
+import kea.dpang.item.dto.review.CreateReviewRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -15,11 +15,12 @@ import lombok.*;
 @Entity
 @Table(name = "reviews")
 public class Review extends BaseEntity {
+
     // 리뷰 ID
     @Id
     @Column(name = "item_review_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long id;
 
     // 리뷰 작성자 ID
     @Column(name = "reviewer_id", nullable = false)
@@ -28,7 +29,7 @@ public class Review extends BaseEntity {
     // 상품 ID
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item itemId;
+    private Item item;
 
     // 리뷰 내용
     @Column(name = "review_content", nullable = false)
@@ -38,10 +39,10 @@ public class Review extends BaseEntity {
     @Column(name = "rating", nullable = false)
     private Double rating;
 
-    public static Review from(ReviewCreateDto dto, ItemRepository itemRepository) {
+    public static Review from(CreateReviewRequestDto dto, Item item) {
         return Review.builder()
                 .reviewerId(dto.getReviewerId())
-                .itemId(itemRepository.findById(dto.getItemId()).orElseThrow(()->new ItemNotFoundException(dto.getItemId())))
+                .item(item)
                 .content(dto.getContent())
                 .rating(dto.getRating())
                 .build();

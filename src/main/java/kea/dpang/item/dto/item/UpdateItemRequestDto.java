@@ -1,4 +1,4 @@
-package kea.dpang.item.dto.Item;
+package kea.dpang.item.dto.item;
 
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemUpdateDto {
+public class UpdateItemRequestDto {
 
     private String itemName;
     private Category category;

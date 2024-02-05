@@ -1,18 +1,14 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.Item.*;
+import kea.dpang.item.dto.item.*;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
-import kea.dpang.item.feign.dto.ItemSimpleListDto;
-import kea.dpang.item.dto.Stock.StockManageDto;
 import kea.dpang.item.repository.ItemRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,12 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -37,43 +31,43 @@ public class ItemServiceImpl implements ItemService {
     // 상품 등록
     @Override
     @Transactional
-    public void createItem(ItemCreateDto dto) {
-        Item item = Item.from(dto);
-        itemRepository.save(item);
+    public void createItem(CreateItemRequestDto dto) {
+        log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
+
+        try {
+            Item item = dto.toItem();
+            itemRepository.save(item);
+            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
+
+        } catch (Exception e) {
+            log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public List<ItemDto> getItemList(List<Long> itemIds) {
+        log.info("item ID 리스트로부터 아이템 리스트 조회를 시작합니다 : {}", itemIds);
+        return itemRepository.findAllById(itemIds)
+                .stream()
+                .map(ItemDto::new)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ItemDto getItemInfo(Long itemId) {
+        log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
+
+        return new ItemDto(item);
     }
 
     // 상품 상세 정보 조회
-    @Override
-    @Transactional(readOnly = true)
-    public ItemResponseDto getItem(Long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        String sellerName = sellerServiceFeignClient.getSeller(item.getSellerId()).getBody().getData();
-        return item.toItemResponseDto(sellerName);
-    }
-
-    // 상품 카드 리스트 조회
-    @Override
-    @Transactional
-    public List<ItemCardDto> getItemCard(Pageable pageable) {
-        Page<Item> items = itemRepository.findAll(pageable);
-        return items.stream()
-                .map(ItemCardDto::new)
-                .collect(Collectors.toList());
-    }
-
-    // 관리자용 상품 리스트 조회
-    @Override
-    @Transactional
-    public Page<ItemManageListDto> getItemManageList(Pageable pageable) {
-        Page<Item> items = itemRepository.findAll(pageable);
-//        return items.stream()
-//                .map(ItemManageListDto::new)
-//                .collect(Collectors.toList());
-        return items.map(ItemManageListDto::new);
-    }
-
-    // 인기 상품 조회
     @Override
     @Transactional(readOnly = true)
     public List<PopularItemDto> getPopularItems() {
@@ -94,85 +88,95 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void incrementViewCount(Long itemId) {
         redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
+      
+    public ItemDetailDto getItemDetailInfo(Long itemId) {
+        log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
+
+        log.info("판매자 이름 조회를 시작합니다 : {}", item.getSellerId());
+
+        String sellerName = sellerServiceFeignClient.getSeller(item.getSellerId()).getBody().getData().toLowerCase();
+
+        log.info("판매자 이름 조회가 성공적으로 완료되었습니다. 조회된 판매자 이름은 : {}", sellerName);
+
+        return new ItemDetailDto(item, sellerName);
     }
 
-    // 상품 검색
     @Override
-    @Transactional
-    public Page<ItemCardDto> filterItems(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
-        Page<Item> items = itemRepository.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
-        return items.map(ItemCardDto::new);
+    public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Long sellerId, Double minPrice, Double maxPrice, String keyword, Pageable pageable) {
+        log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
+        Page<Item> items = itemRepository.filterItems(category, subCategory, minPrice, maxPrice, keyword, pageable);
+
+        log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
+        String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
+
+        log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
     }
 
 
     // 상품 수정
     @Override
     @Transactional
-    public void updateItem(Long itemId, ItemUpdateDto dto) {
+    public void updateItem(Long itemId, UpdateItemRequestDto dto) {
+        log.info("item ID로부터 아이템 수정을 시작합니다 : {}", itemId);
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.updateInformation(dto);
+
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
+
+        log.info("ItemUpdateDto로부터 아이템 수정을 시작합니다 : {}", dto);
+        item.update(dto);
     }
 
     // 상품 삭제
     @Override
     @Transactional
     public void deleteItem(List<Long> itemIds) {
-        for (Long itemId:itemIds){
+        log.info("item ID 리스트로부터 아이템 삭제를 시작합니다 : {}", itemIds);
 
+        for (Long itemId : itemIds) {
             Item item = itemRepository.findById(itemId)
                     .orElseThrow(() -> new ItemNotFoundException(itemId));
+
+            log.info("아이템 삭제를 시작합니다 : {}", item.getId());
             itemRepository.delete(item);
+
+            log.info("아이템 삭제가 성공적으로 완료되었습니다. 삭제된 아이템의 ID는 : {}", item.getId());
         }
 
-    }
-
-    // 재고 수량 조회
-    @Override
-    @Transactional
-    public int getStockQuantity(Long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        return item.getStockQuantity();
     }
 
     // 재고 수량 증감
     @Override
     @Transactional
-    public StockManageDto changeStock(Long itemId, int quantity) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-        item.changeStock(quantity);
-        return StockManageDto.builder()
-                .stockQuantity(item.getStockQuantity())
-                .itemId(item.getItemId())
-                .build();
+    public void changeStock(List<UpdateStockRequestDto> updateStockRequestDtos) {
+        log.info("재고 수량 변경을 시작합니다.");
+
+        for (UpdateStockRequestDto updateStockRequestDto : updateStockRequestDtos) {
+            Long itemId = updateStockRequestDto.getItemId();
+            int quantity = updateStockRequestDto.getQuantity();
+
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new ItemNotFoundException(itemId));
+            log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
+
+            log.info("재고 수량 변경을 시작합니다 : {}", item.getId());
+
+            if (quantity > 0) {
+                item.increaseStock(quantity);
+            } else if (quantity < 0) {
+                item.decreaseStock(-quantity);
+            }
+
+            log.info("재고 수량 변경이 성공적으로 완료되었습니다. 변경된 재고 수량은 : {}", item.getStockQuantity());
+        }
+
+        log.info("모든 아이템의 재고 수량 변경이 완료되었습니다.");
     }
 
-    /* feign */
-    // 이벤트 - 상품명 조회
-    @Override
-    @Transactional
-    public String getItemName(Long itemId) {
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId)).getItemName();
-    }
 
-    // 주문 - 상품 정보 조회
-    @Override
-    @Transactional(readOnly = true)
-    public Item getItemInquiry(Long itemId) {
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException(itemId));
-    }
-
-    // 장바구니, 위시리스트 - 상품 리스트 조회
-    @Override
-    @Transactional
-    public List<ItemSimpleListDto> getCartItemsInquiry(List<Long> itemId) {
-        List<Item> items = itemRepository.findAllByItemIdIn(itemId);
-        return items.stream()
-                .map(ItemSimpleListDto::new)
-                .collect(Collectors.toList());
-    }
 }
