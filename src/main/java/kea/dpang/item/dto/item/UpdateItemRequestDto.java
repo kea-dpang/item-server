@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemUpdateDto {
+public class UpdateItemRequestDto {
 
     private String itemName;
     private Category category;

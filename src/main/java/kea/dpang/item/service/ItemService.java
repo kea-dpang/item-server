@@ -1,9 +1,9 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.item.ItemCreateDto;
-import kea.dpang.item.dto.item.ItemResponseDto;
-import kea.dpang.item.dto.item.ItemUpdateDto;
-import kea.dpang.item.dto.item.StockUpdateDto;
+import kea.dpang.item.dto.item.CreateItemRequestDto;
+import kea.dpang.item.dto.item.ItemDetailDto;
+import kea.dpang.item.dto.item.UpdateItemRequestDto;
+import kea.dpang.item.dto.item.UpdateStockRequestDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import org.springframework.data.domain.Page;
@@ -16,9 +16,9 @@ public interface ItemService {
     /**
      * 새로운 상품을 등록합니다.
      *
-     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
+     * @param createItemRequestDto 등록할 상품의 정보가 담긴 DTO
      */
-    void createItem(ItemCreateDto itemCreateDto);
+    void createItem(CreateItemRequestDto createItemRequestDto);
 
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
@@ -26,10 +26,10 @@ public interface ItemService {
      * @param itemId 조회할 상품의 ID
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
-    ItemResponseDto getItem(Long itemId);
+    ItemDetailDto getItem(Long itemId);
 
     // Todo: 필터링 상품 리스트 조회
-    Page<ItemResponseDto> getItemList(
+    Page<ItemDetailDto> getItemList(
             Category category,
             SubCategory subCategory,
             Double minPrice,
@@ -45,9 +45,9 @@ public interface ItemService {
      * 상품의 정보를 업데이트합니다.
      *
      * @param itemId        업데이트할 상품의 ID
-     * @param itemUpdateDto 업데이트할 상품의 정보가 담긴 DTO
+     * @param updateItemRequestDto 업데이트할 상품의 정보가 담긴 DTO
      */
-    void updateItem(Long itemId, ItemUpdateDto itemUpdateDto);
+    void updateItem(Long itemId, UpdateItemRequestDto updateItemRequestDto);
 
     /**
      * 주어진 ID에 해당하는 상품을 삭제합니다.
@@ -61,5 +61,5 @@ public interface ItemService {
      *
      * @param dto 업데이트할 상품의 재고 정보가 담긴 DTO
      */
-    void changeStock(List<StockUpdateDto> dto);
+    void changeStock(List<UpdateStockRequestDto> dto);
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ItemCreateDto {
+public class CreateItemRequestDto {
     private Long sellerId;
     private String itemName;
     private Category category;
