@@ -97,6 +97,7 @@ public class ItemController {
             @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId
     ) {
         ItemDetailDto item = itemService.getItemDetailInfo(itemId);
+        itemService.incrementViewCount(itemId);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 상세 정보가 조회되었습니다.", item),
