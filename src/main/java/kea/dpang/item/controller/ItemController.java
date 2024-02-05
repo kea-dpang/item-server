@@ -48,12 +48,12 @@ public class ItemController {
     @GetMapping
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<Page<ItemDetailDto>>> getItemList(
-            @RequestParam Category category,
-            @RequestParam SubCategory subCategory,
-            @RequestParam(defaultValue = "0") Double minPrice,
-            @RequestParam(defaultValue = "10000000") Double maxPrice,
-            @RequestParam String keyword,
-            @RequestParam Long sellerId,
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) SubCategory subCategory,
+            @RequestParam(required = false, defaultValue = "0") Double minPrice,
+            @RequestParam(required = false, defaultValue = "10000000") Double maxPrice,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long sellerId,
             Pageable pageable
     ) {
         // 카테고리 따로, 브랜드 따로. 같이 들어오는 경우는 없다 (by 프런트 유지연)
