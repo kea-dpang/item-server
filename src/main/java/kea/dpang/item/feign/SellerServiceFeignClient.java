@@ -11,5 +11,5 @@ public interface SellerServiceFeignClient {
 
     // 판매처 이름을 받아오기 위한 API
     @GetMapping("/api/seller/findName")
-    ResponseEntity<SuccessResponse<String>> getSeller (@RequestParam Long id);
+    ResponseEntity<SuccessResponse<String>> getSeller(@RequestParam Long id);
 }
