@@ -18,7 +18,7 @@ public class CreateItemRequestDto {
     private String itemName;
     private Category category;
     @Convert(converter = StringToSubCategoryConverter.class)
-    private SubCategory subCategory;
+    private SubCategory subCategory = SubCategory.NONE;;
     private int itemPrice;
     private int stockQuantity;
     private String itemImage;

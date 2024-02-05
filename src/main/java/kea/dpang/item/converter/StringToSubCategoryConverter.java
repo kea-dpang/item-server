@@ -10,12 +10,12 @@ public class StringToSubCategoryConverter implements Converter<String, SubCatego
     @Override
     public SubCategory convert(String source) {
         if (source == null || source.isEmpty()) {
-            return null;
+            return SubCategory.NONE;
         }
         try {
             return SubCategory.valueOf(source);
         } catch (IllegalArgumentException e) {
-            return null;
+            return SubCategory.NONE;
         }
     }
 }
