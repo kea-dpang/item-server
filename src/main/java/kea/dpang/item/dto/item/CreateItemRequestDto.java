@@ -39,7 +39,7 @@ public class CreateItemRequestDto {
                 .stockQuantity(this.getStockQuantity())
                 .description("") // 초기 상품 설명을 빈 문자열로 설정
                 .thumbnailImage(this.getItemImage())
-                .images(this.getImages())
+                .informationImages(this.getImages())
                 .build();
     }
 

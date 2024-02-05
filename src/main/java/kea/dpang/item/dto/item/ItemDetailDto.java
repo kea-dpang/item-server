@@ -44,7 +44,7 @@ public class ItemDetailDto {
         this.description = item.getDescription();
         this.stockQuantity = item.getStockQuantity();
         this.itemImage = item.getThumbnailImage();
-        this.images = item.getImages();
+        this.images = item.getInformationImages();
     }
 }
 

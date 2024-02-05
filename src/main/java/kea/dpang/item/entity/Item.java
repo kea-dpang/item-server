@@ -68,9 +68,9 @@ public class Item extends BaseEntity {
     // 상품 썸네일 사진
     private String thumbnailImage;
 
-    // 이미지 리스트
+    // 상품 정보 이미지 리스트
     @ElementCollection
-    private List<String> images;
+    private List<String> informationImages;
 
     public void update(UpdateItemRequestDto dto) {
         this.name = dto.getItemName();
@@ -80,7 +80,7 @@ public class Item extends BaseEntity {
         this.discountRate = dto.getDiscountRate();
         this.stockQuantity = dto.getStockQuantity();
         this.thumbnailImage = dto.getItemImage();
-        this.images = dto.getImages();
+        this.informationImages = dto.getImages();
     }
 
     public void increaseStock(int quantity) {
