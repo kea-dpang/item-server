@@ -8,7 +8,7 @@ import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.UpdateItemRequestDto;
-import kea.dpang.item.dto.item.StockUpdateDto;
+import kea.dpang.item.dto.item.UpdateStockRequestDto;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -134,9 +134,9 @@ public class ItemController {
     @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
-            @RequestBody @Parameter(description = "재고 변경 정보") List<StockUpdateDto> stockUpdateDtos
+            @RequestBody @Parameter(description = "재고 변경 정보") List<UpdateStockRequestDto> updateStockRequestDtos
     ) {
-        itemService.changeStock(stockUpdateDtos);
+        itemService.changeStock(updateStockRequestDtos);
 
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.OK.value(), "상품 재고 수량이 변경되었습니다."),

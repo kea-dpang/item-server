@@ -3,7 +3,7 @@ package kea.dpang.item.service;
 import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.UpdateItemRequestDto;
-import kea.dpang.item.dto.item.StockUpdateDto;
+import kea.dpang.item.dto.item.UpdateStockRequestDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
 import org.springframework.data.domain.Page;
@@ -61,5 +61,5 @@ public interface ItemService {
      *
      * @param dto 업데이트할 상품의 재고 정보가 담긴 DTO
      */
-    void changeStock(List<StockUpdateDto> dto);
+    void changeStock(List<UpdateStockRequestDto> dto);
 }
