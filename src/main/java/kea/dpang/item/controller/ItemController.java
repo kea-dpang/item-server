@@ -67,7 +67,7 @@ public class ItemController {
     }
 
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/{itemId}/detail")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
     public ResponseEntity<SuccessResponse<ItemResponseDto>> getItem(@PathVariable @Parameter(description = "상품ID", example = "1") Long itemId) {
         ItemResponseDto item = itemService.getItem(itemId);
@@ -121,7 +121,7 @@ public class ItemController {
     }
 
 
-    @PutMapping("/stock/update")
+    @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
             @RequestBody @Parameter(description = "재고 변경 정보") List<StockUpdateDto> stockUpdateDtos
