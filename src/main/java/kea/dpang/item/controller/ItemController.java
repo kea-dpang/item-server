@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.item.CreateItemRequestDto;
-import kea.dpang.item.dto.item.ItemDetailDto;
-import kea.dpang.item.dto.item.UpdateItemRequestDto;
-import kea.dpang.item.dto.item.UpdateStockRequestDto;
+import kea.dpang.item.dto.item.*;
 import kea.dpang.item.dto.review.ReviewResponseDto;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.SubCategory;
@@ -68,7 +65,7 @@ public class ItemController {
 
     @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 리스트 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<ItemDetailDto>>> getItemList(
+    public ResponseEntity<SuccessResponse<List<ItemDto>>> getItemList(
             @RequestBody List<Long> itemIds
     ) {
         // Todo: 상품 리스트로 조회
