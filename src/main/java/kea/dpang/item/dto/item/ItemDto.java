@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
-    private Long itemId; // 상품 ID
-    private String image; // 상품 이미지 URL
+    private Long id; // 상품 ID
+    private String thumbnailImage; // 상품 이미지 URL
     private String name; // 상품 이름
     private int price; // 상품 정가
     private int quantity; // 상품 재고 수량
@@ -18,8 +18,8 @@ public class ItemDto {
     private int discountPrice; // 상품 판매가
 
     public ItemDto(Item item) {
-        this.itemId = item.getId();
-        this.image = item.getThumbnailImage();
+        this.id = item.getId();
+        this.thumbnailImage = item.getThumbnailImage();
         this.name = item.getName();
         this.price = item.getPrice();
         this.quantity = item.getStockQuantity();
