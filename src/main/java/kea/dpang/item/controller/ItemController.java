@@ -77,13 +77,25 @@ public class ItemController {
         );
     }
 
+    @GetMapping("/{itemId}")
+    @Operation(summary = "상품 정보 조회", description = "상품 ID를 통해 상품 정보를 조회합니다.")
+    public ResponseEntity<SuccessResponse<ItemDto>> getItemInfo(
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId
+    ) {
+        ItemDto item = itemService.getItemInfo(itemId);
+
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(), "상품 정보가 조회되었습니다.", item),
+                HttpStatus.OK
+        );
+    }
 
     @GetMapping("/{itemId}/detail")
     @Operation(summary = "상품 상세 정보 조회", description = "상품 ID를 통해 상세한 상품 정보를 조회합니다.")
-    public ResponseEntity<SuccessResponse<ItemDetailDto>> getItem(
+    public ResponseEntity<SuccessResponse<ItemDetailDto>> getItemDetailInfo(
             @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId
     ) {
-        ItemDetailDto item = itemService.getItem(itemId);
+        ItemDetailDto item = itemService.getItemDetailInfo(itemId);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "상품 상세 정보가 조회되었습니다.", item),

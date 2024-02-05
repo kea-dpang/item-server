@@ -17,13 +17,15 @@ public interface ItemService {
      */
     void createItem(CreateItemRequestDto dto);
 
+    ItemDto getItemInfo(Long itemId);
+
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
      *
      * @param itemId 조회할 상품의 ID
      * @return 조회된 상품의 상세 정보가 담긴 Detail DTO
      */
-    ItemDetailDto getItem(Long itemId);
+    ItemDetailDto getItemDetailInfo(Long itemId);
 
     List<ItemDto> getItemList(List<Long> itemIds);
 

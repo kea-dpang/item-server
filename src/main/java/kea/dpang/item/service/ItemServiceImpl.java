@@ -53,10 +53,23 @@ public class ItemServiceImpl implements ItemService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ItemDto getItemInfo(Long itemId) {
+        log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException(itemId));
+
+        log.info("아이템 조회가 성공적으로 완료되었습니다. 조회된 아이템의 ID는 : {}", item.getId());
+
+        return new ItemDto(item);
+    }
+
     // 상품 상세 정보 조회
     @Override
     @Transactional(readOnly = true)
-    public ItemDetailDto getItem(Long itemId) {
+    public ItemDetailDto getItemDetailInfo(Long itemId) {
         log.info("item ID로부터 아이템 조회를 시작합니다 : {}", itemId);
 
         Item item = itemRepository.findById(itemId)
