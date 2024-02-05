@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.dpang.item.base.BaseResponse;
 import kea.dpang.item.base.SuccessResponse;
-import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
@@ -37,8 +37,8 @@ public class ItemController {
 
     @PostMapping
     @Operation(summary = "상품 등록", description = "상품 정보를 시스템에 추가합니다.")
-    public ResponseEntity<BaseResponse> createItem(@RequestBody ItemCreateDto itemCreateDto) {
-        itemService.createItem(itemCreateDto);
+    public ResponseEntity<BaseResponse> createItem(@RequestBody CreateItemRequestDto createItemRequestDto) {
+        itemService.createItem(createItemRequestDto);
         return new ResponseEntity<>(
                 new BaseResponse(HttpStatus.CREATED.value(), "상품이 등록되었습니다."),
                 HttpStatus.CREATED

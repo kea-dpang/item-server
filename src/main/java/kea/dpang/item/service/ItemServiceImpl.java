@@ -1,6 +1,6 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
@@ -33,7 +33,7 @@ public class ItemServiceImpl implements ItemService {
     // 상품 등록
     @Override
     @Transactional
-    public void createItem(ItemCreateDto dto) {
+    public void createItem(CreateItemRequestDto dto) {
         log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
 
         try {

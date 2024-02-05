@@ -1,6 +1,6 @@
 package kea.dpang.item.service;
 
-import kea.dpang.item.dto.item.ItemCreateDto;
+import kea.dpang.item.dto.item.CreateItemRequestDto;
 import kea.dpang.item.dto.item.ItemDetailDto;
 import kea.dpang.item.dto.item.ItemUpdateDto;
 import kea.dpang.item.dto.item.StockUpdateDto;
@@ -16,9 +16,9 @@ public interface ItemService {
     /**
      * 새로운 상품을 등록합니다.
      *
-     * @param itemCreateDto 등록할 상품의 정보가 담긴 DTO
+     * @param createItemRequestDto 등록할 상품의 정보가 담긴 DTO
      */
-    void createItem(ItemCreateDto itemCreateDto);
+    void createItem(CreateItemRequestDto createItemRequestDto);
 
     /**
      * 주어진 ID에 해당하는 상품의 정보를 조회합니다.
