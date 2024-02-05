@@ -19,14 +19,16 @@ public class PersonalReviewDto {
     private String content;
     private Double rating;
 
-    public PersonalReviewDto(Review review, String reviewerName) {
-        this.reviewId = review.getId();
-        this.reviewerId = review.getReviewerId();
-        this.reviewerName = reviewerName;
-        this.createdTime = review.getCreatedTime();
-        this.itemId = review.getItemId().getItemId();
-        this.itemImage = review.getItemId().getItemImage();
-        this.content = review.getContent();
-        this.rating = review.getRating();
+    public static PersonalReviewDto of(Review review, String reviewerName) {
+        return new PersonalReviewDto(
+                review.getId(),
+                review.getReviewerId(),
+                reviewerName,
+                review.getCreatedTime(),
+                review.getItemId().getItemId(),
+                review.getItemId().getItemImage(),
+                review.getContent(),
+                review.getRating()
+        );
     }
 }
