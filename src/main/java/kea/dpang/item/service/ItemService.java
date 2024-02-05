@@ -39,7 +39,14 @@ public interface ItemService {
             Pageable pageable
     );
 
-    // Todo: 인기 상품 리스트 조회
+    /**
+     * 인기 상품을 조회합니다.
+     *
+     * @return 조회된 인기 상품 목록이 담긴 DTO 리스트
+     */
+    List<PopularItemDto> getPopularItems();
+
+    void incrementViewCount(Long itemId);
 
     /**
      * 상품의 정보를 업데이트합니다.
