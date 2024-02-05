@@ -118,15 +118,16 @@ public class ItemServiceImpl implements ItemService {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         Page<Item> items = itemRepository.filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
 
-        log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
-        String sellerName = Objects.requireNonNull(sellerServiceFeignClient.getSeller(sellerId).getBody())
-                .getData()
-                .getName();
-
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
-        return items.map(item -> new ItemDetailDto(item, sellerName));
-    }
+        return items.map(item -> {
+            log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", item.getSellerId());
+            String sellerName = Objects.requireNonNull(sellerServiceFeignClient.getSeller(item.getSellerId()).getBody())
+                    .getData()
+                    .getName();
 
+            return new ItemDetailDto(item, sellerName);
+        });
+    }
 
     // 상품 수정
     @Override
