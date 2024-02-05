@@ -67,7 +67,7 @@ public class ItemController {
     @GetMapping("/list")
     @Operation(summary = "상품 리스트 조회", description = "상품 리스트를 리스트 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemDto>>> getItemList(
-            @RequestBody List<Long> itemIds
+            @RequestBody GetItemListRequestDto dto
     ) {
         // Todo: 상품 리스트로 조회
 
@@ -91,7 +91,8 @@ public class ItemController {
     @GetMapping("/{itemId}/reviews")
     @Operation(summary = "상품별 리뷰 리스트 조회", description = "상품별로 리뷰 리스트를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ReviewDto>>> getReviewList(
-            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId, Pageable pageable
+            @PathVariable @Parameter(description = "상품ID", example = "1") Long itemId,
+            Pageable pageable
     ) {
         List<ReviewDto> reviews = reviewService.getReviewList(itemId, pageable);
 
