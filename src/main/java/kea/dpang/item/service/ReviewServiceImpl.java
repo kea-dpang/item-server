@@ -44,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 리뷰 저장
         reviewRepository.save(review);
-        log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getId());
+        log.info("새로운 리뷰 등록 완료. 리뷰 ID: {}", review.getReviewId());
     }
 
 
@@ -52,9 +52,21 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public List<ReviewDto> getReviewList(Long itemId, Pageable pageable) {
+
+        // 사용자 서버로부터 사용자 정보 조회
+        ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(itemId);
+        // 사용자 이름 가져오기
+
+        String name = Optional.ofNullable(responseEntity.getBody())
+                .map(SuccessResponse::getData)
+                .map(UserDetailDto::getName)
+                .orElseThrow(() -> new RuntimeException("사용자 정보 조회에 실패하였습니다."));
+
         Page<Review> reviews = reviewRepository.findByItemId(itemId, pageable);
-        return reviews.stream()
-                .map(ReviewDto::new)
+
+        // 리뷰 리스트를 PersonalReviewDto로 변환
+        return reviews.getContent().stream()
+                .map(review -> ReviewDto.of(review, name))
                 .toList();
     }
 

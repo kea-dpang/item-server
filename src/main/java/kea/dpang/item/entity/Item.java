@@ -99,5 +99,13 @@ public class Item extends BaseEntity {
         }
         this.stockQuantity -= quantity;
     }
+
+    public void updateAverageRating() {
+        this.averageRating = (float) this.reviews.stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
 }
 

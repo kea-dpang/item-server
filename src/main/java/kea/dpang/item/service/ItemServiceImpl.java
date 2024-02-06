@@ -1,5 +1,6 @@
 package kea.dpang.item.service;
 
+import kea.dpang.item.base.SuccessResponse;
 import kea.dpang.item.dto.item.*;
 import kea.dpang.item.entity.Category;
 import kea.dpang.item.entity.Item;
@@ -7,6 +8,7 @@ import kea.dpang.item.entity.SubCategory;
 import kea.dpang.item.exception.ItemNotFoundException;
 import kea.dpang.item.exception.SellerNotFoundException;
 import kea.dpang.item.feign.SellerServiceFeignClient;
+import kea.dpang.item.feign.dto.SellerDto;
 import kea.dpang.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,15 +43,36 @@ public class ItemServiceImpl implements ItemService {
         log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
 
         try {
+            // 판매처 정보를 찾는 부분
+            ResponseEntity<SuccessResponse<SellerDto>> response = sellerServiceFeignClient.getSeller(dto.getSellerId());
+
+            // 판매처 정보가 없을 경우 SellerNotFoundException 발생
+            if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null || response.getBody().getData() == null) {
+                throw new SellerNotFoundException(dto.getSellerId());
+            }
+
             Item item = dto.toItem();
             itemRepository.save(item);
             log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
-
         } catch (Exception e) {
             log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
             throw e;
         }
     }
+
+//    public void createItem(CreateItemRequestDto dto) {
+//        log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
+//
+//        try {
+//            Item item = dto.toItem();
+//            itemRepository.save(item);
+//            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
+//
+//        } catch (Exception e) {
+//            log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
+//            throw e;
+//        }
+//    }
 
     @Override
     public List<ItemDto> getItemList(List<Long> itemIds) {
