@@ -21,7 +21,7 @@ public class PersonalReviewDto {
 
     public static PersonalReviewDto of(Review review, String reviewerName) {
         return new PersonalReviewDto(
-                review.getId(),
+                review.getReviewId(),
                 review.getReviewerId(),
                 reviewerName,
                 review.getCreatedTime(),
