@@ -1,6 +1,7 @@
 package kea.dpang.item.dto.item;
 
 import kea.dpang.item.entity.Category;
+import kea.dpang.item.entity.Image;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.SubCategory;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class ItemDetailDto {
     private String description;
     private int stockQuantity;
     private String thumbnailImage;
-    private List<String> informationImages;
+    private List<Image> informationImages;
 
     public ItemDetailDto(Item item, String sellerName) {
         this.id = item.getId();
