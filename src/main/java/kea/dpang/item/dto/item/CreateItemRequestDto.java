@@ -3,6 +3,7 @@ package kea.dpang.item.dto.item;
 import jakarta.persistence.Convert;
 import kea.dpang.item.converter.StringToSubCategoryConverter;
 import kea.dpang.item.entity.Category;
+import kea.dpang.item.entity.Image;
 import kea.dpang.item.entity.Item;
 import kea.dpang.item.entity.SubCategory;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class CreateItemRequestDto {
     private int itemPrice;
     private int stockQuantity;
     private String itemImage;
-    private List<String> images;
+    private List<Image> images;
 
     public Item toItem() {
         return Item.builder()
