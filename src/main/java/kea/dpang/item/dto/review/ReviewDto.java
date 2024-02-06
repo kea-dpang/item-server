@@ -18,16 +18,13 @@ public class ReviewDto {
     private String content;
     private Double rating;
 
-    public static ReviewDto of(Review review, String reviewerName) {
-        return new ReviewDto(
-                review.getReviewId(),
-                review.getReviewerId(),
-                reviewerName,
-                review.getCreatedTime(),
-                review.getItem().getId(),
-                review.getContent(),
-                review.getRating()
-        );
+    public ReviewDto(Review review) {
+        this.reviewId = review.getReviewId();
+        this.reviewerId = review.getReviewerId();
+        this.createdTime = review.getCreatedTime();
+        this.itemId = review.getItem().getId();
+        this.content = review.getContent();
+        this.rating = review.getRating();
     }
 }
 
