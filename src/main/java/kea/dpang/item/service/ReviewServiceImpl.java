@@ -69,7 +69,8 @@ public class ReviewServiceImpl implements ReviewService {
                     review.getCreatedTime(),
                     review.getItem().getId(),
                     review.getContent(),
-                    review.getRating()
+                    review.getRating(),
+                    review.getItem().getReviewCount()
             );
         }).toList();
     }
