@@ -1,7 +1,6 @@
 package kea.dpang.item.dto.item;
 
 import kea.dpang.item.entity.Category;
-import kea.dpang.item.entity.Image;
 import kea.dpang.item.entity.SubCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +18,5 @@ public class UpdateItemRequestDto {
     private int discountRate;
     private int stockQuantity;
     private String itemImage;
-    private List<Image> images;
+    private List<String> images;
 }
