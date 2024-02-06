@@ -71,6 +71,7 @@ public interface ItemService {
     void changeStock(List<UpdateStockRequestDto> dto);
 
 
-//    void updateItemDiscount(List<Long> itemIds, UpdateItemDiscountDto updateItemDiscountDto);
-//    void deleteItemDiscount(Long itemId);
+    void updateItemDiscount(UpdateEventDiscountDto updateEventDiscountDto);
+    void updateSellerDiscount(UpdateEventDiscountDto updateEventDiscountDto);
+    void deleteEventDiscount(Long eventId);
 }

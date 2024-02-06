@@ -46,6 +46,7 @@ public class Item extends BaseEntity {
     private SubCategory subCategory;
 
     // 평균 평점
+
     private float averageRating;
 
     // 리뷰 리스트
@@ -57,6 +58,10 @@ public class Item extends BaseEntity {
 
     // 할인가
     private int discountPrice;
+
+    // 이벤트 ID
+    @Column(name = "event_id")
+    private Long eventId;
 
     // 재고 수량
     private int stockQuantity;
@@ -109,6 +114,14 @@ public class Item extends BaseEntity {
 
     public int getReviewCount() {
         return this.reviews.size();
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
+    public void setDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
     }
 
 }
