@@ -119,6 +119,9 @@ public class ItemServiceImpl implements ItemService {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         Page<Item> items = filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
 
+//        log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", sellerId);
+//        String sellerName = sellerServiceFeignClient.getSeller(sellerId).getBody().getData().toLowerCase();
+
         log.info("상품 리스트를 ItemResponseDto로 변환합니다.");
         return items.map(item -> {
             log.info("판매자 이름 조회를 시작합니다 : 판매자ID = {}", item.getSellerId());
@@ -221,5 +224,22 @@ public class ItemServiceImpl implements ItemService {
         log.info("모든 아이템의 재고 수량 변경이 완료되었습니다.");
     }
 
+//    @Override
+//    public void updateItemDiscount(List<Long> itemIds, UpdateItemDiscountDto dto) {
+//        // 상품 조회
+//        Item item = itemRepository.findById(itemIds, dto);
+//        // 할인 정보 업데이트
+//        item.setDiscount(updateItemDiscountDto.getDiscountRate());
+//        itemRepository.save(item);
+//    }
+//
+//    @Override
+//    public void deleteItemDiscount(Long itemId) {
+//        // 상품 조회
+//        Item item = itemRepository.findById(itemId);
+//        // 할인 정보 삭제
+//        item.setDiscount(null);
+//        itemRepository.save(item);
+//    }
 
 }
