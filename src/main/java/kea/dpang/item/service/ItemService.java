@@ -69,4 +69,8 @@ public interface ItemService {
      * @param dto 업데이트할 상품의 재고 정보가 담긴 DTO
      */
     void changeStock(List<UpdateStockRequestDto> dto);
+
+
+//    void updateItemDiscount(List<Long> itemIds, UpdateItemDiscountDto updateItemDiscountDto);
+//    void deleteItemDiscount(Long itemId);
 }

@@ -69,8 +69,8 @@ public class Item extends BaseEntity {
     private String thumbnailImage;
 
     // 상품 정보 이미지 리스트
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<Image> informationImages;
+    @ElementCollection
+    private List<String> informationImages;
 
     public void update(UpdateItemRequestDto dto) {
         this.name = dto.getItemName();
