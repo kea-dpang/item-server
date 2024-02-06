@@ -53,21 +53,25 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public List<ReviewDto> getReviewList(Long itemId, Pageable pageable) {
 
-        // 사용자 서버로부터 사용자 정보 조회
-        ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(itemId);
-        // 사용자 이름 가져오기
-
-        String name = Optional.ofNullable(responseEntity.getBody())
-                .map(SuccessResponse::getData)
-                .map(UserDetailDto::getName)
-                .orElseThrow(() -> new RuntimeException("사용자 정보 조회에 실패하였습니다."));
-
         Page<Review> reviews = reviewRepository.findByItemId(itemId, pageable);
 
-        // 리뷰 리스트를 PersonalReviewDto로 변환
-        return reviews.getContent().stream()
-                .map(review -> ReviewDto.of(review, name))
-                .toList();
+        return reviews.stream().map(review -> {
+            // 작성자 이름 가져오기
+            ResponseEntity<SuccessResponse<UserDetailDto>> response = userServiceFeignClient.getReviewer(review.getReviewerId());
+            UserDetailDto userDetailDto = response.getBody().getData();
+            String reviewerName = userDetailDto.getName();
+
+            // ReviewDto 생성
+            return new ReviewDto(
+                    review.getReviewId(),
+                    review.getReviewerId(),
+                    reviewerName, // 작성자 이름 설정
+                    review.getCreatedTime(),
+                    review.getItem().getId(),
+                    review.getContent(),
+                    review.getRating()
+            );
+        }).toList();
     }
 
     // 사용자별 리뷰 리스트 조회
