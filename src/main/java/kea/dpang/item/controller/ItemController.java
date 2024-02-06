@@ -121,8 +121,8 @@ public class ItemController {
 
     @GetMapping("/popular/list")
     @Operation(summary = "인기 상품 리스트 조회", description = "인기 상품 정보를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(Pageable pageable) {
-        List<PopularItemDto> popularItems = itemService.getPopularItems();
+    public ResponseEntity<SuccessResponse<List<ItemDetailDto>>> getPopularItems(Pageable pageable) {
+        List<ItemDetailDto> popularItems = itemService.getPopularItems(pageable);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(),"인기 상품 리스트가 조회되었습니다.", popularItems),
                 HttpStatus.OK
