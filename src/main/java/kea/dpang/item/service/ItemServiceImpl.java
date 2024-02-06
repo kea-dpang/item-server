@@ -60,20 +60,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-//    public void createItem(CreateItemRequestDto dto) {
-//        log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
-//
-//        try {
-//            Item item = dto.toItem();
-//            itemRepository.save(item);
-//            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
-//
-//        } catch (Exception e) {
-//            log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
-//            throw e;
-//        }
-//    }
-
     @Override
     public List<ItemDto> getItemList(List<Long> itemIds) {
         log.info("item ID 리스트로부터 아이템 리스트 조회를 시작합니다 : {}", itemIds);
@@ -96,6 +82,7 @@ public class ItemServiceImpl implements ItemService {
         return new ItemDto(item);
     }
 
+    // 인기 상품 조회
     @Override
     @Transactional(readOnly = true)
     public List<PopularItemDto> getPopularItems() {
@@ -107,7 +94,9 @@ public class ItemServiceImpl implements ItemService {
         return items.stream().map(item -> {
             Long itemId = Long.valueOf(item.getValue());
             Double score = item.getScore();
-            String itemName = "Item " + itemId;
+            String itemName = itemRepository.findById(itemId)
+                    .map(Item::getName)
+                    .orElseThrow(() -> new ItemNotFoundException(itemId));
 
             return new PopularItemDto(itemId, itemName, score);
         }).toList();
@@ -245,6 +234,34 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("모든 아이템의 재고 수량 변경이 완료되었습니다.");
+    }
+
+    @Transactional
+    public void updateItemDiscount(UpdateEventDiscountDto dto) {
+
+        dto.getItemIds().forEach((itemId)->{
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(()-> new ItemNotFoundException(itemId));
+            item.setDiscountRate(dto.getDiscountRate());
+        });
+
+    }
+
+    @Transactional
+    public void updateSellerDiscount(UpdateEventDiscountDto dto){
+        List<Item> items = itemRepository.findAllBySellerId(dto.getSellerId());
+        items.forEach((item -> {
+            item.setDiscountRate(dto.getDiscountRate());
+        }));
+    }
+
+    @Transactional
+    public void deleteEventDiscount(Long eventId){
+        List<Item> items = itemRepository.findAllByEventId(eventId);
+        items.forEach((item -> {
+            item.setDiscountRate(0);
+            item.setEventId(null);
+        }));
     }
 
 
