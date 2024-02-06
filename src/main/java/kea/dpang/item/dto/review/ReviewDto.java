@@ -17,14 +17,6 @@ public class ReviewDto {
     private Long itemId;
     private String content;
     private Double rating;
-
-    public ReviewDto(Review review) {
-        this.reviewId = review.getReviewId();
-        this.reviewerId = review.getReviewerId();
-        this.createdTime = review.getCreatedTime();
-        this.itemId = review.getItem().getId();
-        this.content = review.getContent();
-        this.rating = review.getRating();
-    }
+    private int reviewCount;
 }
 

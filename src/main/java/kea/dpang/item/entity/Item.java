@@ -107,5 +107,9 @@ public class Item extends BaseEntity {
                 .orElse(0.0);
     }
 
+    public int getReviewCount() {
+        return this.reviews.size();
+    }
+
 }
 
