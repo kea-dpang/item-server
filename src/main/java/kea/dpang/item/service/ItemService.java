@@ -44,7 +44,7 @@ public interface ItemService {
      *
      * @return 조회된 인기 상품 목록이 담긴 DTO 리스트
      */
-    List<PopularItemDto> getPopularItems();
+    List<ItemDetailDto> getPopularItems(Pageable pageable);
 
     void incrementViewCount(Long itemId);
 
