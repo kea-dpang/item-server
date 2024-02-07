@@ -36,7 +36,7 @@ public class Item extends BaseEntity {
     private int price;
 
     // 상품 분류 카테고리
-    @Column(name = "item_category")
+    @Column(name = "item_category", nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -46,7 +46,6 @@ public class Item extends BaseEntity {
     private SubCategory subCategory;
 
     // 평균 평점
-
     private float averageRating;
 
     // 리뷰 리스트

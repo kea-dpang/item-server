@@ -273,18 +273,22 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void updateSellerDiscount(UpdateEventDiscountDto dto){
         List<Item> items = itemRepository.findAllBySellerId(dto.getSellerId());
-        items.forEach((item -> {
-            item.setDiscountRate(dto.getDiscountRate());
-        }));
+        if(!items.isEmpty()) {
+            items.forEach((item -> {
+                item.setDiscountRate(dto.getDiscountRate());
+            }));
+        }
     }
 
     @Transactional
-    public void deleteEventDiscount(Long eventId){
+    public void deleteEventDiscount(Long eventId) {
         List<Item> items = itemRepository.findAllByEventId(eventId);
-        items.forEach((item -> {
-            item.setDiscountRate(0);
-            item.setEventId(null);
-        }));
+        if (!items.isEmpty()) {
+            items.forEach((item -> {
+                item.setDiscountRate(0);
+                item.setEventId(null);
+            }));
+        }
     }
 
 
