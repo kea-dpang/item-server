@@ -114,10 +114,20 @@ public class ItemServiceImpl implements ItemService {
         return popularItems;
     }
 
-
+    // 조회수 증가 (인기 상품 조회용)
     @Override
     public void incrementViewCount(Long itemId) {
         redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
+    }
+
+    // 신상품 조회
+    @Override
+    public List<ItemDto> getNewItems(Pageable pageable) {
+        log.info("신제품 리스트 조회를 시작합니다.");
+        return itemRepository.findByOrderByCreatedTime(pageable)
+                .stream()
+                .map(ItemDto::new)
+                .toList();
     }
 
     // 상품 상세 정보 조회

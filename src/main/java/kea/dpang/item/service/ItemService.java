@@ -46,6 +46,11 @@ public interface ItemService {
      */
     List<ItemDetailDto> getPopularItems(Pageable pageable);
 
+    /**
+     * 신상품을 조회합니다.
+     */
+    List<ItemDto> getNewItems(Pageable pageable);
+
     void incrementViewCount(Long itemId);
 
     /**
