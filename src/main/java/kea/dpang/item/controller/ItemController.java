@@ -197,7 +197,7 @@ public class ItemController {
     @DeleteMapping("/eventDiscount")
     @Operation(summary = "이벤트 할인 해제", description = "(백엔드) 상품에 이벤트에서 발생한 할인을 해제합니다.")
     public ResponseEntity<BaseResponse> deleteItemDiscount(
-            @PathVariable Long eventId
+            @RequestParam Long eventId
     ) {
         itemService.deleteEventDiscount(eventId);
         return ResponseEntity.ok().build();
