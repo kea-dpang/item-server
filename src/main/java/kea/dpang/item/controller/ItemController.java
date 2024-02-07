@@ -129,6 +129,16 @@ public class ItemController {
         );
     }
 
+    @GetMapping("/new/list")
+    @Operation(summary = "신제품 리스트 조회", description = "최신 상품 정보를 페이지 정보에 따라 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<ItemDto>>> getNewItems(Pageable pageable) {
+        List<ItemDto> newItems = itemService.getNewItems(pageable);
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(),"신제품 리스트가 조회되었습니다.", newItems),
+                HttpStatus.OK
+        );
+    }
+
     @PutMapping("/{itemId}")
     @Operation(summary = "상품 수정", description = "상품 ID에 해당하는 상품 정보를 수정합니다.")
     public ResponseEntity<BaseResponse> updateItem(

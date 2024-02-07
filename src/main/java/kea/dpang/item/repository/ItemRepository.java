@@ -15,9 +15,11 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificationExecutor<Item> {
 
-    List<Item> findAllBySellerId (Long sellerId);
+    List<Item> findAllBySellerId(Long sellerId);
 
-    List<Item> findAllByEventId (Long eventId);
+    List<Item> findAllByEventId(Long eventId);
+
+    List<Item> findByOrderByCreatedTime(Pageable pageable);
 
 }
 
