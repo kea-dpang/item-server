@@ -36,26 +36,28 @@ public class Item extends BaseEntity {
     private int price;
 
     // 상품 분류 카테고리
-    @Column(name = "item_category", nullable = false)
     @Enumerated(EnumType.STRING)
     private Category category;
 
     // 상품 분류 서브카테고리
-    @Column(name = "item_sub_category")
     @Enumerated(EnumType.STRING)
     private SubCategory subCategory;
 
     // 평균 평점
+    @Column(name = "average_rating")
     private float averageRating;
 
     // 리뷰 리스트
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @Column(name = "reviews")
     private List<Review> reviews;
 
     // 할인율
+    @Column(name = "discount_rate")
     private int discountRate;
 
     // 할인가
+    @Column(name = "discount_price")
     private int discountPrice;
 
     // 이벤트 ID
@@ -63,17 +65,20 @@ public class Item extends BaseEntity {
     private Long eventId;
 
     // 재고 수량
+    @Column(name = "stock_quantity")
     private int stockQuantity;
 
-    // 상품 상세정보
-    @Column(length = 1000)
+    // 상품 상세 설명
+    @Column(name = "description", length = 1000)
     private String description;
 
     // 상품 썸네일 사진
+    @Column(name = "thumbnail_image")
     private String thumbnailImage;
 
     // 상품 정보 이미지 리스트
     @ElementCollection
+    @Column(name = "information_images")
     private List<String> informationImages;
 
     public void update(UpdateItemRequestDto dto) {
