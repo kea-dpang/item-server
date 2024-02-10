@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -60,20 +61,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-//    public void createItem(CreateItemRequestDto dto) {
-//        log.info("ItemCreateDto로부터 새로운 아이템 생성을 시작합니다 : {}", dto);
-//
-//        try {
-//            Item item = dto.toItem();
-//            itemRepository.save(item);
-//            log.info("성공적으로 아이템이 생성되었습니다. 생성된 아이템의 ID는 : {}", item.getId());
-//
-//        } catch (Exception e) {
-//            log.error("ItemCreateDto로부터 아이템 생성에 실패하였습니다. DTO 정보 : {}", dto, e);
-//            throw e;
-//        }
-//    }
-
     @Override
     public List<ItemDto> getItemList(List<Long> itemIds) {
         log.info("item ID 리스트로부터 아이템 리스트 조회를 시작합니다 : {}", itemIds);
@@ -96,26 +83,51 @@ public class ItemServiceImpl implements ItemService {
         return new ItemDto(item);
     }
 
+    // 인기 상품 조회
     @Override
     @Transactional(readOnly = true)
-    public List<PopularItemDto> getPopularItems() {
+    public List<ItemDetailDto> getPopularItems(Pageable pageable) {
         // Redis에서 조회수를 기반으로 인기 상품 ID와 점수를 가져옴
         Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
-                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, 0, -1);
+                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, pageable.getOffset(), pageable.getOffset() + pageable.getPageSize() - 1);
 
         // 가져온 데이터를 PopularItemDto 리스트로 변환
-        return items.stream().map(item -> {
+        List<ItemDetailDto> popularItems = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> item : items) {
             Long itemId = Long.valueOf(item.getValue());
-            Double score = item.getScore();
-            String itemName = "Item " + itemId;
+            try {
+                Item foundItem = itemRepository.findById(itemId)
+                        .orElseThrow(() -> new ItemNotFoundException(itemId));
 
-            return new PopularItemDto(itemId, itemName, score);
-        }).toList();
+                // 판매자 이름을 가져옴
+                ResponseEntity<SuccessResponse<SellerDto>> sellerResponse = sellerServiceFeignClient.getSeller(foundItem.getSellerId());
+                SellerDto seller = sellerResponse.getBody().getData();
+                String sellerName = seller.getName();
+
+                popularItems.add(new ItemDetailDto(foundItem, sellerName));
+            } catch (ItemNotFoundException e) {
+                log.error("상품을 찾을 수 없습니다. 상품 ID: {}", itemId, e);
+                // 상품을 찾을 수 없는 경우, 다음 상품으로 넘어감.
+                continue;
+            }
+        }
+        return popularItems;
     }
 
+    // 조회수 증가 (인기 상품 조회용)
     @Override
     public void incrementViewCount(Long itemId) {
         redisTemplate.opsForZSet().incrementScore(ITEM_VIEW_COUNT_KEY, String.valueOf(itemId), 1);
+    }
+
+    // 신상품 조회
+    @Override
+    public List<ItemDto> getNewItems(Pageable pageable) {
+        log.info("신제품 리스트 조회를 시작합니다.");
+        return itemRepository.findByOrderByCreatedTime(pageable)
+                .stream()
+                .map(ItemDto::new)
+                .toList();
     }
 
     // 상품 상세 정보 조회
@@ -245,6 +257,38 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("모든 아이템의 재고 수량 변경이 완료되었습니다.");
+    }
+
+    @Transactional
+    public void updateItemDiscount(UpdateEventDiscountDto dto) {
+
+        dto.getItemIds().forEach((itemId)->{
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(()-> new ItemNotFoundException(itemId));
+            item.setDiscountRate(dto.getDiscountRate());
+        });
+
+    }
+
+    @Transactional
+    public void updateSellerDiscount(UpdateEventDiscountDto dto){
+        List<Item> items = itemRepository.findAllBySellerId(dto.getSellerId());
+        if(!items.isEmpty()) {
+            items.forEach((item -> {
+                item.setDiscountRate(dto.getDiscountRate());
+            }));
+        }
+    }
+
+    @Transactional
+    public void deleteEventDiscount(Long eventId) {
+        List<Item> items = itemRepository.findAllByEventId(eventId);
+        if (!items.isEmpty()) {
+            items.forEach((item -> {
+                item.setDiscountRate(0);
+                item.setEventId(null);
+            }));
+        }
     }
 
 

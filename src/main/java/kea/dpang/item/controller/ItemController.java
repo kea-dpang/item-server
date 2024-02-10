@@ -121,10 +121,20 @@ public class ItemController {
 
     @GetMapping("/popular/list")
     @Operation(summary = "인기 상품 리스트 조회", description = "인기 상품 정보를 페이지 정보에 따라 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<PopularItemDto>>> getPopularItems(Pageable pageable) {
-        List<PopularItemDto> popularItems = itemService.getPopularItems();
+    public ResponseEntity<SuccessResponse<List<ItemDetailDto>>> getPopularItems(Pageable pageable) {
+        List<ItemDetailDto> popularItems = itemService.getPopularItems(pageable);
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(),"인기 상품 리스트가 조회되었습니다.", popularItems),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/new/list")
+    @Operation(summary = "신제품 리스트 조회", description = "최신 상품 정보를 페이지 정보에 따라 조회합니다.")
+    public ResponseEntity<SuccessResponse<List<ItemDto>>> getNewItems(Pageable pageable) {
+        List<ItemDto> newItems = itemService.getNewItems(pageable);
+        return new ResponseEntity<>(
+                new SuccessResponse<>(HttpStatus.OK.value(),"신제품 리스트가 조회되었습니다.", newItems),
                 HttpStatus.OK
         );
     }
@@ -168,22 +178,29 @@ public class ItemController {
         );
     }
 
-//    @PostMapping("/updateItemDiscount")
-//    @Operation(summary = "이벤트 할인 반영", description = "(백엔드) 상품에 이벤트에서 발생하는 할인을 반영합니다.")
-//    public ResponseEntity<Void> updateItemDiscount(
-//            @RequestBody List<Long> itemIds, UpdateItemDiscountDto dto
-//    ) {
-//        itemService.updateItemDiscount(itemIds, dto);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @DeleteMapping("/itemDiscount/{itemId}")
-//    @Operation(summary = "이벤트 할인 해제", description = "(백엔드) 상품에 이벤트에서 발생한 할인을 해제합니다.")
-//    public ResponseEntity<Void> deleteItemDiscount(
-//            @PathVariable Long itemId
-//    ) {
-//        itemService.deleteItemDiscount(itemId);
-//        return ResponseEntity.ok().build();
-//    }
+
+    @PutMapping("/eventDiscount")
+    @Operation(summary = "이벤트 할인 반영", description = "(백엔드) 상품에 이벤트에서 발생하는 할인을 반영합니다.")
+    public ResponseEntity<BaseResponse> updateEventDiscounts(
+            @RequestBody UpdateEventDiscountDto dto
+    ) {
+        if (dto.getItemIds() != null) {
+            itemService.updateItemDiscount(dto);
+        } else if (dto.getSellerId() != null) {
+            itemService.updateSellerDiscount(dto);
+        } else {
+            return ResponseEntity.badRequest().body(new BaseResponse(404,"올바른 요청 정보가 아닙니다."));
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/eventDiscount")
+    @Operation(summary = "이벤트 할인 해제", description = "(백엔드) 상품에 이벤트에서 발생한 할인을 해제합니다.")
+    public ResponseEntity<BaseResponse> deleteItemDiscount(
+            @RequestParam Long eventId
+    ) {
+        itemService.deleteEventDiscount(eventId);
+        return ResponseEntity.ok().build();
+    }
 
 }

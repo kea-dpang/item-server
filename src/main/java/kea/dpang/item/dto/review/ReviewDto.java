@@ -17,6 +17,5 @@ public class ReviewDto {
     private Long itemId;
     private String content;
     private Double rating;
-    private int reviewCount;
 }
 

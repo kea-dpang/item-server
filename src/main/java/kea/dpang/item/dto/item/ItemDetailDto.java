@@ -23,6 +23,7 @@ public class ItemDetailDto {
     private SubCategory subCategory;
     private int price;
     private float averageRating;
+    private int reviewCount;
     private int discountRate;
     private int discountPrice;
     private String description;
@@ -39,6 +40,7 @@ public class ItemDetailDto {
         this.subCategory = item.getSubCategory();
         this.price = item.getPrice();
         this.averageRating = item.getAverageRating();
+        this.reviewCount = item.getReviewCount();
         this.discountRate = item.getDiscountRate();
         this.discountPrice = item.getDiscountPrice();
         this.description = item.getDescription();

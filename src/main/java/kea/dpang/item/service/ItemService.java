@@ -44,7 +44,12 @@ public interface ItemService {
      *
      * @return 조회된 인기 상품 목록이 담긴 DTO 리스트
      */
-    List<PopularItemDto> getPopularItems();
+    List<ItemDetailDto> getPopularItems(Pageable pageable);
+
+    /**
+     * 신상품을 조회합니다.
+     */
+    List<ItemDto> getNewItems(Pageable pageable);
 
     void incrementViewCount(Long itemId);
 
@@ -71,6 +76,7 @@ public interface ItemService {
     void changeStock(List<UpdateStockRequestDto> dto);
 
 
-//    void updateItemDiscount(List<Long> itemIds, UpdateItemDiscountDto updateItemDiscountDto);
-//    void deleteItemDiscount(Long itemId);
+    void updateItemDiscount(UpdateEventDiscountDto updateEventDiscountDto);
+    void updateSellerDiscount(UpdateEventDiscountDto updateEventDiscountDto);
+    void deleteEventDiscount(Long eventId);
 }
