@@ -130,7 +130,7 @@ public class ItemController {
     }
 
     @GetMapping("/new/list")
-    @Operation(summary = "신제품 리스트 조회", description = "최신 상품 정보를 페이지 정보에 따라 조회합니다.")
+    @Operation(summary = "신상품 리스트 조회", description = "최신 상품 정보를 페이지 정보에 따라 조회합니다.")
     public ResponseEntity<SuccessResponse<List<ItemDto>>> getNewItems(Pageable pageable) {
         List<ItemDto> newItems = itemService.getNewItems(pageable);
         return new ResponseEntity<>(
@@ -164,7 +164,6 @@ public class ItemController {
         );
     }
 
-
     @PutMapping("/stock")
     @Operation(summary = "재고 수량 변경", description = "(백엔드) 재고 수량을 변경합니다.")
     public ResponseEntity<BaseResponse> changeStock(
@@ -177,7 +176,6 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
-
 
     @PutMapping("/eventDiscount")
     @Operation(summary = "이벤트 할인 반영", description = "(백엔드) 상품에 이벤트에서 발생하는 할인을 반영합니다.")

@@ -19,7 +19,6 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
 
     List<Item> findAllByEventId(Long eventId);
 
-    List<Item> findByOrderByCreatedTime(Pageable pageable);
+    List<Item> findBy(Pageable pageable);
 
 }
-
