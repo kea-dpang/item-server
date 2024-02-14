@@ -4,6 +4,7 @@ import kea.dpang.item.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,8 +20,11 @@ public class PersonalReviewDto {
     private String content;
     private Double rating;
     private LocalDateTime createdTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    public static PersonalReviewDto of(Review review, String reviewerName) {
+
+    public static PersonalReviewDto of(Review review, String reviewerName, LocalDate startDate, LocalDate endDate) {
         return new PersonalReviewDto(
                 review.getReviewId(),
                 review.getReviewerId(),
@@ -30,7 +34,9 @@ public class PersonalReviewDto {
                 review.getItem().getThumbnailImage(),
                 review.getContent(),
                 review.getRating(),
-                review.getCreatedTime()
+                review.getCreatedTime(),
+                startDate,
+                endDate
         );
     }
 }
