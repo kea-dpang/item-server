@@ -91,7 +91,12 @@ public class ReviewServiceImpl implements ReviewService {
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.atTime(23, 59, 59) : null;
 
-        Page<Review> reviews = reviewRepository.findByReviewerIdAndCreatedTimeBetween(reviewerId, startDateTime, endDateTime, pageable);
+        Page<Review> reviews;
+        if (startDateTime == null && endDateTime == null) {
+            reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
+        } else {
+            reviews = reviewRepository.findByReviewerIdAndCreatedTimeBetween(reviewerId, startDateTime, endDateTime, pageable);
+        }
 
         log.info("리뷰 목록 조회 완료. 조회된 리뷰 건수: {}", reviews.getTotalElements());
 
