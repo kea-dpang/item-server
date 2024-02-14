@@ -12,5 +12,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByItemId(Long itemId, Pageable pageable);
 
-    Page<Review> findReviewsTime(Long reviewerId, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<Review> findByReviewerIdAndCreatedTimeBetween(Long reviewerId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

@@ -87,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Page<PersonalReviewDto> getPersonalReviewList(Long reviewerId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         log.info("리뷰 목록 조회 시작. 시작 날짜: {}, 종료 날짜: {}, 리뷰어 ID: {}, 페이지 정보: {}", startDate, endDate, reviewerId, pageable);
 
-        Page<Review> reviews = reviewRepository.findReviewsTime(reviewerId, startDate, endDate, pageable);
+        Page<Review> reviews = reviewRepository.findByReviewerIdAndCreatedTimeBetween(reviewerId, startDate, endDate, pageable);
 
         log.info("리뷰 목록 조회 완료. 조회된 리뷰 건수: {}", reviews.getTotalElements());
 
