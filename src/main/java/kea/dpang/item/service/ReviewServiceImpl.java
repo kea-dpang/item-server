@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,24 +83,27 @@ public class ReviewServiceImpl implements ReviewService {
 
     // 사용자별 리뷰 리스트 조회
     @Override
-    @Transactional
-    public List<PersonalReviewDto> getPersonalReviewList(Long reviewerId, Pageable pageable) {
-        // 사용자 서버로부터 사용자 정보 조회
-        ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(reviewerId);
+    @Transactional(readOnly = true)
+    public Page<PersonalReviewDto> getPersonalReviewList(Long reviewerId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        log.info("리뷰 목록 조회 시작. 시작 날짜: {}, 종료 날짜: {}, 리뷰어 ID: {}, 페이지 정보: {}", startDate, endDate, reviewerId, pageable);
+
+        Page<Review> reviews = reviewRepository.findReviewsTime(reviewerId, startDate, endDate, pageable);
+
+        log.info("리뷰 목록 조회 완료. 조회된 리뷰 건수: {}", reviews.getTotalElements());
+
+        // 리뷰 목록이 비어있으면 빈 페이지를 반환한다.
+        if (reviews.isEmpty()) {
+            return Page.empty(pageable);
+        }
 
         // 사용자 이름 가져오기
+        ResponseEntity<SuccessResponse<UserDetailDto>> responseEntity = userServiceFeignClient.getReviewer(reviewerId);
         String name = Optional.ofNullable(responseEntity.getBody())
                 .map(SuccessResponse::getData)
                 .map(UserDetailDto::getName)
                 .orElseThrow(() -> new RuntimeException("사용자 정보 조회에 실패하였습니다."));
 
-        // 사용자 리뷰 리스트 조회
-        Page<Review> reviews = reviewRepository.findByReviewerId(reviewerId, pageable);
-
-        // 리뷰 리스트를 PersonalReviewDto로 변환
-        return reviews.getContent().stream()
-                .map(review -> PersonalReviewDto.of(review, name))
-                .toList();
+        return reviews.map(review -> PersonalReviewDto.of(review, name, startDate, endDate));
     }
 
 }
