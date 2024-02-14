@@ -26,13 +26,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "review API", description = "리뷰 관련 API 입니다.")
-@RequestMapping("/api")
+@RequestMapping("/api/reviews")
 @Slf4j
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/reviews")
+    @PostMapping
     @Operation(summary = "리뷰 등록", description = "리뷰 정보를 시스템에 추가합니다.")
     public ResponseEntity<BaseResponse> createReview(@RequestBody CreateReviewRequestDto dto) {
         reviewService.createReview(dto);
