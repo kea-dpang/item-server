@@ -20,11 +20,9 @@ public class PersonalReviewDto {
     private String content;
     private Double rating;
     private LocalDateTime createdTime;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
 
-    public static PersonalReviewDto of(Review review, String reviewerName, LocalDate startDate, LocalDate endDate) {
+    public static PersonalReviewDto of(Review review, String reviewerName) {
         return new PersonalReviewDto(
                 review.getReviewId(),
                 review.getReviewerId(),
@@ -34,9 +32,7 @@ public class PersonalReviewDto {
                 review.getItem().getThumbnailImage(),
                 review.getContent(),
                 review.getRating(),
-                review.getCreatedTime(),
-                startDate,
-                endDate
+                review.getCreatedTime()
         );
     }
 }

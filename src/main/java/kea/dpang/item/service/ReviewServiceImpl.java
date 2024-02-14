@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,9 +86,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public Page<PersonalReviewDto> getPersonalReviewList(Long reviewerId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        log.info("리뷰 목록 조회 시작. 시작 날짜: {}, 종료 날짜: {}, 리뷰어 ID: {}, 페이지 정보: {}", startDate, endDate, reviewerId, pageable);
+        log.info("리뷰 리스트 조회를 시작합니다 : 시작 날짜: {}, 종료 날짜: {}, 리뷰어 ID: {}, 페이지 요청 정보: {}", startDate, endDate, reviewerId, pageable);
 
-        Page<Review> reviews = reviewRepository.findByReviewerIdAndCreatedTimeBetween(reviewerId, startDate, endDate, pageable);
+        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = endDate != null ? endDate.atTime(23, 59, 59) : null;
+
+        Page<Review> reviews = reviewRepository.findByReviewerIdAndCreatedTimeBetween(reviewerId, startDateTime, endDateTime, pageable);
 
         log.info("리뷰 목록 조회 완료. 조회된 리뷰 건수: {}", reviews.getTotalElements());
 
@@ -103,7 +107,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(UserDetailDto::getName)
                 .orElseThrow(() -> new RuntimeException("사용자 정보 조회에 실패하였습니다."));
 
-        return reviews.map(review -> PersonalReviewDto.of(review, name, startDate, endDate));
+        return reviews.map(review -> PersonalReviewDto.of(review, name));
     }
+
 
 }
