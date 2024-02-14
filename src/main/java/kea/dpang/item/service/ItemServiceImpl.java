@@ -162,8 +162,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     // 상품 리스트 조회
+    // ItemServiceImpl.java
     @Override
     public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
+        // 정렬 조건 추가
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
         Page<Item> items = filterItems(category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
 
