@@ -13,11 +13,14 @@ import kea.dpang.item.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,11 +45,15 @@ public class ReviewController {
 
     @GetMapping("/{reviewerId}/list")
     @Operation(summary = "사용자별 리뷰 리스트 조회", description = "사용자 정보에 따라 리뷰 리스트를 조회합니다.")
-    public ResponseEntity<SuccessResponse<List<PersonalReviewDto>>> getReviewPersonalList(
+    public ResponseEntity<SuccessResponse<Page<PersonalReviewDto>>> getReviewPersonalList(
             @PathVariable @Parameter(description = "리뷰 작성자 ID", example = "1") Long reviewerId,
+            @Parameter(description = "리뷰 작성 시작 날짜") @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @Parameter(description = "리뷰 작성 종료 날짜") @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             Pageable pageable
     ) {
-        List<PersonalReviewDto> reviews = reviewService.getPersonalReviewList(reviewerId, pageable);
+        Page<PersonalReviewDto> reviews = reviewService.getPersonalReviewList(reviewerId, startDate, endDate, pageable);
 
         return new ResponseEntity<>(
                 new SuccessResponse<>(HttpStatus.OK.value(), "리뷰 리스트가 조회되었습니다.", reviews),
