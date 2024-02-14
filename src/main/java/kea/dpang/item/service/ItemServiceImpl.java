@@ -13,7 +13,9 @@ import kea.dpang.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -88,28 +90,34 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public List<ItemDetailDto> getPopularItems(Pageable pageable) {
         // Redis에서 조회수를 기반으로 인기 상품 ID와 점수를 가져옴
-        Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
-                .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, pageable.getOffset(), pageable.getOffset() + pageable.getPageSize() - 1);
-
-        // 가져온 데이터를 PopularItemDto 리스트로 변환
+        int count = 0;
+        int redisOffset = 0;
         List<ItemDetailDto> popularItems = new ArrayList<>();
-        for (ZSetOperations.TypedTuple<String> item : items) {
-            Long itemId = Long.valueOf(item.getValue());
-            try {
-                Item foundItem = itemRepository.findById(itemId)
-                        .orElseThrow(() -> new ItemNotFoundException(itemId));
+        while (count < pageable.getPageSize()) {
+            Set<ZSetOperations.TypedTuple<String>> items = redisTemplate.opsForZSet()
+                    .reverseRangeWithScores(ITEM_VIEW_COUNT_KEY, redisOffset, redisOffset + pageable.getPageSize() - 1);
 
-                // 판매자 이름을 가져옴
-                ResponseEntity<SuccessResponse<SellerDto>> sellerResponse = sellerServiceFeignClient.getSeller(foundItem.getSellerId());
-                SellerDto seller = sellerResponse.getBody().getData();
-                String sellerName = seller.getName();
+            for (ZSetOperations.TypedTuple<String> item : items) {
+                Long itemId = Long.valueOf(item.getValue());
+                try {
+                    Item foundItem = itemRepository.findById(itemId)
+                            .orElseThrow(() -> new ItemNotFoundException(itemId));
 
-                popularItems.add(new ItemDetailDto(foundItem, sellerName));
-            } catch (ItemNotFoundException e) {
-                log.error("상품을 찾을 수 없습니다. 상품 ID: {}", itemId, e);
-                // 상품을 찾을 수 없는 경우, 다음 상품으로 넘어감.
-                continue;
+                    // 판매자 이름을 가져옴
+                    ResponseEntity<SuccessResponse<SellerDto>> sellerResponse = sellerServiceFeignClient.getSeller(foundItem.getSellerId());
+                    SellerDto seller = sellerResponse.getBody().getData();
+                    String sellerName = seller.getName();
+
+                    popularItems.add(new ItemDetailDto(foundItem, sellerName));
+                    count++;
+                    if (count >= pageable.getPageSize()) {
+                        break;
+                    }
+                } catch (ItemNotFoundException e) {
+                    log.error("상품을 찾을 수 없습니다. 상품 ID: {}", itemId, e);
+                }
             }
+            redisOffset += pageable.getPageSize();
         }
         return popularItems;
     }
@@ -123,8 +131,9 @@ public class ItemServiceImpl implements ItemService {
     // 신상품 조회
     @Override
     public List<ItemDto> getNewItems(Pageable pageable) {
-        log.info("신제품 리스트 조회를 시작합니다.");
-        return itemRepository.findByOrderByCreatedTime(pageable)
+        log.info("신상품 리스트 조회를 시작합니다.");
+        Pageable sortedByCreatedTimeDesc = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdTime").descending());
+        return itemRepository.findBy(sortedByCreatedTimeDesc)
                 .stream()
                 .map(ItemDto::new)
                 .toList();
@@ -152,6 +161,7 @@ public class ItemServiceImpl implements ItemService {
         return new ItemDetailDto(item, sellerName);
     }
 
+    // 상품 리스트 조회
     @Override
     public Page<ItemDetailDto> getItemList(Category category, SubCategory subCategory, Double minPrice, Double maxPrice, String keyword, Long sellerId, Pageable pageable) {
         log.info("상품 리스트 조회를 시작합니다 : 카테고리 = {}, 서브카테고리 = {}, 판매자ID = {}, 최소가격 = {}, 최대가격 = {}, 키워드 = {}, 페이지 요청 정보 = {}", category, subCategory, sellerId, minPrice, maxPrice, keyword, pageable);
@@ -185,11 +195,11 @@ public class ItemServiceImpl implements ItemService {
         }
 
         if (minPrice != null) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("discountPrice"), minPrice));
         }
 
         if (maxPrice != null) {
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("discountPrice"), maxPrice));
         }
 
         if (keyword != null && !keyword.isEmpty()) {

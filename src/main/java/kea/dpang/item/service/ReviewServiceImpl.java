@@ -14,7 +14,9 @@ import kea.dpang.item.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public List<ReviewDto> getReviewList(Long itemId, Pageable pageable) {
+        // 정렬 조건 추가
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<Review> reviews = reviewRepository.findByItemId(itemId, pageable);
 
@@ -73,6 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
             );
         }).toList();
     }
+
 
     // 사용자별 리뷰 리스트 조회
     @Override
